@@ -71,7 +71,9 @@
 |ML_|Marker Library|ML_Currency|
 
 #### 3. C# 변수명
-  * 기본적으로 카멜 케이스 사용 (예: playerScore)
+  * Public 멤버 변수는 파스칼 케이스 사용 (예: Public int PlayerNum;)
+  * Non Public 멤버 변수는 _카멜 케이스 사용 (예: private int _playerNum;)
+  * 지역 변수, 함수의 매개변수는 카멜 케이스 사용 (예: int playerScore;)
   * 부울 변수는 질문형으로 작성 (예: isActive, canJump)
   * const 변수는 대문자와 언더바 사용 (예: MAX_PLAYER_COUNT)
   * 열거형(Enum): 파스칼 케이스 사용 (타입: CurrencyType, 값: Coin100, Bill1000)
