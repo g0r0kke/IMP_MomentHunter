@@ -3,48 +3,27 @@ using UnityEngine.InputSystem;
 
 public class CameraModeController : MonoBehaviour
 {
-    public Transform cameraIdlePosition; // Grip 안 누른 상태 위치
-    public Transform cameraActivePosition; // Grip 눌렀을 때 위치
-
-    public GameObject cameraModel; // 카메라 오브젝트
+    public Transform cameraIdlePos;
+    public Transform cameraActivePos;
+    public GameObject cameraModel;
+    public GameObject cameraUIRoot;
     public InputActionProperty gripButton;
 
-    public GameObject cameraUIRoot;
-
-    private bool isCameraActive = false;
+    bool isActive = false;
 
     void Update()
     {
-        float gripValue = gripButton.action.ReadValue<float>();
-
-        if (gripValue > 0.5f && !isCameraActive)
+        if (gripButton.action.ReadValue<float>() > 0.5f && !isActive)
         {
-            EnterCameraMode();
-        }
-        else if (gripValue <= 0.5f && isCameraActive)
-        {
-            ExitCameraMode();
-        }
-    }
-
-    void EnterCameraMode()
-    {
-        isCameraActive = true;
-        cameraModel.transform.position = cameraActivePosition.position;
-        cameraModel.transform.rotation = cameraActivePosition.rotation;
-        // TODO: 애니메이션이나 사운드 추가 가능
-
-        if (cameraUIRoot != null)
+            isActive = true;
+            cameraModel.transform.SetPositionAndRotation(cameraActivePos.position, cameraActivePos.rotation);
             cameraUIRoot.SetActive(true);
-    }
-
-    void ExitCameraMode()
-    {
-        isCameraActive = false;
-        cameraModel.transform.position = cameraIdlePosition.position;
-        cameraModel.transform.rotation = cameraIdlePosition.rotation;
-
-        if (cameraUIRoot != null)
+        }
+        else if (gripButton.action.ReadValue<float>() <= 0.5f && isActive)
+        {
+            isActive = false;
+            cameraModel.transform.SetPositionAndRotation(cameraIdlePos.position, cameraIdlePos.rotation);
             cameraUIRoot.SetActive(false);
+        }
     }
 }
