@@ -1,29 +1,48 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// Grip을 눌러 카메라 UI를 켜고 끄는 컨트롤러
+/// </summary>
 public class CameraModeController : MonoBehaviour
 {
-    public Transform cameraIdlePos;
-    public Transform cameraActivePos;
     public GameObject cameraModel;
-    public GameObject cameraUIRoot;
-    public InputActionProperty gripButton;
+    public GameObject cameraUI; 
 
-    bool isActive = false;
+    public InputActionProperty gripAction;   // <XRController>{RightHand}/grip
 
-    void Update()
+    public bool IsActive { get; private set; }
+
+    /* ─────────── Input 바인딩 ─────────── */
+    void OnEnable()
     {
-        if (gripButton.action.ReadValue<float>() > 0.5f && !isActive)
-        {
-            isActive = true;
-            cameraModel.transform.SetPositionAndRotation(cameraActivePos.position, cameraActivePos.rotation);
-            cameraUIRoot.SetActive(true);
-        }
-        else if (gripButton.action.ReadValue<float>() <= 0.5f && isActive)
-        {
-            isActive = false;
-            cameraModel.transform.SetPositionAndRotation(cameraIdlePos.position, cameraIdlePos.rotation);
-            cameraUIRoot.SetActive(false);
-        }
+        gripAction.action.performed += OnGripPressed;   // 눌렀을 때
+        gripAction.action.canceled  += OnGripReleased;  // 뗐을 때
+        gripAction.action.Enable();
+    }
+    void OnDisable()
+    {
+        gripAction.action.performed -= OnGripPressed;
+        gripAction.action.canceled  -= OnGripReleased;
+        gripAction.action.Disable();
+    }
+
+    /* ─────────── 이벤트 핸들러 ─────────── */
+    void OnGripPressed(InputAction.CallbackContext _)
+    {
+        if (IsActive) return;
+        IsActive = true;
+
+        // 시각 요소 온
+        cameraUI.SetActive(true);
+    }
+
+    void OnGripReleased(InputAction.CallbackContext _)
+    {
+        if (!IsActive) return;
+        IsActive = false;
+
+        // UI 끄기
+        cameraUI.SetActive(false);
     }
 }
