@@ -1,18 +1,21 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.IO;
+using System.Collections.Generic;
 
 public class PhotoCaptureAndJudge : MonoBehaviour
 {
     public TutorialMission tutorialMission;
+    public bool useTutorial = true;
 
     [Header("Input")]
     public InputActionProperty triggerButton;   // 오른손 트리거
 
-    [Header("Ray / Viewport")]
+    [Header("Camera / Distance")]
     public Camera captureCam;                   // 카메라(대개 MainCamera)
     public float maxJudgeDistance = 5f;
     public LayerMask TargetLayer;          // PhotoTarget 레이어만 체크
+    public int requiredTargets = 2;
 
     [Header("Save")]
     public bool savePhotoToFile = true;
@@ -36,14 +39,14 @@ public class PhotoCaptureAndJudge : MonoBehaviour
         if (triggerButton.action.WasPressedThisFrame())
         {
             CaptureScreenshot();       // 1) 사진 저장
-            JudgeByViewportRaycast();  // 2) 즉시 판정
+            JudgeMultipleTargets();  // 2) 즉시 판정
 
-            // 튜토리얼 상태가 TakePhoto일 경우 → 다음 단계로 넘김
-            if (TutorialManager.Instance != null &&
-                TutorialManager.Instance.Current == TutorialManager.Step.TakePhoto)
-            {
-                TutorialManager.Instance.OnTutorialPhotoTaken();
-            }
+            if (useTutorial &&
+               TutorialManager.Instance != null &&
+               TutorialManager.Instance.Current == TutorialManager.Step.TakePhoto)
+          {
+               TutorialManager.Instance.OnTutorialPhotoTaken();
+           }
         }
     }
 
@@ -57,28 +60,54 @@ public class PhotoCaptureAndJudge : MonoBehaviour
         Debug.Log($"사진 저장: {file}");
     }
 
-    /* ---------------------- 뷰포트 판정 ---------------------- */
-    void JudgeByViewportRaycast()
-{
-    Ray ray = captureCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+        /* ---------------- 다중 타겟 판정 ---------------- */
+        void JudgeMultipleTargets()
+        {
+            // 1) 카메라 주변 OverlapSphere 로 후보 수집
+            Vector3 camPos = captureCam.transform.position;
+            Collider[] hits = Physics.OverlapSphere(camPos, maxJudgeDistance, TargetLayer);
 
-    if (Physics.Raycast(ray, out RaycastHit hit, maxJudgeDistance, TargetLayer))
-    {
-        Debug.DrawRay(ray.origin, ray.direction * maxJudgeDistance, Color.red, 2f);
-
-        if (hit.collider.CompareTag("MissionTarget"))
+            int visibleCount = 0;
+            foreach (Collider col in hits)
             {
-                Debug.Log($"미션 성공: {hit.collider.name}");
-                tutorialMission?.OnHandsetPhotoSuccess();   // ← 직접 호출
+                if (!col.CompareTag("MissionTarget")) continue; // 태그 필터
+
+                if (IsInView(col.transform))
+                {
+                    visibleCount++;
+    #if UNITY_EDITOR
+                    Debug.Log($"뷰포트 + 거리 통과: {col.name}");
+    #endif
+                }
+            }
+
+            if (visibleCount >= requiredTargets)
+            {
+                Debug.Log($"미션 성공! ({visibleCount}/{requiredTargets})");
+                tutorialMission?.OnHandsetPhotoSuccess();
             }
             else
             {
-                Debug.Log($"MissionTarget 태그 아님: {hit.collider.name}");
+                Debug.Log($"미션 실패: 조건 통과 {visibleCount}/{requiredTargets}");
             }
-    }
-    else
-    {
-        Debug.Log("판정 실패: 히트 없음");
-    }
-}
+        }
+
+        // 카메라 뷰 안(0~1) + 정면(Z>0)인지 검사
+        bool IsInView(Transform target)
+        {
+            Vector3 vPos = captureCam.WorldToViewportPoint(target.position);
+            return vPos.z > 0f && vPos.x is >= 0f and <= 1f && vPos.y is >= 0f and <= 1f;
+        }
+
+        //카메라 → 타겟 라인에 가로막는 물체가 없는지 검사
+        bool IsVisible(Vector3 camPos, Collider targetCol)
+        {
+            Vector3 targetCenter = targetCol.bounds.center;
+            Vector3 dir          = targetCenter - camPos;
+
+            // Linecast로 가장 먼저 맞는 콜라이더가 본인인가?
+            return !Physics.Linecast(camPos, targetCenter, out RaycastHit hit, ~0)
+                || hit.collider == targetCol;
+        }
+
 }
