@@ -3,7 +3,7 @@ using System.Collections;
 
 public class TutorialManager : MonoBehaviour
 {
-    public enum Step { None, Teleport, Move, Grab, TakePhoto, Mission1, AllDone }
+    public enum Step { None, Teleport, Move, GrabLeft, GrabRight, TakePhoto, Mission1, AllDone }
     public Step Current { get; private set; }
     
     public static TutorialManager Instance;
@@ -12,7 +12,8 @@ public class TutorialManager : MonoBehaviour
     [Header("Step UI")]
     public GameObject teleportUI;
     public GameObject moveUI;
-    public GameObject grabUI;
+    public GameObject leftGrabUI;
+    public GameObject rightGrabUI;
     public GameObject photoUI;
 
     [Header("Narration (선택)")]
@@ -40,42 +41,56 @@ public class TutorialManager : MonoBehaviour
 
         Current = Step.Teleport;
         teleportUI.SetActive(true);
-        Debug.Log("[1단계] 텔레포트 시작");
+        Debug.Log("[1단계] move 시작");
     }
 
     /* ───────── 단계별 콜백 ───────── */
-    public void OnTeleportDone()
-
-    {
-        Debug.Log("OnTeleportDone() 호출됨");
-        if (Current != Step.Teleport) return;
-        teleportUI.SetActive(false);
-        Debug.Log("텔레포트 완료");
-
-        Current = Step.Move;
-        moveUI.SetActive(true);
-        Debug.Log("[2단계] 조이스틱 이동 시작");
-    }
-
     public void OnMoveDone()
     {
         if (Current != Step.Move) return;
-        moveUI.SetActive(false);
-        Debug.Log(" 조이스틱 이동 완료");
 
-        Current = Step.Grab;
-        grabUI.SetActive(true);
-        Debug.Log("[3단계] 카메라 잡기 시작");
+        moveUI.SetActive(false);
+        Debug.Log("조이스틱 이동 완료");
+
+        Current = Step.Teleport;
+        teleportUI.SetActive(true);
+        Debug.Log("[2단계] 텔레포트 시작");
     }
 
-    public void OnGrabDone()
+    public void OnTeleportDone()
     {
-        if (Current != Step.Grab) return;
-        grabUI.SetActive(false);
+        if (Current != Step.Teleport) return;
+
+        teleportUI.SetActive(false);
+        Debug.Log("텔레포트 완료");
+
+        Current = Step.GrabLeft;
+        leftGrabUI.SetActive(true);
+        Debug.Log("[3단계] 왼손 그립 시작");
+    }
+
+    public void OnLeftGrabDone()
+    {
+        if (Current != Step.GrabLeft) return;
+
+        leftGrabUI.SetActive(false);
+        Debug.Log("왼손 그립 완료");
+
+        Current = Step.GrabRight;
+        rightGrabUI.SetActive(true);
+        Debug.Log("[4단계] 오른손 그립 시작");
+    }
+
+    public void OnRightGrabDone()
+    {
+        if (Current != Step.GrabRight) return;
+
+        rightGrabUI.SetActive(false);
+        Debug.Log("오른손 그립 완료");
 
         Current = Step.TakePhoto;
         photoUI.SetActive(true);
-        Debug.Log("[4단계] 시작");
+        Debug.Log("[5단계] 사진 촬영 시작");
     }
 
     /* PhotoCaptureAndJudge 에서 호출 */
