@@ -39,7 +39,7 @@ public class CameraModeController : MonoBehaviour
 
         // 시각 요소 온
         cameraUI.SetActive(true);
-        TutorialManager.Instance?.OnGrabDone();
+        TutorialManager.Instance?.OnRightGrabDone();
     }
 
     void OnGripReleased(InputAction.CallbackContext _)
