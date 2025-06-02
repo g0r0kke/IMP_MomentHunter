@@ -1,8 +1,9 @@
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class WristUIManager : MonoBehaviour
 {
@@ -15,21 +16,33 @@ public class WristUIManager : MonoBehaviour
     private string SelectedMenu;
     [SerializeField] private TextMeshProUGUI SelectedMenuUIText;
 
-    [Header("Check Debug:")]
-    [SerializeField] bool IsBebug = true;
+    [Header("WristUI")]
+    [SerializeField] private GameObject WristUI;
 
-    public InputActionAsset inputActions;
-    private Canvas wristUICanvas;
+    [Header("inputActions")]
+    [SerializeField] private InputActionAsset inputActions;
+
+    [Header("Check Debug:")]
+    [SerializeField] bool isDebug = true;
+
     private InputAction menu;
+    private InputAction yButton;
+    private XRGrabInteractable grabInteractable;
+
+    private bool isWristUI;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        wristUICanvas = GetComponent<Canvas>();
-        menu = inputActions.FindActionMap("XRI LeftHand").FindAction("Menu");
-        menu.Enable();
-        menu.performed += ToggleMenu;
-        ResetMenu();
+        if(WristUI == null) WristUI = transform.Find("WristUI").gameObject;
+        WristUI.SetActive(false);
+        isWristUI = false;
+
+        yButton = inputActions.FindActionMap("XRI Left").FindAction("YButton");
+        yButton.Enable();
+        yButton.performed += OnYButtonPressed;
+
+        ResetAction();
     }
 
     // Update is called once per frame
@@ -38,23 +51,15 @@ public class WristUIManager : MonoBehaviour
         
     }
 
-    private void UpdateText()
+    private void OnYButtonPressed(InputAction.CallbackContext context)
     {
-        ClicksCountUIText.text = ClicksCount.ToString();
-        SelectedMenuUIText.text = SelectedMenu;
-
-        if (IsBebug) Debug.Log($"Clicked Menu {SelectedMenu}" +
-                               $"Click Count {ClicksCount}");
+        if (isWristUI) { CloseAction(); }
+        else { OpenAction(); }
     }
 
     private void OnDestroy()
     {
-        menu.performed -= ToggleMenu;
-    }
-
-    public void ToggleMenu(InputAction.CallbackContext context)
-    {
-        wristUICanvas.enabled = !wristUICanvas.enabled;
+        yButton.performed -= OnYButtonPressed;
     }
 
     public void OnClickMenu()
@@ -66,8 +71,8 @@ public class WristUIManager : MonoBehaviour
             SelectedMenu = clickedObj.name;
             ClicksCount++;
 
-            UpdateText();
             CheckMenu();
+            UpdateText();
         }
     }
 
@@ -75,28 +80,80 @@ public class WristUIManager : MonoBehaviour
     {
         switch (SelectedMenu) {
 
-            case "ResetMenu":
-                ResetMenu();
+            case "CloseButton":
+                CloseAction();
                 break;
 
-            case "GalleryMenu":
-                ResetMenu();
+            case "TutorialButton":
+                TutorialAction();
                 break;
 
-            case "TutorialMenu":
-                ResetMenu();
+            case "AudioButton":
+                AudioAction();
+                break;
+
+            case "MainBackButton":
+                MainBackAction();
                 break;
 
             default:
-                ResetMenu();
+                if(isDebug) Debug.LogError("Unknown menu: " + SelectedMenu);
                 break;
 
         }
     }
 
-    private void ResetMenu()
+    private void UpdateText()
+    {
+        if (ClicksCountUIText.text != ClicksCount.ToString())
+            ClicksCountUIText.text = ClicksCount.ToString();
+
+        if (SelectedMenuUIText.text != SelectedMenu)
+            SelectedMenuUIText.text = SelectedMenu;
+
+        if (isDebug) Debug.Log($"Clicked Menu {SelectedMenu}\n" +
+                               $"Click Count {ClicksCount}");
+    }
+
+    private void ResetAction()
     {
         ClicksCount = 0;
         SelectedMenu = "Not Selected";
+        UpdateText();
+    }
+
+    private void OpenAction()
+    {
+        SelectedMenu = "OpenButton";
+        WristUI.SetActive(true);
+        isWristUI = true;
+        ResetAction();
+        if (isDebug) Debug.Log("The WristUI has been activated.");
+    }
+
+    private void CloseAction()
+    {
+        SelectedMenu = "CloseButton";
+        WristUI.SetActive(false);
+        isWristUI = false;
+        if (isDebug) Debug.Log("The WristUI has been disabled.");
+    }
+
+    private void TutorialAction()
+    {
+        SelectedMenu = "TutorialButton";
+        if (isDebug) Debug.Log("The Tutorial Menu has been activated.");
+    }
+
+    private void AudioAction()
+    {
+        SelectedMenu = "AudioButton";
+        if (isDebug) Debug.Log("The Audio Menu has been activated.");
+    }
+
+    private void MainBackAction()
+    {
+        SelectedMenu = "MainBackButton";
+        if (isDebug) Debug.Log("The MainBack Menu has been activated.");
     }
 }
