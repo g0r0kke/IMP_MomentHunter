@@ -1,17 +1,21 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-/// <summary>
-/// Grip을 눌러 카메라 UI를 켜고 끄는 컨트롤러
-/// </summary>
+// Grip을 눌러 카메라 UI를 켜고 끄는 컨트롤러
+
 public class CameraModeController : MonoBehaviour
 {
-    public GameObject cameraModel;
+    // public GameObject cameraModel;
     public GameObject cameraUI; 
 
-    public InputActionProperty gripAction;   // <XRController>{RightHand}/grip
+    public InputActionProperty gripAction;   
 
     public bool IsActive { get; private set; }
+    void Start()
+    {
+        cameraUI.SetActive(false); 
+    }
+
 
     /* ─────────── Input 바인딩 ─────────── */
     void OnEnable()
@@ -35,6 +39,7 @@ public class CameraModeController : MonoBehaviour
 
         // 시각 요소 온
         cameraUI.SetActive(true);
+        TutorialManager.Instance?.OnRightGrabDone();
     }
 
     void OnGripReleased(InputAction.CallbackContext _)
