@@ -14,7 +14,11 @@ public class InputTest : MonoBehaviour
     {
         if (Keyboard.current.zKey.wasPressedThisFrame)
         {
-            GameManager.Instance.TransitionToScene(0);
+            GameManager.Instance.SetNextMissionState();
+        }
+        if (Keyboard.current.nKey.wasPressedThisFrame)
+        {
+            
         }
     }
 }

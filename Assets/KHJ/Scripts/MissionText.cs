@@ -11,6 +11,11 @@ public class MissionText : MonoBehaviour
     [SerializeField] private string[] _firstTextArray;
     [SerializeField] private string[] _secondTextArray;
     
+    private void Start()
+    {
+        UpdateMissionText();
+    }
+    
     // 인덱스로 텍스트 변경
     public void ChangeTexts(int index)
     {
@@ -23,5 +28,30 @@ public class MissionText : MonoBehaviour
         {
             _secondText.text = _secondTextArray[index];
         }
+    }
+    
+    public void UpdateMissionText()
+    {
+        if (GameManager.Instance == null) return;
+        
+        int textIndex = GetTextIndex(GameManager.Instance.MissionState);
+        ChangeTexts(textIndex);
+    }
+    
+    private int GetTextIndex(MissionState missionState)
+    {
+        return missionState switch
+        {
+            MissionState.None => 7,
+            MissionState.Tutorial => 0,
+            MissionState.Mission1 => 1,
+            MissionState.Mission2 => 2,
+            MissionState.Mission3 => 3,
+            MissionState.Mission4 => 4,
+            MissionState.Mission5 => 5,
+            MissionState.Mission6 => 6,
+            MissionState.Ending => 7,
+            _ => 7 // 기본값
+        };
     }
 }
