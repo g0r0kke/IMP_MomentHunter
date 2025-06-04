@@ -1,4 +1,7 @@
+using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum GameState
 {
@@ -32,6 +35,12 @@ public class GameManager : MonoBehaviour
     
     [SerializeField] private MissionState _missionState = MissionState.None;
     public MissionState MissionState => _missionState;
+    
+    [Header("Scene Configuration")]
+#if UNITY_EDITOR
+    [SerializeField] private List<SceneAsset> _sceneAssets = new List<SceneAsset>(); // 씬 에셋 리스트
+#endif
+    [SerializeField] private List<string> _sceneNames = new List<string>(); // 씬 이름 리스트 (빌드용)
     
     void Awake()
     {
@@ -105,5 +114,34 @@ public class GameManager : MonoBehaviour
             case MissionState.Ending:
                 break;
         }
+    }
+    
+#if UNITY_EDITOR
+    // Inspector에서 SceneAsset 변경 시 sceneNames 자동 업데이트
+    private void OnValidate()
+    {
+        // sceneNames 리스트를 sceneAssets와 동기화
+        _sceneNames.Clear();
+        foreach (var sceneAsset in _sceneAssets)
+        {
+            if (sceneAsset != null)
+            {
+                _sceneNames.Add(sceneAsset.name);
+            }
+        }
+    }
+#endif
+    
+    public void TransitionToScene(int sceneIndex)
+    {
+        // 유효한 인덱스인지 확인
+        if (sceneIndex < 0 || sceneIndex >= _sceneNames.Count)
+        {
+            Debug.LogError($"Invalid scene index: {sceneIndex}. Available scenes: {_sceneNames.Count}");
+            return;
+        }
+        
+        string targetScene = _sceneNames[sceneIndex];
+        SceneManager.LoadScene(targetScene);
     }
 }
