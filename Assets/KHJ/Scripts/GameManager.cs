@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -30,6 +31,8 @@ public class GameManager : MonoBehaviour
     // Singleton pattern
     public static GameManager Instance { get; private set; }
 
+    public static event Action<MissionState> OnMissionStateChanged;
+    
     [SerializeField] private GameState _gameState = GameState.Intro;
     public GameState GameState => _gameState;
     
@@ -54,18 +57,6 @@ public class GameManager : MonoBehaviour
         }
 
         Instance = this;
-    }
-    
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public void SetGameState(GameState newGameState)
@@ -96,6 +87,8 @@ public class GameManager : MonoBehaviour
         
         this._missionState = newMissionState;
 
+        OnMissionStateChanged?.Invoke(_missionState);
+        
         if (_missionText)
         {
             _missionText.UpdateMissionText();

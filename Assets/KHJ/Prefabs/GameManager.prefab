@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8570527765589104178}
   - component: {fileID: 3647386402798826931}
   - component: {fileID: -3276509725225054760}
+  - component: {fileID: 3462731648061174088}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -47,6 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _gameState: 0
   _missionState: 0
+  _missionText: {fileID: 0}
   _sceneAssets:
   - {fileID: 102900000, guid: fc92407cb4a7e064c87048c2e78a374b, type: 3}
   - {fileID: 102900000, guid: bf397684f79d7f7479089b1a0a883de9, type: 3}
@@ -67,5 +69,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3565bf6aba23674c9e71a2c7a85f126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3462731648061174088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1537800247845910802}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 307bfbdf56929a24e9bd90ff8c9cf4bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
