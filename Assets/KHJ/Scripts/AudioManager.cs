@@ -1,35 +1,34 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class AudioManager : MonoBehaviour
 {
-    [SerializeField]
-    private AudioSource audioSource;
-    [SerializeField]
-    private AudioClip[] audioClips;
+    private AudioSource _audioSource;
+    private AudioClip[] _audioClips;
     
     void Start()
     {
-        if (audioSource == null)
-            audioSource = GetComponent<AudioSource>();
+        if (_audioSource == null)
+            _audioSource = GetComponent<AudioSource>();
     }
 
     public void PlayAudio(int clipId)
     {
         // 안전성 체크
-        if (audioClips == null || clipId < 0 || clipId >= audioClips.Length)
+        if (_audioClips == null || clipId < 0 || clipId >= _audioClips.Length)
         {
             Debug.LogWarning($"Invalid clip ID: {clipId}");
             return;
         }
         
-        if (audioClips[clipId] == null)
+        if (_audioClips[clipId] == null)
         {
             Debug.LogWarning($"Audio clip at index {clipId} is null");
             return;
         }
 
-        audioSource.clip = audioClips[clipId];
-        audioSource.Play();
+        _audioSource.clip = _audioClips[clipId];
+        _audioSource.Play();
     }
     
     // AudioSource의 clip을 바꾸지 않고 추가로 소리 재생
@@ -37,16 +36,16 @@ public class AudioManager : MonoBehaviour
     public void PlayOneShot(int clipId)
     {
         if (IsValidClipId(clipId))
-            audioSource.PlayOneShot(audioClips[clipId]);
+            _audioSource.PlayOneShot(_audioClips[clipId]);
     }
     
     public void StopAudio()
     {
-        audioSource.Stop();
+        _audioSource.Stop();
     }
     
     private bool IsValidClipId(int clipId)
     {
-        return audioClips != null && clipId >= 0 && clipId < audioClips.Length && audioClips[clipId] != null;
+        return _audioClips != null && clipId >= 0 && clipId < _audioClips.Length && _audioClips[clipId] != null;
     }
 }
