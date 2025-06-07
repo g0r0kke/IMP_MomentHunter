@@ -3,8 +3,8 @@ using UnityEngine.Serialization;
 
 public class AudioManager : MonoBehaviour
 {
-    private AudioSource _audioSource;
-    private AudioClip[] _audioClips;
+    [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private AudioClip[] _audioClips;
     
     void Start()
     {

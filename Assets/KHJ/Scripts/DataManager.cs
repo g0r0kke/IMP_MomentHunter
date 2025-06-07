@@ -141,4 +141,9 @@ public class DataManager : MonoBehaviour
             Debug.Log($"마스터 볼륨이 {_masterVolume:F1}로 설정되었습니다.");
         }
     }
+
+    public void InitializeHealth()
+    {
+        _currentHealth = MAX_HEALTH;
+    }
 }
