@@ -3179,6 +3179,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9add70e81f749784baa6559680b9750b, type: 3}
+--- !u!1 &2850323202878179376 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8413994656474603047, guid: 9add70e81f749784baa6559680b9750b, type: 3}
+  m_PrefabInstance: {fileID: 6001858314092123671}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5911003985073202208 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 90908274749829687, guid: 9add70e81f749784baa6559680b9750b, type: 3}
@@ -3287,7 +3292,7 @@ PrefabInstance:
     - target: {fileID: 1556127099216572558, guid: 94a9c3ce3a775e24a8254d3e1b30c028, type: 3}
       propertyPath: uiRayInteractor
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2850323202878179376}
     - target: {fileID: 1951849774034360858, guid: 94a9c3ce3a775e24a8254d3e1b30c028, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -3332,6 +3337,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8924174214453321952, guid: 94a9c3ce3a775e24a8254d3e1b30c028, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 653947712027840020}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
