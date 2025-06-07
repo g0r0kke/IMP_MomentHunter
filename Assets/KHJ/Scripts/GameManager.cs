@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -30,11 +31,15 @@ public class GameManager : MonoBehaviour
     // Singleton pattern
     public static GameManager Instance { get; private set; }
 
+    public static event Action<MissionState> OnMissionStateChanged;
+    
     [SerializeField] private GameState _gameState = GameState.Intro;
     public GameState GameState => _gameState;
     
     [SerializeField] private MissionState _missionState = MissionState.None;
     public MissionState MissionState => _missionState;
+
+    [SerializeField] private MissionText _missionText;
     
     [Header("Scene Configuration")]
 #if UNITY_EDITOR
@@ -53,18 +58,6 @@ public class GameManager : MonoBehaviour
 
         Instance = this;
     }
-    
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public void SetGameState(GameState newGameState)
     {
@@ -75,15 +68,14 @@ public class GameManager : MonoBehaviour
 
         switch (_gameState)
         {
-            case GameState.Intro:
-                break;
-            case GameState.Room1:
-                break;
-            case GameState.Room2:
-                break;
             case GameState.Victory:
+                TransitionToScene(3);
+                SetMissionState(MissionState.Ending);
                 break;
             case GameState.Defeat:
+                SetMissionState(MissionState.Ending);
+                break;
+            default:
                 break;
         }
     }
@@ -95,9 +87,22 @@ public class GameManager : MonoBehaviour
         
         this._missionState = newMissionState;
 
+        OnMissionStateChanged?.Invoke(_missionState);
+        
+        if (_missionText)
+        {
+            _missionText.UpdateMissionText();
+        }
+        
         switch (_missionState)
         {
+            case MissionState.None:
+                TransitionToScene(0);
+                SetGameState(GameState.Intro);
+                break;
             case MissionState.Tutorial:
+                TransitionToScene(1);
+                SetGameState(GameState.Room1);
                 break;
             case MissionState.Mission1:
                 break;
@@ -106,6 +111,8 @@ public class GameManager : MonoBehaviour
             case MissionState.Mission3:
                 break;
             case MissionState.Mission4:
+                TransitionToScene(2);
+                SetGameState(GameState.Room2);
                 break;
             case MissionState.Mission5:
                 break;
@@ -114,6 +121,12 @@ public class GameManager : MonoBehaviour
             case MissionState.Ending:
                 break;
         }
+    }
+
+    public void SetNextMissionState()
+    {
+        int nextIndex = ((int)_missionState + 1) % System.Enum.GetValues(typeof(MissionState)).Length;
+        SetMissionState((MissionState)nextIndex);
     }
     
 #if UNITY_EDITOR
