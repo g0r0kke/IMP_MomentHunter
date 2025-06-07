@@ -142,6 +142,11 @@ public class DataManager : MonoBehaviour
         }
     }
 
+    public float GetMasterVolume()
+    {
+        return _currentHealth;
+    }
+
     public void InitializeHealth()
     {
         _currentHealth = MAX_HEALTH;

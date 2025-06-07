@@ -1,33 +1,38 @@
 using TMPro;
+using Unity.Tutorials.Core.Editor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
+using UnityEngine.Windows;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class WristUIManager : MonoBehaviour
 {
 
-    [Header("Clicks Count")]
-    private int ClicksCount;
-    [SerializeField] private TextMeshProUGUI ClicksCountUIText;
-
-    [Header("Clicked Menu:")]
-    private string SelectedMenu;
-    [SerializeField] private TextMeshProUGUI SelectedMenuUIText;
-
     [Header("UIComponents")]
     [SerializeField] private GameObject WristUI;
+    [SerializeField] private GameObject TutorialUI;
+                     private GameObject Tutorial1Page;
+                     private GameObject Tutorial2Page;
+    [SerializeField] private TextMeshProUGUI TutorialPageText;
+    [SerializeField] private GameObject AudioUI;
+    [SerializeField] private TextMeshProUGUI BGMText;
+    [SerializeField] private Slider BGMSlider;
+    [SerializeField] private TextMeshProUGUI SFXText;
+    [SerializeField] private Slider SFXSlider;
+    [SerializeField] private GameObject MainBackUI;
+    
+    private string SelectedMenu;
 
     [Header("InteractorComponents")]
     [SerializeField] private GameObject rightController;
                      private GameObject R_directInteractor;
                      private GameObject R_rayInteractor;
-                     private GameObject R_teleportRayInteractor;
     [SerializeField] private GameObject leftController;
     [SerializeField] private GameObject uiRayInteractor;
                      private GameObject L_directInteractor;
-                     private GameObject L_rayInteractor;
 
     [Header("CameraComponents")]
     [SerializeField] private GameObject Camera;
@@ -38,27 +43,64 @@ public class WristUIManager : MonoBehaviour
     [Header("Check Debug:")]
     [SerializeField] bool isDebug = true;
 
-    private InputAction menu;
     private InputAction yButton;
+    private InputAction BButton;
     private XRGrabInteractable grabInteractable;
 
     private bool isWristUI;
+    private bool isTutorialUI;
+    private bool isAudioUI;
+    private bool isMainBackUI;
+    private int pagesNum;
+    private int BGMValue;
+    private int SFXValue;
+
+    private GameManager gameManager;
+    private DataManager dataManager;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        gameManager = FindAnyObjectByType<GameManager>();
+        dataManager = FindAnyObjectByType<DataManager>();
+
+
         FindInteractorComponents();
         FindUIComponents();
         FindCameraComponents();
 
         isWristUI = false;
+        isTutorialUI = false;
+        isAudioUI = false;
+        isMainBackUI = false;
+
         if (WristUI != null) WristUI.SetActive(isWristUI);
+        if (TutorialUI != null) TutorialUI.SetActive(isTutorialUI);
+        if (AudioUI != null) AudioUI.SetActive(isAudioUI);
+        if (MainBackUI != null) MainBackUI.SetActive(isMainBackUI);
         if (uiRayInteractor != null) uiRayInteractor.SetActive(isWristUI);
 
-        var actionMap = inputActions?.FindActionMap("XRI Left");
-        if (actionMap != null)
+        BGMSlider.minValue = 0;
+        BGMSlider.maxValue = 100;
+        BGMSlider.wholeNumbers = true;
+        if(dataManager != null) BGMValue = Mathf.RoundToInt(dataManager.GetMasterVolume() * 100f);
+        else BGMValue = 100;
+        BGMSlider.value = BGMValue;
+        BGMSlider.onValueChanged.AddListener(OnBGMSliderValueChanged);
+        OnBGMSliderValueChanged(BGMValue);
+        
+        SFXSlider.minValue = 0;
+        SFXSlider.maxValue = 100;
+        SFXSlider.wholeNumbers = true;
+        SFXValue = 100;
+        SFXSlider.value = SFXValue;
+        SFXSlider.onValueChanged.AddListener(OnSFXSliderValueChanged);
+        OnSFXSliderValueChanged(SFXValue);
+
+        var LeftActionMap = inputActions?.FindActionMap("XRI Left");
+        if (LeftActionMap != null)
         {
-            yButton = actionMap.FindAction("YButton");
+            yButton = LeftActionMap.FindAction("YButton");
             if (yButton != null)
             {
                 yButton.Enable();
@@ -74,24 +116,49 @@ public class WristUIManager : MonoBehaviour
             if (isDebug) Debug.LogError("XRI Left action map not found!");
         }
 
+        var RightActionMap = inputActions?.FindActionMap("XRI Right");
+        if (RightActionMap != null)
+        {
+
+            BButton = RightActionMap.FindAction("BButton");
+            if (BButton != null)
+            {
+                BButton.Enable();
+                BButton.performed += OnBButtonPressed;
+            }
+            else
+            {
+                if (isDebug) Debug.LogError("BButton action not found!");
+            }
+        }
+        else
+        {
+            if (isDebug) Debug.LogError("XRI Right action map not found!");
+        }
+
         ResetAction();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     private void OnYButtonPressed(InputAction.CallbackContext context)
     {
-        if (isWristUI) { CloseAction(); }
+        if (isWristUI || isTutorialUI || isAudioUI || isMainBackUI) { CloseAction(); }
         else { OpenAction(); }
+    }
+    private void OnBButtonPressed(InputAction.CallbackContext context)
+    {
+        if (isTutorialUI || isAudioUI || isMainBackUI) { BackAction(); }
     }
 
     private void OnDestroy()
     {
         if (yButton != null) yButton.performed -= OnYButtonPressed;
+        if (BButton != null) BButton.performed -= OnBButtonPressed;
     }
 
     public void OnClickMenu()
@@ -101,7 +168,6 @@ public class WristUIManager : MonoBehaviour
         if (clickedObj != null)
         {
             SelectedMenu = clickedObj.name;
-            ClicksCount++;
 
             CheckMenu();
             UpdateText();
@@ -110,18 +176,35 @@ public class WristUIManager : MonoBehaviour
 
     private void CheckMenu()
     {
-        switch (SelectedMenu) {
+        switch (SelectedMenu)
+        {
 
             case "CloseButton":
                 CloseAction();
                 break;
 
-            case "TutorialButton":
-                TutorialAction();
+            case "BackButton":
+                BackAction();
                 break;
 
-            case "AudioButton":
-                AudioAction();
+            case "TutorialUIButton":
+                TutorialUIAction();
+                break;
+
+            case "PreButton":
+                TurningPageAction();
+                break;
+
+            case "NextButton":
+                TurningPageAction();
+                break;
+
+            case "AudioUIButton":
+                AudioUIAction();
+                break;
+
+            case "MainBackUIButton":
+                MainBackUIAction();
                 break;
 
             case "MainBackButton":
@@ -129,7 +212,7 @@ public class WristUIManager : MonoBehaviour
                 break;
 
             default:
-                if(isDebug) Debug.LogError("Unknown menu: " + SelectedMenu);
+                if (isDebug) Debug.LogError("Unknown menu: " + SelectedMenu);
                 break;
 
         }
@@ -137,19 +220,12 @@ public class WristUIManager : MonoBehaviour
 
     private void UpdateText()
     {
-        if (ClicksCountUIText.text != ClicksCount.ToString())
-            ClicksCountUIText.text = ClicksCount.ToString();
 
-        if (SelectedMenuUIText.text != SelectedMenu)
-            SelectedMenuUIText.text = SelectedMenu;
-
-        if (isDebug) Debug.Log($"Clicked Menu {SelectedMenu}\n" +
-                               $"Click Count {ClicksCount}");
+        if (isDebug) Debug.Log($"Clicked Menu {SelectedMenu}");
     }
 
     private void ResetAction()
     {
-        ClicksCount = 0;
         SelectedMenu = "Not Selected";
         UpdateText();
     }
@@ -161,6 +237,7 @@ public class WristUIManager : MonoBehaviour
         WristUI.SetActive(isWristUI);
         ToggleUIRayInteractor();
         ToggleInteractor();
+        ToggleCamera();
 
         ResetAction();
         if (isDebug) Debug.Log("The WristUI has been activated.");
@@ -169,30 +246,144 @@ public class WristUIManager : MonoBehaviour
     private void CloseAction()
     {
         SelectedMenu = "CloseButton";
+
         isWristUI = false;
         WristUI.SetActive(isWristUI);
+        isTutorialUI = false;
+        TutorialUI.SetActive(isTutorialUI);
+        isAudioUI = false;
+        AudioUI.SetActive(isAudioUI);
+        isMainBackUI = false;
+        MainBackUI.SetActive(isMainBackUI);
+
         ToggleUIRayInteractor();
         ToggleInteractor();
+        ToggleCamera();
 
         if (isDebug) Debug.Log("The WristUI has been disabled.");
     }
 
-    private void TutorialAction()
+    private void BackAction()
     {
-        SelectedMenu = "TutorialButton";
+        SelectedMenu = "BackButton";
+
+        isTutorialUI = false;
+        TutorialUI.SetActive(isTutorialUI);
+        isAudioUI = false;
+        AudioUI.SetActive(isAudioUI);
+        isMainBackUI = false;
+        MainBackUI.SetActive(isMainBackUI);
+        isWristUI = true;
+        WristUI.SetActive(isWristUI);
+
+        if (isDebug) Debug.Log("The Back Menu has been activated.");
+
+    }
+
+    private void TutorialUIAction()
+    {
+        SelectedMenu = "TutorialUIButton";
         if (isDebug) Debug.Log("The Tutorial Menu has been activated.");
+
+        isWristUI = false;
+        WristUI.SetActive(isWristUI);
+        isTutorialUI = true;
+        TutorialUI.SetActive(isTutorialUI);
+
+        pagesNum = 1;
+        TutorialPageText.text = pagesNum.ToString();
+        Tutorial2Page.SetActive(false);
+        Tutorial1Page.SetActive(true);
+
     }
 
-    private void AudioAction()
+    private void TurningPageAction()
     {
-        SelectedMenu = "AudioButton";
-        if (isDebug) Debug.Log("The Audio Menu has been activated.");
+        SelectedMenu = "TurningPageButton";
+        if (isDebug) Debug.Log("TurningPageButton has been activated.");
+
+        pagesNum++;
+        switch (pagesNum)
+        {
+
+            case 2:
+                Tutorial1Page.SetActive(false);
+                Tutorial2Page.SetActive(true);
+                break;
+
+            case 1:
+            default:
+                pagesNum = 1;
+                Tutorial2Page.SetActive(false);
+                Tutorial1Page.SetActive(true);
+                break;
+
+        }
+        TutorialPageText.text = pagesNum.ToString();
+
+        WristUI.SetActive(isWristUI);
+        TutorialUI.SetActive(isTutorialUI);
+
     }
 
+    private void AudioUIAction()
+    {
+        SelectedMenu = "AudioUIButton";
+        if (isDebug) Debug.Log("The Audio Menu has been activated.");
+
+        isWristUI = false;
+        WristUI.SetActive(isWristUI);
+        isAudioUI = true;
+        AudioUI.SetActive(isAudioUI);
+
+    }
+
+    void OnBGMSliderValueChanged(float value)
+    {
+        BGMValue = Mathf.RoundToInt(value);
+        if (BGMText != null)
+            BGMText.text = BGMValue.ToString();
+        if (dataManager != null)
+        {
+            if (isDebug) Debug.Log("dataManager found.");
+            dataManager.SetMasterVolume(BGMValue);
+        }
+        else
+        {
+            if (isDebug) Debug.LogWarning("dataManager not found");
+        }
+    }
+
+    void OnSFXSliderValueChanged(float value)
+    {
+        SFXValue = Mathf.RoundToInt(value);
+        if (SFXText != null)
+            SFXText.text = SFXValue.ToString();
+    }
+
+    private void MainBackUIAction()
+    {
+        SelectedMenu = "MainBackUIButton";
+        if (isDebug) Debug.Log("The MainBack Menu has been activated.");
+
+        isWristUI = false;
+        WristUI.SetActive(isWristUI);
+        isMainBackUI = true;
+        MainBackUI.SetActive(isMainBackUI);
+
+    }
     private void MainBackAction()
     {
-        SelectedMenu = "MainBackButton";
-        if (isDebug) Debug.Log("The MainBack Menu has been activated.");
+        
+        if (gameManager != null)
+        {
+            if (isDebug) Debug.Log("gameManager found.");
+            gameManager.TransitionToScene(0);
+        }
+        else
+        {
+            if (isDebug) Debug.LogWarning("gameManager not found");
+        }
     }
 
     private void FindInteractorComponents()
@@ -202,9 +393,8 @@ public class WristUIManager : MonoBehaviour
         {
             R_directInteractor = rightController.transform.Find("Direct Interactor").gameObject;
             R_rayInteractor = rightController.transform.Find("Ray Interactor").gameObject;
-            R_teleportRayInteractor = rightController.transform.Find("Teleport Ray Interactor").gameObject;
 
-            if (R_directInteractor != null && R_rayInteractor != null && R_teleportRayInteractor != null)
+            if (R_directInteractor != null && R_rayInteractor != null)
             {
                 if (isDebug) Debug.Log("Interactor found and cached.");
             }
@@ -222,9 +412,8 @@ public class WristUIManager : MonoBehaviour
         if (leftController != null)
         {
             L_directInteractor = leftController.transform.Find("Direct Interactor").gameObject;
-            L_rayInteractor = leftController.transform.Find("Ray Interactor").gameObject;
 
-            if (L_directInteractor != null && L_rayInteractor != null)
+            if (L_directInteractor != null)
             {
                 if (isDebug) Debug.Log("Interactor found and cached.");
             }
@@ -242,7 +431,6 @@ public class WristUIManager : MonoBehaviour
     private void FindUIComponents()
     {
         if (uiRayInteractor == null) uiRayInteractor = rightController.transform.Find("UI Ray Interactor").gameObject;
-
         if (uiRayInteractor != null)
         {
             if (isDebug) Debug.Log("UI Ray Interactor found and cached.");
@@ -253,26 +441,75 @@ public class WristUIManager : MonoBehaviour
         }
 
 
-        if (WristUI != null) WristUI = transform.Find("WristUI").gameObject;
-        else WristUI = GameObject.Find("WristUI");
-
+        if (WristUI == null) WristUI = transform.Find("WristUI").gameObject;
         if (WristUI != null)
         {
-            if (isDebug) Debug.LogWarning("WristUI found!");
+            if (isDebug) Debug.Log("WristUI found!");
         }
         else
         {
-            if (isDebug) Debug.LogWarning("Right Controller not found!");
+            if (isDebug) Debug.LogWarning("WristUI not found!");
         }
+
+        if (TutorialUI == null) TutorialUI = transform.Find("TutorialUI").gameObject;
+        if (TutorialUI != null)
+        {
+            if (isDebug) Debug.Log("TutorialUI found!");
+
+            Tutorial1Page = TutorialUI.transform.Find("Tutorial1Page").gameObject;
+            if (Tutorial1Page != null)
+            {
+                if (isDebug) Debug.Log("Tutorial1Page found!");
+            }
+            else
+            {
+                if (isDebug) Debug.LogWarning("Tutorial1Page not found!");
+            }
+
+            Tutorial2Page = TutorialUI.transform.Find("Tutorial2Page").gameObject;
+            if (Tutorial2Page != null)
+            {
+                if (isDebug) Debug.Log("Tutorial2Page found!");
+            }
+            else
+            {
+                if (isDebug) Debug.LogWarning("Tutorial2Page not found!");
+            }
+        }
+        else
+        {
+            if (isDebug) Debug.LogWarning("TutorialUI not found!");
+        }
+
+        if (AudioUI == null) AudioUI = transform.Find("AudioUI").gameObject;
+        if (AudioUI != null)
+        {
+            if (isDebug) Debug.Log("AudioUI found!");
+        }
+        else
+        {
+            if (isDebug) Debug.LogWarning("AudioUI not found!");
+        }
+
+        if (MainBackUI == null) MainBackUI = transform.Find("MainBackUI").gameObject;
+        if (MainBackUI != null)
+        {
+            if (isDebug) Debug.Log("MainBackUI found!");
+        }
+        else
+        {
+            if (isDebug) Debug.LogWarning("MainBackUI not found!");
+        }
+
     }
 
     private void FindCameraComponents()
     {
-        if (Camera == null) Camera = GameObject.Find("Camera Model");
+        if (Camera == null) Camera = GameObject.Find("Camera Holder");
         if (Camera != null)
         {
 
-            if (isDebug) Debug.LogWarning("Camera found!");
+            if (isDebug) Debug.Log("Camera found!");
         }
         else
         {
@@ -282,14 +519,12 @@ public class WristUIManager : MonoBehaviour
 
     private void ToggleInteractor()
     {
-        if (R_directInteractor != null && R_rayInteractor != null && R_teleportRayInteractor != null && L_directInteractor != null && L_rayInteractor != null)
+        if (R_directInteractor != null && R_rayInteractor != null && L_directInteractor != null)
         {
 
-            R_directInteractor.SetActive(!isWristUI); ;
-            R_rayInteractor.SetActive(!isWristUI); ;
-            R_teleportRayInteractor.SetActive(!isWristUI); ;
-            L_directInteractor.SetActive(!isWristUI); ;
-            L_rayInteractor.SetActive(!isWristUI); ;
+            R_directInteractor.SetActive(!isWristUI);
+            R_rayInteractor.SetActive(!isWristUI);
+            L_directInteractor.SetActive(!isWristUI);
             if (isDebug) Debug.Log("Interactor modified.");
         }
         else
@@ -297,11 +532,9 @@ public class WristUIManager : MonoBehaviour
             FindInteractorComponents();
             if (uiRayInteractor != null)
             {
-                R_directInteractor.SetActive(!isWristUI); ;
-                R_rayInteractor.SetActive(!isWristUI); ;
-                R_teleportRayInteractor.SetActive(!isWristUI); ;
-                L_directInteractor.SetActive(!isWristUI); ;
-                L_rayInteractor.SetActive(!isWristUI); ;
+                R_directInteractor.SetActive(!isWristUI);
+                R_rayInteractor.SetActive(!isWristUI);
+                L_directInteractor.SetActive(!isWristUI);
                 if (isDebug) Debug.Log("Interactor found and modified.");
             }
             else
