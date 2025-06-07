@@ -18,6 +18,8 @@ public class WristUIManager : MonoBehaviour
 
     [Header("UIComponents")]
     [SerializeField] private GameObject WristUI;
+
+    [Header("InteractorComponents")]
     [SerializeField] private GameObject rightController;
                      private GameObject R_directInteractor;
                      private GameObject R_rayInteractor;
@@ -26,6 +28,9 @@ public class WristUIManager : MonoBehaviour
     [SerializeField] private GameObject uiRayInteractor;
                      private GameObject L_directInteractor;
                      private GameObject L_rayInteractor;
+
+    [Header("CameraComponents")]
+    [SerializeField] private GameObject Camera;
 
     [Header("inputActions")]
     [SerializeField] private InputActionAsset inputActions;
@@ -44,6 +49,7 @@ public class WristUIManager : MonoBehaviour
     {
         FindInteractorComponents();
         FindUIComponents();
+        FindCameraComponents();
 
         isWristUI = false;
         if (WristUI != null) WristUI.SetActive(isWristUI);
@@ -260,26 +266,17 @@ public class WristUIManager : MonoBehaviour
         }
     }
 
-    private void ToggleUIRayInteractor()
+    private void FindCameraComponents()
     {
-        if (uiRayInteractor != null)
+        if (Camera == null) Camera = GameObject.Find("Camera Model");
+        if (Camera != null)
         {
-            uiRayInteractor.SetActive(isWristUI);
-            if (isDebug) Debug.Log("UI Ray Interactor modified.");
+
+            if (isDebug) Debug.LogWarning("Camera found!");
         }
         else
         {
-            FindInteractorComponents();
-            FindUIComponents();
-            if (uiRayInteractor != null)
-            {
-                uiRayInteractor.SetActive(isWristUI);
-                if (isDebug) Debug.Log("UI Ray Interactor found and modified.");
-            }
-            else
-            {
-                if (isDebug) Debug.LogError("Cannot find UI Ray Interactor to modified!");
-            }
+            if (isDebug) Debug.LogWarning("Camera not found!");
         }
     }
 
@@ -287,7 +284,7 @@ public class WristUIManager : MonoBehaviour
     {
         if (R_directInteractor != null && R_rayInteractor != null && R_teleportRayInteractor != null && L_directInteractor != null && L_rayInteractor != null)
         {
-            
+
             R_directInteractor.SetActive(!isWristUI); ;
             R_rayInteractor.SetActive(!isWristUI); ;
             R_teleportRayInteractor.SetActive(!isWristUI); ;
@@ -313,4 +310,50 @@ public class WristUIManager : MonoBehaviour
             }
         }
     }
+
+    private void ToggleUIRayInteractor()
+    {
+        if (uiRayInteractor != null)
+        {
+            uiRayInteractor.SetActive(isWristUI);
+            if (isDebug) Debug.Log("UI Ray Interactor modified.");
+        }
+        else
+        {
+            FindInteractorComponents();
+            FindUIComponents();
+            if (uiRayInteractor != null)
+            {
+                uiRayInteractor.SetActive(isWristUI);
+                if (isDebug) Debug.Log("UI Ray Interactor found and modified.");
+            }
+            else
+            {
+                if (isDebug) Debug.LogError("Cannot find UI Ray Interactor to modified!");
+            }
+        }
+    }
+
+    private void ToggleCamera()
+    {
+        if (Camera != null)
+        {
+            Camera.SetActive(!isWristUI);
+            if (isDebug) Debug.Log("Camera modified.");
+        }
+        else
+        {
+            FindCameraComponents();
+            if (Camera != null)
+            {
+                Camera.SetActive(!isWristUI);
+                if (isDebug) Debug.Log("Camera found and modified.");
+            }
+            else
+            {
+                if (isDebug) Debug.LogError("Cannot find Camera to modified!");
+            }
+        }
+    }
+
 }
