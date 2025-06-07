@@ -88,7 +88,7 @@ public class OpeningUIManager : MonoBehaviour
     }
     
     // 캔버스 상태를 설정하는 메서드
-    private void SetPrologueActive(bool isPrologueActive)
+    public void SetPrologueActive(bool isPrologueActive)
     {
         _isPrologueActive = isPrologueActive;
         _openingCanvas.enabled = !_isPrologueActive;
