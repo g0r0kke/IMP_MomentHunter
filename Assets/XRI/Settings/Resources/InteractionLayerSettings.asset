@@ -23,6 +23,7 @@ MonoBehaviour:
   - 
   - 
   - 
+  - UI
   - 
   - 
   - 
@@ -37,11 +38,10 @@ MonoBehaviour:
   - 
   - 
   - 
+  - Cutlery
+  - Tray
+  - Plate
+  - Cup
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Grab
   - Teleport
