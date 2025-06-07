@@ -84,6 +84,7 @@ public class GameManager : MonoBehaviour
                 break;
             case GameState.Defeat:
                 SetMissionState(MissionState.Ending);
+                Debug.Log("Defeat");
                 break;
             default:
                 break;

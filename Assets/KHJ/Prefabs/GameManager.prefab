@@ -49,7 +49,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _gameState: 0
   _missionState: 0
+  _mainCanvas: {fileID: 0}
   _missionText: {fileID: 0}
+  _isMainCanvasActive: 1
   _sceneAssets:
   - {fileID: 102900000, guid: fc92407cb4a7e064c87048c2e78a374b, type: 3}
   - {fileID: 102900000, guid: bf397684f79d7f7479089b1a0a883de9, type: 3}
@@ -97,10 +99,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0071502ea48b574c850a7403b5f56f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mainCanvas: {fileID: 0}
   _firstText: {fileID: 0}
   _secondText: {fileID: 0}
-  _isActive: 1
+  _healthText: {fileID: 0}
   _firstTextArray:
   - Tutorial
   - Mission1
