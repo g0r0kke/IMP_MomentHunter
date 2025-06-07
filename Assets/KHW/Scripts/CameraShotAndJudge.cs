@@ -2,11 +2,14 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.IO;
 using System.Collections.Generic;
+using System.Collections;
 
 public class PhotoCaptureAndJudge : MonoBehaviour
 {
     public TutorialMission tutorialMission;
     public bool useTutorial = true;
+    public CanvasGroup flashCanvasGroup;
+    public float flashDuration = 0.2f;
 
     [Header("Input")]
     public InputActionProperty triggerButton;   // 오른손 트리거
@@ -31,6 +34,48 @@ public class PhotoCaptureAndJudge : MonoBehaviour
         }
     }
 
+    void PlayShutterEffect()
+    {
+        // 사운드
+        //if (shutterAudioSrc != null && shutterClip != null)
+        //{
+        //    shutterAudioSrc.PlayOneShot(shutterClip);
+        //}
+
+        // 플래시 코루틴 실행
+        if (flashCanvasGroup != null)
+        {
+            StartCoroutine(FlashRoutine());
+        }
+    }
+
+    IEnumerator FlashRoutine()
+    {
+        float fadeInDuration = flashDuration * 0.3f;   
+        float holdDuration   = flashDuration * 0.2f;   
+        float fadeOutDuration = flashDuration * 0.5f;  
+
+        float t = 0f;
+        while (t < fadeInDuration)
+        {
+            t += Time.deltaTime;
+            flashCanvasGroup.alpha = Mathf.Lerp(0f, 1f, t / fadeInDuration);
+            yield return null;
+        }
+        flashCanvasGroup.alpha = 1f;
+
+        yield return new WaitForSeconds(holdDuration);
+
+        t = 0f;
+        while (t < fadeOutDuration)
+        {
+            t += Time.deltaTime;
+            flashCanvasGroup.alpha = Mathf.Lerp(1f, 0f, t / fadeOutDuration);
+            yield return null;
+        }
+        flashCanvasGroup.alpha = 0f;
+    }
+
     void OnEnable()  => triggerButton.action.Enable();
     void OnDisable() => triggerButton.action.Disable();
 
@@ -38,6 +83,7 @@ public class PhotoCaptureAndJudge : MonoBehaviour
     {
         if (triggerButton.action.WasPressedThisFrame())
         {
+            PlayShutterEffect();
             CaptureScreenshot();       // 1) 사진 저장
             JudgeMultipleTargets();  // 2) 즉시 판정
 
