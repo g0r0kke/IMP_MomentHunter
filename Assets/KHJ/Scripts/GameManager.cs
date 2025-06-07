@@ -42,6 +42,7 @@ public class GameManager : MonoBehaviour
     [Header("UI Components")]
     [SerializeField] private Canvas _mainCanvas;
     [SerializeField] private MissionText _missionText;
+    [SerializeField] private OpeningUIManager _openingUIManager;
     
     [Header("UI Settings")]
     [SerializeField] private bool _isMainCanvasActive = true;
@@ -51,6 +52,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private List<SceneAsset> _sceneAssets = new List<SceneAsset>(); // 씬 에셋 리스트
 #endif
     [SerializeField] private List<string> _sceneNames = new List<string>(); // 씬 이름 리스트 (빌드용)
+    
+    // 씬 로드 후 Initialize 호출을 위한 플래그
+    private bool _shouldInitializeScene0Load = false;
     
     void Awake()
     {
@@ -62,11 +66,29 @@ public class GameManager : MonoBehaviour
         }
 
         Instance = this;
+        
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     void Start()
     {
         SetMainCanvasActive(true);
+    }
+    
+    void OnDestroy()
+    {
+        // 이벤트 구독 해제
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+    
+    // 씬 로드 완료 시 호출되는 메서드
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (_shouldInitializeScene0Load && scene.name == _sceneNames[0])
+        {
+            _shouldInitializeScene0Load = false;
+            Initialize();
+        }
     }
 
     public void SetGameState(GameState newGameState)
@@ -173,6 +195,11 @@ public class GameManager : MonoBehaviour
             Debug.LogError($"Invalid scene index: {sceneIndex}. Available scenes: {_sceneNames.Count}");
             return;
         }
+
+        if (sceneIndex == 0)
+        {
+            _shouldInitializeScene0Load = true;
+        }
         
         string targetScene = _sceneNames[sceneIndex];
         SceneManager.LoadScene(targetScene);
@@ -182,5 +209,14 @@ public class GameManager : MonoBehaviour
     {
         _isMainCanvasActive = isActive;
         _mainCanvas.enabled = _isMainCanvasActive;
+    }
+
+    private void Initialize()
+    {
+        if (DataManager.Data) DataManager.Data.InitializeHealth();
+        // SetGameState(GameState.Intro);
+        // SetMissionState(MissionState.None);
+        // SetMainCanvasActive(true);
+        // if (_openingUIManager) _openingUIManager.SetPrologueActive(false);
     }
 }
