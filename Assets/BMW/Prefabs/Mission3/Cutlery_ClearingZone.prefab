@@ -31,8 +31,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.4999869, y: 0.5009573, z: 0.49971014, w: 0.49934423}
   m_LocalPosition: {x: 0.244, y: 0.668, z: 0.96}
-  m_LocalScale: {x: 0.03, y: 0.08, z: 0.03}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.04, y: 0.10666667, z: 0.04}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8367210467550001993}
   m_Father: {fileID: 0}
@@ -177,8 +177,9 @@ MonoBehaviour:
   IsNextSpawn: 0
   spawnRotation: {x: 0, y: 0, z: 0}
   spawnScale: {x: 1, y: 1, z: 1}
+  spawnedZPose: 0.07
   spawnedYPose: 0
-  spawnedXPose: 0.04
+  spawnedXPose: 0
 --- !u!1 &6727999109457002587
 GameObject:
   m_ObjectHideFlags: 0

@@ -14,6 +14,7 @@ public class RecursiveSocketSpawner : MonoBehaviour
     [Header("Transform Settings")]
     [SerializeField] private Vector3 spawnRotation;
     [SerializeField] private Vector3 spawnScale;
+    [SerializeField] private float spawnedZPose = 0;
     [SerializeField] private float spawnedYPose = 0;
     [SerializeField] private float spawnedXPose = 0;
 
@@ -41,11 +42,12 @@ public class RecursiveSocketSpawner : MonoBehaviour
             if (IsNextSpawn)
             {
                 spawnRotation = nextObjectToSpawn.transform.rotation.eulerAngles;
+                spawnRotation = new Vector3(spawnRotation.x, spawnRotation.y - 90, spawnRotation.z);
                 spawnScale = nextObjectToSpawn.transform.localScale;
 
                 spawnPosition = socketInteractor.attachTransform.position;
                 if (spawnedYPose != 0) spawnPosition = spawnPosition + Vector3.up * spawnedYPose;
-                spawnPosition = spawnPosition + Vector3.left * 0.16f;
+                spawnPosition = spawnPosition + Vector3.back * 0.28f;
 
                 spawnedObject = Instantiate(nextObjectToSpawn, spawnPosition, Quaternion.Euler(spawnRotation));
                 spawnedObject.transform.localScale = spawnScale;
@@ -60,6 +62,7 @@ public class RecursiveSocketSpawner : MonoBehaviour
         }
 
         spawnPosition = socketInteractor.attachTransform.position;
+        if (spawnedZPose != 0) spawnPosition = spawnPosition + Vector3.forward * spawnedZPose;
         if (spawnedYPose != 0) spawnPosition = spawnPosition + Vector3.up * spawnedYPose;
         if (spawnedXPose != 0) spawnPosition = spawnPosition + Vector3.right * spawnedXPose;
 

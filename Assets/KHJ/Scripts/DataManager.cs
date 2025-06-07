@@ -144,7 +144,7 @@ public class DataManager : MonoBehaviour
 
     public float GetMasterVolume()
     {
-        return _currentHealth;
+        return _masterVolume;
     }
 
     public void InitializeHealth()
