@@ -16,6 +16,11 @@ public class TutorialManager : MonoBehaviour
     public GameObject rightGrabUI;
     public GameObject photoUI;
 
+    [Header("Trigger Zones")]
+    public GameObject moveTriggerZoneObject;
+    public GameObject teleportTriggerZoneObject;
+    public GameObject leftGrabDetectorObject;
+
     [Header("Narration (선택)")]
     public AudioSource audioSrc;
     public AudioClip narrationClip;
@@ -39,8 +44,9 @@ public class TutorialManager : MonoBehaviour
             yield return new WaitForSeconds(narrationClip.length);
         }
 
-        Current = Step.Teleport;
-        teleportUI.SetActive(true);
+        Current = Step.Move;
+        moveTriggerZoneObject.SetActive(true);
+        moveUI.SetActive(true);
         Debug.Log("[1단계] move 시작");
     }
 
@@ -49,10 +55,12 @@ public class TutorialManager : MonoBehaviour
     {
         if (Current != Step.Move) return;
 
+        moveTriggerZoneObject.SetActive(false);
         moveUI.SetActive(false);
         Debug.Log("조이스틱 이동 완료");
 
         Current = Step.Teleport;
+        teleportTriggerZoneObject.SetActive(true);
         teleportUI.SetActive(true);
         Debug.Log("[2단계] 텔레포트 시작");
     }
@@ -61,10 +69,12 @@ public class TutorialManager : MonoBehaviour
     {
         if (Current != Step.Teleport) return;
 
+        teleportTriggerZoneObject.SetActive(false);
         teleportUI.SetActive(false);
         Debug.Log("텔레포트 완료");
 
         Current = Step.GrabLeft;
+        leftGrabDetectorObject.SetActive(true);
         leftGrabUI.SetActive(true);
         Debug.Log("[3단계] 왼손 그립 시작");
     }
@@ -73,6 +83,7 @@ public class TutorialManager : MonoBehaviour
     {
         if (Current != Step.GrabLeft) return;
 
+        leftGrabDetectorObject.SetActive(false);
         leftGrabUI.SetActive(false);
         Debug.Log("왼손 그립 완료");
 
@@ -112,6 +123,6 @@ public class TutorialManager : MonoBehaviour
         Current = Step.AllDone;
 
         Debug.Log("< 완료 >");
-        // 필요하면 씬 전환 등 추가
+       //  GameManager.Instance.SetNextMissionState();
     }
 }

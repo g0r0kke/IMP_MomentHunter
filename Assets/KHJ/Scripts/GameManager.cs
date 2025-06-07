@@ -39,7 +39,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private MissionState _missionState = MissionState.None;
     public MissionState MissionState => _missionState;
 
+    [Header("UI Components")]
+    [SerializeField] private Canvas _mainCanvas;
     [SerializeField] private MissionText _missionText;
+    
+    [Header("UI Settings")]
+    [SerializeField] private bool _isMainCanvasActive = true;
     
     [Header("Scene Configuration")]
 #if UNITY_EDITOR
@@ -59,6 +64,11 @@ public class GameManager : MonoBehaviour
         Instance = this;
     }
 
+    void Start()
+    {
+        SetMainCanvasActive(true);
+    }
+
     public void SetGameState(GameState newGameState)
     {
         if (_gameState == newGameState)
@@ -74,6 +84,7 @@ public class GameManager : MonoBehaviour
                 break;
             case GameState.Defeat:
                 SetMissionState(MissionState.Ending);
+                Debug.Log("Defeat");
                 break;
             default:
                 break;
@@ -142,6 +153,15 @@ public class GameManager : MonoBehaviour
                 _sceneNames.Add(sceneAsset.name);
             }
         }
+        
+        if (_mainCanvas)
+        {
+            UnityEditor.EditorApplication.delayCall += () => 
+            {
+                if (_mainCanvas != null)
+                    _mainCanvas.enabled = _isMainCanvasActive;
+            };
+        }
     }
 #endif
     
@@ -156,5 +176,11 @@ public class GameManager : MonoBehaviour
         
         string targetScene = _sceneNames[sceneIndex];
         SceneManager.LoadScene(targetScene);
+    }
+
+    public void SetMainCanvasActive(bool isActive)
+    {
+        _isMainCanvasActive = isActive;
+        _mainCanvas.enabled = _isMainCanvasActive;
     }
 }

@@ -1,11 +1,14 @@
+using System.Collections;
 using TMPro;
+using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 
 public class MissionText : MonoBehaviour
 {
-    [Header("Text Components")]
+    [Header("UI Components")]
     [SerializeField] private TMP_Text _firstText;
     [SerializeField] private TMP_Text _secondText;
+    [SerializeField] private TMP_Text _healthText;
     
     [Header("Text Arrays")]
     [SerializeField] private string[] _firstTextArray;
@@ -14,6 +17,9 @@ public class MissionText : MonoBehaviour
     private void Start()
     {
         UpdateMissionText();
+        
+        if (!DataManager.Data) return;
+        UpdateHealthText(DataManager.Data.CurrentHealth);
     }
     
     // 인덱스로 텍스트 변경
@@ -32,10 +38,17 @@ public class MissionText : MonoBehaviour
     
     public void UpdateMissionText()
     {
-        if (GameManager.Instance == null) return;
+        if (!GameManager.Instance) return;
         
         int textIndex = GetTextIndex(GameManager.Instance.MissionState);
         ChangeTexts(textIndex);
+    }
+
+    public void UpdateHealthText(int health)
+    {
+        if (!DataManager.Data) return;
+
+        _healthText.text = DataManager.Data.CurrentHealth + " / "  + DataManager.Data.MaxHealth;
     }
     
     private int GetTextIndex(MissionState missionState)
