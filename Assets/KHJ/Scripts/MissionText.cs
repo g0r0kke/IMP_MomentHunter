@@ -1,9 +1,10 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
 public class MissionText : MonoBehaviour
 {
-    [Header("Text Components")]
+    [Header("UI Components")]
     [SerializeField] private TMP_Text _firstText;
     [SerializeField] private TMP_Text _secondText;
     
@@ -32,7 +33,7 @@ public class MissionText : MonoBehaviour
     
     public void UpdateMissionText()
     {
-        if (GameManager.Instance == null) return;
+        if (!GameManager.Instance) return;
         
         int textIndex = GetTextIndex(GameManager.Instance.MissionState);
         ChangeTexts(textIndex);

@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &7202110974683020141
+--- !u!1 &7223722913892671828
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,59 +8,39 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2811260561937848493}
-  - component: {fileID: 7356709028970004319}
+  - component: {fileID: 6297958861909424120}
+  - component: {fileID: 412017913082392807}
   m_Layer: 0
-  m_Name: MissionText
+  m_Name: OpeningUIManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2811260561937848493
+--- !u!4 &6297958861909424120
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7202110974683020141}
+  m_GameObject: {fileID: 7223722913892671828}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 404.52292, y: 254.76979, z: 50.401047}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 64.47708, y: 19.23021, z: -50.401047}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7356709028970004319
+--- !u!114 &412017913082392807
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7202110974683020141}
+  m_GameObject: {fileID: 7223722913892671828}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e0071502ea48b574c850a7403b5f56f0, type: 3}
+  m_Script: {fileID: 11500000, guid: fc04661d35370824480dfe042b31fc3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _firstText: {fileID: 0}
-  _secondText: {fileID: 0}
-  _firstTextArray:
-  - Tutorial
-  - Mission1
-  - Mission2
-  - Mission3
-  - Mission4
-  - Mission5
-  - Mission6
-  - 
-  _secondTextArray:
-  - Tutorial Text
-  - Mission1 Text
-  - Mission2 Text
-  - Mission3 Text
-  - Mission4 Text
-  - Mission5 Text
-  - Mission6 Text
-  - 
