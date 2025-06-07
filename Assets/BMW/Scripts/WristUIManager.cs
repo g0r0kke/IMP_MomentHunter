@@ -19,7 +19,13 @@ public class WristUIManager : MonoBehaviour
     [Header("UIComponents")]
     [SerializeField] private GameObject WristUI;
     [SerializeField] private GameObject rightController;
+                     private GameObject R_directInteractor;
+                     private GameObject R_rayInteractor;
+                     private GameObject R_teleportRayInteractor;
+    [SerializeField] private GameObject leftController;
     [SerializeField] private GameObject uiRayInteractor;
+                     private GameObject L_directInteractor;
+                     private GameObject L_rayInteractor;
 
     [Header("inputActions")]
     [SerializeField] private InputActionAsset inputActions;
@@ -36,6 +42,7 @@ public class WristUIManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        FindInteractorComponents();
         FindUIComponents();
 
         isWristUI = false;
@@ -147,6 +154,7 @@ public class WristUIManager : MonoBehaviour
         isWristUI = true;
         WristUI.SetActive(isWristUI);
         ToggleUIRayInteractor();
+        ToggleInteractor();
 
         ResetAction();
         if (isDebug) Debug.Log("The WristUI has been activated.");
@@ -158,6 +166,7 @@ public class WristUIManager : MonoBehaviour
         isWristUI = false;
         WristUI.SetActive(isWristUI);
         ToggleUIRayInteractor();
+        ToggleInteractor();
 
         if (isDebug) Debug.Log("The WristUI has been disabled.");
     }
@@ -180,21 +189,22 @@ public class WristUIManager : MonoBehaviour
         if (isDebug) Debug.Log("The MainBack Menu has been activated.");
     }
 
-    private void FindUIComponents()
+    private void FindInteractorComponents()
     {
         if (rightController == null) rightController = GameObject.Find("Right Controller");
-
         if (rightController != null)
         {
-            if (uiRayInteractor == null) uiRayInteractor = rightController.transform.Find("UI Ray Interactor").gameObject;
+            R_directInteractor = rightController.transform.Find("Direct Interactor").gameObject;
+            R_rayInteractor = rightController.transform.Find("Ray Interactor").gameObject;
+            R_teleportRayInteractor = rightController.transform.Find("Teleport Ray Interactor").gameObject;
 
-            if (uiRayInteractor != null)
+            if (R_directInteractor != null && R_rayInteractor != null && R_teleportRayInteractor != null)
             {
-                if (isDebug) Debug.Log("UI Ray Interactor found and cached.");
+                if (isDebug) Debug.Log("Interactor found and cached.");
             }
             else
             {
-                if (isDebug) Debug.LogWarning("UI Ray Interactor not found under Right Controller!");
+                if (isDebug) Debug.LogWarning("Interactor not found under Right Controller!");
             }
         }
         else
@@ -202,8 +212,42 @@ public class WristUIManager : MonoBehaviour
             if (isDebug) Debug.LogWarning("Right Controller not found!");
         }
 
+        if (leftController == null) leftController = GameObject.Find("Left Controller");
+        if (leftController != null)
+        {
+            L_directInteractor = leftController.transform.Find("Direct Interactor").gameObject;
+            L_rayInteractor = leftController.transform.Find("Ray Interactor").gameObject;
 
-        if(WristUI != null) WristUI = transform.Find("WristUI").gameObject;
+            if (L_directInteractor != null && L_rayInteractor != null)
+            {
+                if (isDebug) Debug.Log("Interactor found and cached.");
+            }
+            else
+            {
+                if (isDebug) Debug.LogWarning("Interactor not found under Left Controller!");
+            }
+        }
+        else
+        {
+            if (isDebug) Debug.LogWarning("Left Controller not found!");
+        }
+    }
+
+    private void FindUIComponents()
+    {
+        if (uiRayInteractor == null) uiRayInteractor = rightController.transform.Find("UI Ray Interactor").gameObject;
+
+        if (uiRayInteractor != null)
+        {
+            if (isDebug) Debug.Log("UI Ray Interactor found and cached.");
+        }
+        else
+        {
+            if (isDebug) Debug.LogWarning("UI Ray Interactor not found under Right Controller!");
+        }
+
+
+        if (WristUI != null) WristUI = transform.Find("WristUI").gameObject;
         else WristUI = GameObject.Find("WristUI");
 
         if (WristUI != null)
@@ -221,19 +265,51 @@ public class WristUIManager : MonoBehaviour
         if (uiRayInteractor != null)
         {
             uiRayInteractor.SetActive(isWristUI);
-            if (isDebug) Debug.Log("UI Ray Interactor activated.");
+            if (isDebug) Debug.Log("UI Ray Interactor modified.");
         }
         else
         {
+            FindInteractorComponents();
             FindUIComponents();
             if (uiRayInteractor != null)
             {
                 uiRayInteractor.SetActive(isWristUI);
-                if (isDebug) Debug.Log("UI Ray Interactor found and activated.");
+                if (isDebug) Debug.Log("UI Ray Interactor found and modified.");
             }
             else
             {
-                if (isDebug) Debug.LogError("Cannot find UI Ray Interactor to activate!");
+                if (isDebug) Debug.LogError("Cannot find UI Ray Interactor to modified!");
+            }
+        }
+    }
+
+    private void ToggleInteractor()
+    {
+        if (R_directInteractor != null && R_rayInteractor != null && R_teleportRayInteractor != null && L_directInteractor != null && L_rayInteractor != null)
+        {
+            
+            R_directInteractor.SetActive(!isWristUI); ;
+            R_rayInteractor.SetActive(!isWristUI); ;
+            R_teleportRayInteractor.SetActive(!isWristUI); ;
+            L_directInteractor.SetActive(!isWristUI); ;
+            L_rayInteractor.SetActive(!isWristUI); ;
+            if (isDebug) Debug.Log("Interactor modified.");
+        }
+        else
+        {
+            FindInteractorComponents();
+            if (uiRayInteractor != null)
+            {
+                R_directInteractor.SetActive(!isWristUI); ;
+                R_rayInteractor.SetActive(!isWristUI); ;
+                R_teleportRayInteractor.SetActive(!isWristUI); ;
+                L_directInteractor.SetActive(!isWristUI); ;
+                L_rayInteractor.SetActive(!isWristUI); ;
+                if (isDebug) Debug.Log("Interactor found and modified.");
+            }
+            else
+            {
+                if (isDebug) Debug.LogError("Cannot find Interactor to modify!");
             }
         }
     }
