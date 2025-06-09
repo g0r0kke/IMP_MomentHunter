@@ -8,6 +8,8 @@ public class TutorialManager : MonoBehaviour
     
     public static TutorialManager Instance;
     void Awake() => Instance = this;
+    
+
 
     [Header("Step UI")]
     public GameObject teleportUI;
@@ -26,8 +28,9 @@ public class TutorialManager : MonoBehaviour
     public AudioClip narrationClip;
 
     [Header("Mission 1")]
-    public TutorialMission TutorialMission;           // Inspector에서 드래그
+    public TutorialMission tutorialMission;          
 
+    
     /* ───────── 튜토리얼 시작 ───────── */
     void Start()
     {
@@ -50,7 +53,6 @@ public class TutorialManager : MonoBehaviour
         Debug.Log("[1단계] move 시작");
     }
 
-    /* ───────── 단계별 콜백 ───────── */
     public void OnMoveDone()
     {
         if (Current != Step.Move) return;
@@ -71,12 +73,15 @@ public class TutorialManager : MonoBehaviour
 
         teleportTriggerZoneObject.SetActive(false);
         teleportUI.SetActive(false);
-        Debug.Log("텔레포트 완료");
 
+        /* ── Mission 1 시작! ── */
+        tutorialMission.BeginMission();          // 준비(UI, 태그 등)
+
+        /* 3. 왼손 그립 학습 */
         Current = Step.GrabLeft;
-        leftGrabDetectorObject.SetActive(true);
+        leftGrabDetectorObject.SetActive(true);  
         leftGrabUI.SetActive(true);
-        Debug.Log("[3단계] 왼손 그립 시작");
+        Debug.Log("[3단계] 왼손 그립 시작 (미션1 진행 중)");
     }
 
     public void OnLeftGrabDone()
@@ -85,11 +90,11 @@ public class TutorialManager : MonoBehaviour
 
         leftGrabDetectorObject.SetActive(false);
         leftGrabUI.SetActive(false);
-        Debug.Log("왼손 그립 완료");
 
+        /* 4. 오른손 그립 + 카메라 모드 진입 */
         Current = Step.GrabRight;
         rightGrabUI.SetActive(true);
-        Debug.Log("[4단계] 오른손 그립 시작");
+        Debug.Log("[4단계] 오른손 그립 + 카메라 모드 진입 시작 (미션1 진행 중)");
     }
 
     public void OnRightGrabDone()
@@ -97,32 +102,25 @@ public class TutorialManager : MonoBehaviour
         if (Current != Step.GrabRight) return;
 
         rightGrabUI.SetActive(false);
-        Debug.Log("오른손 그립 완료");
 
+        /* 5. 사진 촬영 */
         Current = Step.TakePhoto;
         photoUI.SetActive(true);
-        Debug.Log("[5단계] 사진 촬영 시작");
+        Debug.Log("[5단계] 사진 촬영 시작 (미션1 진행 중)");
     }
 
     /* PhotoCaptureAndJudge 에서 호출 */
     public void OnTutorialPhotoTaken()
     {
         if (Current != Step.TakePhoto) return;
+
         photoUI.SetActive(false);
 
-        /* ── 튜토리얼 끝 → 미션1 시작 ── */
-        Debug.Log("미션시작");
-        Current = Step.Mission1;
-        TutorialMission.BeginMission();
-    }
+        /* ── Mission 1 최종 완료 처리 ── */
+        tutorialMission.CompleteMission();       // 음성·연출 재생 등
 
-    /* HandsetMission 에서 호출 */
-    public void OnMission1Complete()
-    {
-        if (Current != Step.Mission1) return;
         Current = Step.AllDone;
-
-        Debug.Log("< 완료 >");
-       //  GameManager.Instance.SetNextMissionState();
+        Debug.Log("< 튜토리얼 + 미션1 완료 >");
+        GameManager.Instance.SetNextMissionState();
     }
 }
