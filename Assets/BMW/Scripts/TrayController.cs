@@ -7,7 +7,7 @@ public class TrayController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Cutlery"))
+        if (other.CompareTag("OverlayObject"))
         {
             other.transform.SetParent(transform);
         }
@@ -15,7 +15,7 @@ public class TrayController : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Cutlery"))
+        if (other.CompareTag("OverlayObject"))
         {
             if (defaultParent != null)
                 other.transform.SetParent(defaultParent);

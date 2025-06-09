@@ -1,21 +1,25 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class Mission2TargetManager : MonoBehaviour
+public class OverlayObjectTargetManager : MonoBehaviour
 {
     [Header("Layer")]
     [SerializeField] private LayerMask customLayerMask;
     [SerializeField] private LayerMask defaultLayerMask;
+
+    [Header("Tag")]
+    [SerializeField] private string Tag = "OverlayObject";
+
     [Header("DeBug Log")]
     [SerializeField] private bool IsDebug = false;
 
-    private int _cutleryCount = 0;
+    private int _OverlayObjectCount = 0;
     private List<string> _enteredObjects = new List<string>();
     private Dictionary<string, int> _previousLayers = new Dictionary<string, int>();
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Cutlery"))
+        if (other.CompareTag(Tag))
         {
             string objName = other.gameObject.name;
 
@@ -24,13 +28,13 @@ public class Mission2TargetManager : MonoBehaviour
                 _previousLayers[objName] = other.gameObject.layer;
 
                 _enteredObjects.Add(objName);
-                _cutleryCount++;
+                _OverlayObjectCount++;
 
                 int defaultLayerIndex = Mathf.RoundToInt(Mathf.Log(defaultLayerMask.value, 2));
                 other.gameObject.layer = defaultLayerIndex;
 
                 if (IsDebug)
-                    Debug.LogWarning($"[Enter] Added: {objName} | Total: {_cutleryCount}");
+                    Debug.LogWarning($"[Enter] Added: {objName} | Total: {_OverlayObjectCount}");
 
                 if (other.gameObject.layer != _previousLayers[objName] && IsDebug)
                 {
@@ -48,7 +52,7 @@ public class Mission2TargetManager : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Cutlery"))
+        if (other.CompareTag(Tag))
         {
             string objName = other.gameObject.name;
 
@@ -57,16 +61,16 @@ public class Mission2TargetManager : MonoBehaviour
                 int prevLayer = other.gameObject.layer;
 
                 _enteredObjects.Remove(objName);
-                _cutleryCount = Mathf.Max(0, _cutleryCount - 1);
+                _OverlayObjectCount = Mathf.Max(0, _OverlayObjectCount - 1);
 
                 if (IsDebug)
-                    Debug.LogWarning($"[Exit] Removed: {objName} | Remaining: {_cutleryCount}");
+                    Debug.LogWarning($"[Exit] Removed: {objName} | Remaining: {_OverlayObjectCount}");
 
-                if (_cutleryCount <= 0)
+                if (_OverlayObjectCount <= 0)
                 {
                     int customLayerIndex = Mathf.RoundToInt(Mathf.Log(customLayerMask.value, 2));
                     other.gameObject.layer = customLayerIndex;
-                    _cutleryCount = 0;
+                    _OverlayObjectCount = 0;
 
                     if (other.gameObject.layer != prevLayer && IsDebug)
                     {

@@ -6,7 +6,7 @@ TagManager:
   tags:
   - Anchor
   - MissionTarget
-  - Cutlery
+  - OverlayObject
   layers:
   - Default
   - TransparentFX
