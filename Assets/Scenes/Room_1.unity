@@ -1575,9 +1575,125 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 655055548840416724, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_TagString
+      value: Cutlery
+      objectReference: {fileID: 0}
+    - target: {fileID: 834722348028450454, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 834722348028450454, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_ProvidesContacts
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 998780611733850429, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_TagString
+      value: Cutlery
+      objectReference: {fileID: 0}
+    - target: {fileID: 1252404444197938828, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_TagString
+      value: Cutlery
+      objectReference: {fileID: 0}
+    - target: {fileID: 1811557165988809167, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_TagString
+      value: Cutlery
+      objectReference: {fileID: 0}
+    - target: {fileID: 2128161303053666666, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2196142233117862381, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2482393240426798386, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2484492362082133355, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_TagString
+      value: Cutlery
+      objectReference: {fileID: 0}
+    - target: {fileID: 2512900039114391164, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2534192743735643896, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_TagString
+      value: Cutlery
+      objectReference: {fileID: 0}
+    - target: {fileID: 2841285729303954630, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3070614737149497663, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3149885454122412125, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_TagString
+      value: Cutlery
+      objectReference: {fileID: 0}
+    - target: {fileID: 3328169235340425662, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3711452959540820293, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3772265675732118448, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_TagString
+      value: Cutlery
+      objectReference: {fileID: 0}
+    - target: {fileID: 3982067170041470006, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204231647999306608, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_TagString
+      value: Cutlery
+      objectReference: {fileID: 0}
+    - target: {fileID: 4434035542125493061, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4744881405658698499, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4977159689710931946, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5052541530261438865, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
       propertyPath: m_Name
       value: BMW_Room1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5139700242191362920, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_TagString
+      value: Cutlery
+      objectReference: {fileID: 0}
+    - target: {fileID: 5443444931146303475, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5734572096525168812, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736672422121441525, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_TagString
+      value: Cutlery
+      objectReference: {fileID: 0}
+    - target: {fileID: 5884503792237983627, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_TagString
+      value: Cutlery
+      objectReference: {fileID: 0}
+    - target: {fileID: 6247704667574611770, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_TagString
+      value: Cutlery
       objectReference: {fileID: 0}
     - target: {fileID: 7419709858303995489, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1619,11 +1735,111 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7423454832791259468, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_TagString
+      value: Cutlery
+      objectReference: {fileID: 0}
+    - target: {fileID: 7662199549693345848, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7757489936991942968, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_TagString
+      value: Cutlery
+      objectReference: {fileID: 0}
+    - target: {fileID: 8099518589521058989, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_TagString
+      value: Cutlery
+      objectReference: {fileID: 0}
+    - target: {fileID: 8317320541749074818, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8513990815340961691, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_TagString
+      value: Cutlery
+      objectReference: {fileID: 0}
+    - target: {fileID: 8660040079085804955, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_TagString
+      value: Cutlery
+      objectReference: {fileID: 0}
+    - target: {fileID: 9220796952854646638, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5139700242191362920, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 56875544}
+    - targetCorrespondingSourceObject: {fileID: 3149885454122412125, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 56875543}
+    - targetCorrespondingSourceObject: {fileID: 7757489936991942968, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 56875542}
   m_SourcePrefab: {fileID: 100100000, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+--- !u!4 &56875538 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8461338511059475280, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+  m_PrefabInstance: {fileID: 56875537}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &56875539 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7757489936991942968, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+  m_PrefabInstance: {fileID: 56875537}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &56875540 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3149885454122412125, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+  m_PrefabInstance: {fileID: 56875537}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &56875541 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5139700242191362920, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+  m_PrefabInstance: {fileID: 56875537}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &56875542
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 56875539}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb8f25f794543b642a3ff647906bfa7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultParent: {fileID: 56875538}
+--- !u!114 &56875543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 56875540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb8f25f794543b642a3ff647906bfa7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultParent: {fileID: 56875538}
+--- !u!114 &56875544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 56875541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb8f25f794543b642a3ff647906bfa7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultParent: {fileID: 56875538}
 --- !u!1001 &57355335
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13796,8 +14012,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1030986914, guid: abc00000000012972773621642560953, type: 3}
-      insertIndex: -1
+      insertIndex: 3
       addedObject: {fileID: 1617770295}
+    - targetCorrespondingSourceObject: {fileID: 1030986914, guid: abc00000000012972773621642560953, type: 3}
+      insertIndex: 4
+      addedObject: {fileID: 1617770298}
   m_SourcePrefab: {fileID: 100100000, guid: abc00000000012972773621642560953, type: 3}
 --- !u!1 &573881430 stripped
 GameObject:
@@ -28055,7 +28274,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8772191662380716991, guid: 504628a345f7013479313ce8e873e403, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -40051,6 +40270,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetMissionType: 4
+--- !u!114 &1617770298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 573881430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 534c1a0732c79b242b53ff918dbe7252, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  customLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  defaultLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!1001 &1625261209
 PrefabInstance:
   m_ObjectHideFlags: 0
