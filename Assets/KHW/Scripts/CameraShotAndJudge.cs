@@ -17,6 +17,10 @@ public class PhotoCaptureAndJudge : MonoBehaviour
     public GameObject panel;
     public GameObject CameraFrame;
     public RenderTexture captureRT;
+    public AudioClip shutterClip;        
+    private AudioSource audioSource;
+    public float startTimeInSeconds = 0f; 
+    public float playDuration = 2f; 
     
 
     [Header("Input")]
@@ -39,15 +43,21 @@ public class PhotoCaptureAndJudge : MonoBehaviour
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
             saveFolder = path;   // 퀘스트 빌드 대비
         }
+        audioSource = GetComponent<AudioSource>();
     }
 
     void PlayShutterEffect()
     {
-        // 사운드
-        //if (shutterAudioSrc != null && shutterClip != null)
-        //{
-        //    shutterAudioSrc.PlayOneShot(shutterClip);
-        //}
+        
+        if (shutterClip != null && audioSource != null)
+        {
+            audioSource.clip = shutterClip;
+            audioSource.time = startTimeInSeconds; 
+            audioSource.Play();
+
+            // 2초만 재생 후 Stop() 코루틴 실행
+            StartCoroutine(StopAudioAfterSeconds(playDuration));
+        }
 
         // 플래시 코루틴 실행
         if (flashCanvasGroup != null)
@@ -55,6 +65,13 @@ public class PhotoCaptureAndJudge : MonoBehaviour
             StartCoroutine(FlashRoutine());
         }
     }
+
+    IEnumerator StopAudioAfterSeconds(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        audioSource.Stop();
+    }
+
 
     IEnumerator FlashRoutine()
     {
