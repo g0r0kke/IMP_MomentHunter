@@ -1575,6 +1575,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 573187951798091998, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_Convex
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 655055548840416724, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
       propertyPath: m_TagString
       value: Cutlery
@@ -1658,6 +1662,10 @@ PrefabInstance:
     - target: {fileID: 4434035542125493061, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
       propertyPath: m_IsTrigger
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4689424054747770013, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_Convex
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4744881405658698499, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
       propertyPath: m_IsTrigger
@@ -1758,6 +1766,10 @@ PrefabInstance:
     - target: {fileID: 8513990815340961691, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
       propertyPath: m_TagString
       value: Cutlery
+      objectReference: {fileID: 0}
+    - target: {fileID: 8548494261597033334, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: m_Convex
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8660040079085804955, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
       propertyPath: m_TagString
@@ -40288,6 +40300,7 @@ MonoBehaviour:
   defaultLayerMask:
     serializedVersion: 2
     m_Bits: 1
+  IsDebug: 1
 --- !u!1001 &1625261209
 PrefabInstance:
   m_ObjectHideFlags: 0
