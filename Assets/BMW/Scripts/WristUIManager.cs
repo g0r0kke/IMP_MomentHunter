@@ -285,12 +285,12 @@ public class WristUIManager : MonoBehaviour
         SelectedMenu = "TutorialUIButton";
         if (isDebug) Debug.Log("The Tutorial Menu has been activated.");
 
+        pagesNum = 1;
         isWristUI = false;
         WristUI.SetActive(isWristUI);
         isTutorialUI = true;
         TutorialUI.SetActive(isTutorialUI);
-
-        pagesNum = 1;
+        
         TutorialPageText.text = pagesNum.ToString();
         Tutorial2Page.SetActive(false);
         Tutorial1Page.SetActive(true);
@@ -320,9 +320,6 @@ public class WristUIManager : MonoBehaviour
 
         }
         TutorialPageText.text = pagesNum.ToString();
-
-        WristUI.SetActive(isWristUI);
-        TutorialUI.SetActive(isTutorialUI);
 
     }
 
