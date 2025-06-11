@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2309290938643839990, guid: 23c00551d37edad40b6d69a6984ee84f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3535884973102505182, guid: 23c00551d37edad40b6d69a6984ee84f, type: 3}
       propertyPath: m_Name
       value: KHJ_Room2
@@ -62,7 +66,7 @@ PrefabInstance:
       objectReference: {fileID: 83632052702815896}
     - target: {fileID: 8802101508224316070, guid: 23c00551d37edad40b6d69a6984ee84f, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8873573171520887073, guid: 23c00551d37edad40b6d69a6984ee84f, type: 3}
       propertyPath: _gameState
@@ -71,6 +75,10 @@ PrefabInstance:
     - target: {fileID: 8873573171520887073, guid: 23c00551d37edad40b6d69a6984ee84f, type: 3}
       propertyPath: _missionState
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8873573171520887073, guid: 23c00551d37edad40b6d69a6984ee84f, type: 3}
+      propertyPath: _openingUIManager
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 8873573171520887073, guid: 23c00551d37edad40b6d69a6984ee84f, type: 3}
       propertyPath: _isMainCanvasActive

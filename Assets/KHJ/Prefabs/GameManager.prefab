@@ -51,6 +51,7 @@ MonoBehaviour:
   _missionState: 0
   _mainCanvas: {fileID: 0}
   _missionText: {fileID: 0}
+  _openingUIManager: {fileID: 0}
   _isMainCanvasActive: 1
   _sceneAssets:
   - {fileID: 102900000, guid: fc92407cb4a7e064c87048c2e78a374b, type: 3}
@@ -62,6 +63,7 @@ MonoBehaviour:
   - Room_1
   - Room_2
   - Ending
+  _missionObjectCounts: 0000000000000000040000000100000000000000000000000000000000000000
 --- !u!114 &-3276509725225054760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -99,24 +101,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0071502ea48b574c850a7403b5f56f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _firstText: {fileID: 0}
-  _secondText: {fileID: 0}
   _healthText: {fileID: 0}
-  _firstTextArray:
-  - Tutorial
-  - Mission1
-  - Mission2
-  - Mission3
-  - Mission4
-  - Mission5
-  - Mission6
-  - 
-  _secondTextArray:
-  - Tutorial Text
-  - Mission1 Text
-  - Mission2 Text
-  - Mission3 Text
-  - Mission4 Text
-  - Mission5 Text
-  - Mission6 Text
-  - 
+  _missionBG: {fileID: 0}
+  _pin: {fileID: 0}
+  _missionTitle: {fileID: 0}
+  _missionContents: {fileID: 0}
+  _missionTitleObjects: []
+  _missionContentObjects: []
