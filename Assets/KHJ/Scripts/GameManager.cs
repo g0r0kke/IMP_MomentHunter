@@ -54,7 +54,7 @@ public class GameManager : MonoBehaviour
     
     [Header("Mission Object Settings")]
     [SerializeField, HideInInspector] private List<int> _missionObjectCounts = new List<int>(); // 숨김
-    private readonly int[] missionObjectCountsReadOnly = { 0, 1, 4, 1, 2, 1, 1, 0 }; // 읽기 전용 배열
+    private readonly int[] missionObjectCountsReadOnly = { 0, 1, 6, 2, 2, 1, 1, 0 }; // 읽기 전용 배열
 
     // 인스펙터에서 확인용 (수정 불가)
     [Space]
