@@ -8,14 +8,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 194591086885947265, guid: 23c00551d37edad40b6d69a6984ee84f, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2309290938643839990, guid: 23c00551d37edad40b6d69a6984ee84f, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3535884973102505182, guid: 23c00551d37edad40b6d69a6984ee84f, type: 3}
       propertyPath: m_Name
       value: KHJ_Room2
@@ -60,13 +52,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7339367817659353110, guid: 23c00551d37edad40b6d69a6984ee84f, type: 3}
-      propertyPath: _mainCanvas
-      value: 
-      objectReference: {fileID: 83632052702815896}
-    - target: {fileID: 8802101508224316070, guid: 23c00551d37edad40b6d69a6984ee84f, type: 3}
+    - target: {fileID: 4567904883978750787, guid: 23c00551d37edad40b6d69a6984ee84f, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8873573171520887073, guid: 23c00551d37edad40b6d69a6984ee84f, type: 3}
       propertyPath: _gameState
@@ -74,15 +62,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8873573171520887073, guid: 23c00551d37edad40b6d69a6984ee84f, type: 3}
       propertyPath: _missionState
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8873573171520887073, guid: 23c00551d37edad40b6d69a6984ee84f, type: 3}
       propertyPath: _openingUIManager
       value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 8873573171520887073, guid: 23c00551d37edad40b6d69a6984ee84f, type: 3}
-      propertyPath: _isMainCanvasActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -90,8 +74,3 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 23c00551d37edad40b6d69a6984ee84f, type: 3}
---- !u!223 &83632052702815896 stripped
-Canvas:
-  m_CorrespondingSourceObject: {fileID: 194591086885947265, guid: 23c00551d37edad40b6d69a6984ee84f, type: 3}
-  m_PrefabInstance: {fileID: 259605109195628825}
-  m_PrefabAsset: {fileID: 0}

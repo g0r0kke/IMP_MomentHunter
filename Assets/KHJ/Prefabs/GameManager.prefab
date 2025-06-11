@@ -50,7 +50,7 @@ MonoBehaviour:
   _gameState: 0
   _missionState: 0
   _mainCanvas: {fileID: 0}
-  _missionText: {fileID: 0}
+  _missionText: {fileID: -6025269336697166716}
   _openingUIManager: {fileID: 0}
   _isMainCanvasActive: 1
   _sceneAssets:
@@ -63,7 +63,16 @@ MonoBehaviour:
   - Room_1
   - Room_2
   - Ending
-  _missionObjectCounts: 0000000000000000040000000100000000000000000000000000000000000000
+  _missionObjectCounts: 
+  _missionObjectDisplay:
+  - 'None: 0'
+  - 'Mission1: 1'
+  - 'Mission2: 4'
+  - 'Mission3: 1'
+  - 'Mission4: 2'
+  - 'Mission5: 1'
+  - 'Mission6: 1'
+  - 'Ending: 0'
 --- !u!114 &-3276509725225054760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -106,5 +115,17 @@ MonoBehaviour:
   _pin: {fileID: 0}
   _missionTitle: {fileID: 0}
   _missionContents: {fileID: 0}
-  _missionTitleObjects: []
-  _missionContentObjects: []
+  _missionTitleObjects:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  _missionContentObjects:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
