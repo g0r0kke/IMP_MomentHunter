@@ -266,15 +266,11 @@ PrefabInstance:
     - target: {fileID: 571203504602029996, guid: 69fcda3cee266ae499bc77edbf3778ed, type: 3}
       propertyPath: MainUI
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 768783339}
     - target: {fileID: 571203504602029996, guid: 69fcda3cee266ae499bc77edbf3778ed, type: 3}
       propertyPath: PhotoUI
       value: 
       objectReference: {fileID: 1316848185}
-    - target: {fileID: 571203504602029996, guid: 69fcda3cee266ae499bc77edbf3778ed, type: 3}
-      propertyPath: isDebug
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 875958189519843287, guid: 69fcda3cee266ae499bc77edbf3778ed, type: 3}
       propertyPath: m_Name
       value: XR Origin (VR)
@@ -319,10 +315,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3904124014195649845, guid: 69fcda3cee266ae499bc77edbf3778ed, type: 3}
-      propertyPath: isDebug
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3921598533727149780, guid: 69fcda3cee266ae499bc77edbf3778ed, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -365,10 +357,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8313212464490817877, guid: 69fcda3cee266ae499bc77edbf3778ed, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8413687780492580600, guid: 69fcda3cee266ae499bc77edbf3778ed, type: 3}
-      propertyPath: isDebug
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -19116,6 +19104,11 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 1030987337, guid: abc00000000001179670640414874669, type: 3}
   m_PrefabInstance: {fileID: 751075708}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &768783339 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4395012077553986138, guid: 504628a345f7013479313ce8e873e403, type: 3}
+  m_PrefabInstance: {fileID: 1157715730}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &768915668
 PrefabInstance:

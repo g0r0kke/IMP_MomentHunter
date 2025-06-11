@@ -2553,7 +2553,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputActions: {fileID: -944628639613478452, guid: c348712bda248c246b8c49b3db54643f, type: 3}
-  isDebug: 1
+  isDebug: 0
 --- !u!114 &571203504602029996
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2572,7 +2572,7 @@ MonoBehaviour:
   PhotoUIName: PhotoDisplay
   CAMUI: {fileID: 0}
   CAMUIName: Camera Canvas
-  isDebug: 1
+  isDebug: 0
 --- !u!114 &8413687780492580600
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2599,7 +2599,7 @@ MonoBehaviour:
   leftController: {fileID: 1942860103248412337}
   uiRayInteractor: {fileID: 2850323202878179376}
   Camera: {fileID: 8928290575783541428}
-  isDebug: 1
+  isDebug: 0
 --- !u!1 &5517177919768292634
 GameObject:
   m_ObjectHideFlags: 0
