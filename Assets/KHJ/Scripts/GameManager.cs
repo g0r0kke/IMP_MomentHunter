@@ -16,6 +16,7 @@ public enum GameState
 public enum MissionState
 {
     None,
+    Tutorial,
     Mission1,
     Mission2,
     Mission3,
@@ -52,10 +53,6 @@ public class GameManager : MonoBehaviour
 #endif
     [SerializeField] private List<string> _sceneNames = new List<string>(); // 씬 이름 리스트 (빌드용)
     
-    [Header("Mission Object Settings")]
-    [SerializeField] private List<int> _missionObjectCounts = new List<int>(); // 각 미션별 필요한 오브젝트 개수
-    private int _currentMissionObjectCount = 0; // 현재 촬영한 미션 오브젝트 개수
-    
     // 씬 로드 후 Initialize 호출을 위한 플래그
     private bool _shouldInitializeScene0Load = false;
     
@@ -71,13 +68,6 @@ public class GameManager : MonoBehaviour
         Instance = this;
         
         SceneManager.sceneLoaded += OnSceneLoaded;
-        
-        // 미션 오브젝트 개수 리스트 초기화 (미션 개수만큼)
-        if (_missionObjectCounts.Count == 0)
-        {
-            int missionCount = System.Enum.GetValues(typeof(MissionState)).Length;
-            _missionObjectCounts = new List<int>(new int[missionCount]);
-        }
     }
 
     void Start()
@@ -129,9 +119,6 @@ public class GameManager : MonoBehaviour
             return;
         
         this._missionState = newMissionState;
-        
-        // 미션 상태가 변경될 때 미션 오브젝트 개수 초기화
-        ResetMissionObjectCount();
 
         OnMissionStateChanged?.Invoke(_missionState);
         
@@ -146,9 +133,11 @@ public class GameManager : MonoBehaviour
                 TransitionToScene(0);
                 SetGameState(GameState.Intro);
                 break;
-            case MissionState.Mission1:
+            case MissionState.Tutorial:
                 TransitionToScene(1);
                 SetGameState(GameState.Room1);
+                break;
+            case MissionState.Mission1:
                 break;
             case MissionState.Mission2:
                 break;
@@ -173,50 +162,6 @@ public class GameManager : MonoBehaviour
         SetMissionState((MissionState)nextIndex);
     }
     
-    /// <param name="capturedCount">촬영한 미션 오브젝트 개수</param>
-    public void SetMissionObjectCount(int capturedCount)
-    {
-        _currentMissionObjectCount = capturedCount;
-        
-        int currentMissionIndex = (int)_missionState;
-        
-        // 리스트 범위 확인
-        if (currentMissionIndex >= 0 && currentMissionIndex < _missionObjectCounts.Count)
-        {
-            int requiredCount = _missionObjectCounts[currentMissionIndex];
-            
-            Debug.Log($"미션 오브젝트 개수 업데이트: {_currentMissionObjectCount}/{requiredCount}");
-            
-            // 필요한 개수와 현재 개수 비교
-            if (_currentMissionObjectCount == requiredCount)
-            {
-                Debug.Log("클리어!");
-                SetNextMissionState();
-            }
-            else
-            {
-                Debug.Log("실패!");
-                // 체력 감소
-                if (DataManager.Data != null)
-                {
-                    DataManager.Data.UseHealth();
-                }
-            }
-        }
-        else
-        {
-            Debug.LogWarning($"미션 인덱스가 범위를 벗어났습니다: {currentMissionIndex}");
-        }
-    }
-    
-    /// <summary>
-    /// 현재 미션 오브젝트 개수 초기화
-    /// </summary>
-    private void ResetMissionObjectCount()
-    {
-        _currentMissionObjectCount = 0;
-    }
-    
 #if UNITY_EDITOR
     // Inspector에서 SceneAsset 변경 시 sceneNames 자동 업데이트
     private void OnValidate()
@@ -229,17 +174,6 @@ public class GameManager : MonoBehaviour
             {
                 _sceneNames.Add(sceneAsset.name);
             }
-        }
-        
-        // 미션 오브젝트 개수 리스트 크기 조정
-        int missionCount = System.Enum.GetValues(typeof(MissionState)).Length;
-        while (_missionObjectCounts.Count < missionCount)
-        {
-            _missionObjectCounts.Add(0);
-        }
-        while (_missionObjectCounts.Count > missionCount)
-        {
-            _missionObjectCounts.RemoveAt(_missionObjectCounts.Count - 1);
         }
         
         if (_mainCanvas)

@@ -111,12 +111,6 @@ public class PhotoCaptureAndJudge : MonoBehaviour
             StartCoroutine(CaptureAndShowPhoto());       
             int count = JudgeMultipleTargets();
             Debug.Log($"현재 프레임 + 거리 통과 타겟 개수: {count}");
-            
-            // KHJ: GameManager에 촬영한 미션 오브젝트 개수 전달
-            if (GameManager.Instance)
-            {
-                GameManager.Instance.SetMissionObjectCount(count);
-            }
 
             if (useTutorial &&
                TutorialManager.Instance != null &&
