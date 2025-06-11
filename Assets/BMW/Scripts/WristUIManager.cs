@@ -106,7 +106,7 @@ public class WristUIManager : MonoBehaviour
     }
     public void GetOnYButtonPressed()
     {
-        if (isDebug) Debug.Log("º’∏ÒUI »£√‚µ ");
+        if (isDebug) Debug.Log("WristUI Called");
         if (isWristUI || isTutorialUI || isAudioUI || isMainBackUI) { CloseAction(); }
         else { OpenAction(); }
     }
