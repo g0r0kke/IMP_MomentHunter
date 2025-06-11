@@ -6,13 +6,17 @@ using UnityEngine;
 public class MissionText : MonoBehaviour
 {
     [Header("UI Components")]
-    [SerializeField] private TMP_Text _firstText;
-    [SerializeField] private TMP_Text _secondText;
     [SerializeField] private TMP_Text _healthText;
     
-    [Header("Text Arrays")]
-    [SerializeField] private string[] _firstTextArray;
-    [SerializeField] private string[] _secondTextArray;
+    [Header("Mission UI Objects")]
+    [SerializeField] private GameObject _missionBG;          // MissionBG 오브젝트
+    [SerializeField] private GameObject _pin;                // Pin 오브젝트
+    [SerializeField] private GameObject _missionTitle;       // MissionTitle 오브젝트
+    [SerializeField] private GameObject _missionContents;    // MissionContents 오브젝트
+    
+    [Header("Mission GameObject Arrays")]
+    [SerializeField] private GameObject[] _missionTitleObjects;    // 미션 타이틀 게임오브젝트들
+    [SerializeField] private GameObject[] _missionContentObjects; // 미션 콘텐츠 게임오브젝트들
     
     private void Start()
     {
@@ -22,17 +26,31 @@ public class MissionText : MonoBehaviour
         UpdateHealthText(DataManager.Data.CurrentHealth);
     }
     
-    // 인덱스로 텍스트 변경
-    public void ChangeTexts(int index)
+    // 인덱스로 게임오브젝트 활성화/비활성화
+    public void ActivateMissionObjects(int index)
     {
-        if (_firstTextArray != null && index >= 0 && index < _firstTextArray.Length)
+        // 모든 미션 타이틀 오브젝트 비활성화
+        if (_missionTitleObjects != null)
         {
-            _firstText.text = _firstTextArray[index];
+            for (int i = 0; i < _missionTitleObjects.Length; i++)
+            {
+                if (_missionTitleObjects[i])
+                {
+                    _missionTitleObjects[i].SetActive(i == index);
+                }
+            }
         }
         
-        if (_secondTextArray != null && index >= 0 && index < _secondTextArray.Length)
+        // 모든 미션 콘텐츠 오브젝트 비활성화
+        if (_missionContentObjects != null)
         {
-            _secondText.text = _secondTextArray[index];
+            for (int i = 0; i < _missionContentObjects.Length; i++)
+            {
+                if (_missionContentObjects[i])
+                {
+                    _missionContentObjects[i].SetActive(i == index);
+                }
+            }
         }
     }
     
@@ -40,10 +58,30 @@ public class MissionText : MonoBehaviour
     {
         if (!GameManager.Instance) return;
         
-        int textIndex = GetTextIndex(GameManager.Instance.MissionState);
-        ChangeTexts(textIndex);
+        MissionState currentState = GameManager.Instance.MissionState;
+        
+        // None, Tutorial, Ending 상태에서는 미션 UI 숨기기
+        if (currentState == MissionState.None || currentState == MissionState.Ending)
+        {
+            SetMissionUIActive(false);
+        }
+        else
+        {
+            SetMissionUIActive(true);
+            int objectIndex = GetObjectIndex(currentState);
+            ActivateMissionObjects(objectIndex);
+        }
     }
 
+    // 미션 UI 전체 활성화/비활성화
+    private void SetMissionUIActive(bool isActive)
+    {
+        if (_missionBG) _missionBG.SetActive(isActive);
+        if (_pin) _pin.SetActive(isActive);
+        if (_missionTitle) _missionTitle.SetActive(isActive);
+        if (_missionContents) _missionContents.SetActive(isActive);
+    }
+    
     public void UpdateHealthText(int health)
     {
         if (!DataManager.Data) return;
@@ -51,20 +89,17 @@ public class MissionText : MonoBehaviour
         _healthText.text = DataManager.Data.CurrentHealth + " / "  + DataManager.Data.MaxHealth;
     }
     
-    private int GetTextIndex(MissionState missionState)
+    private int GetObjectIndex(MissionState missionState)
     {
         return missionState switch
         {
-            MissionState.None => 7,
-            MissionState.Tutorial => 0,
-            MissionState.Mission1 => 1,
-            MissionState.Mission2 => 2,
-            MissionState.Mission3 => 3,
-            MissionState.Mission4 => 4,
-            MissionState.Mission5 => 5,
-            MissionState.Mission6 => 6,
-            MissionState.Ending => 7,
-            _ => 7 // 기본값
+            MissionState.Mission1 => 0,    // 첫 번째 게임오브젝트
+            MissionState.Mission2 => 1,    // 두 번째 게임오브젝트
+            MissionState.Mission3 => 2,    // 세 번째 게임오브젝트
+            MissionState.Mission4 => 3,    // 네 번째 게임오브젝트
+            MissionState.Mission5 => 4,    // 다섯 번째 게임오브젝트
+            MissionState.Mission6 => 5,    // 여섯 번째 게임오브젝트
+            _ => 0 // 기본값
         };
     }
 }
