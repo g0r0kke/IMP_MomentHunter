@@ -2506,6 +2506,72 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &5359485161322484465
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8672741668727526920}
+  - component: {fileID: 3904124014195649845}
+  - component: {fileID: 571203504602029996}
+  m_Layer: 0
+  m_Name: Controller Button Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8672741668727526920
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5359485161322484465}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 0.72987, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4602360771249058568}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3904124014195649845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5359485161322484465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0da5b5b2eba27104dac6aca8600998e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputActions: {fileID: -944628639613478452, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  isDebug: 0
+--- !u!114 &571203504602029996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5359485161322484465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a4d76e86ffb1ad429394ee8f089322a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MainUI: {fileID: 0}
+  MainUIName: Can_Main
+  PhotoUI: {fileID: 0}
+  PhotoUIName: PhotoDisplay
+  CAMUI: {fileID: 0}
+  CAMUIName: Camera Canvas
+  isDebug: 0
 --- !u!1 &5517177919768292634
 GameObject:
   m_ObjectHideFlags: 0
@@ -2570,6 +2636,7 @@ Transform:
   - {fileID: 6906066862064454073}
   - {fileID: 25507578778127916}
   - {fileID: 7802911033794008620}
+  - {fileID: 8672741668727526920}
   m_Father: {fileID: 1817581616213639828}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5816319682196854493
@@ -6215,6 +6282,10 @@ PrefabInstance:
       propertyPath: Camera
       value: 
       objectReference: {fileID: 8928290575783541428}
+    - target: {fileID: 1556127099216572558, guid: 94a9c3ce3a775e24a8254d3e1b30c028, type: 3}
+      propertyPath: isDebug
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1556127099216572558, guid: 94a9c3ce3a775e24a8254d3e1b30c028, type: 3}
       propertyPath: leftController
       value: 

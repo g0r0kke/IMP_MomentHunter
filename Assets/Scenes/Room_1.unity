@@ -259,6 +259,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 571203504602029996, guid: 69fcda3cee266ae499bc77edbf3778ed, type: 3}
+      propertyPath: CAMUI
+      value: 
+      objectReference: {fileID: 1760459870}
+    - target: {fileID: 571203504602029996, guid: 69fcda3cee266ae499bc77edbf3778ed, type: 3}
+      propertyPath: MainUI
+      value: 
+      objectReference: {fileID: 1157715732}
+    - target: {fileID: 571203504602029996, guid: 69fcda3cee266ae499bc77edbf3778ed, type: 3}
+      propertyPath: PhotoUI
+      value: 
+      objectReference: {fileID: 1316848185}
+    - target: {fileID: 571203504602029996, guid: 69fcda3cee266ae499bc77edbf3778ed, type: 3}
+      propertyPath: CAMUIName
+      value: Camera Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 571203504602029996, guid: 69fcda3cee266ae499bc77edbf3778ed, type: 3}
+      propertyPath: MainUIName
+      value: Can_Main
+      objectReference: {fileID: 0}
+    - target: {fileID: 571203504602029996, guid: 69fcda3cee266ae499bc77edbf3778ed, type: 3}
+      propertyPath: PhotoUIName
+      value: PhotoDisplay
+      objectReference: {fileID: 0}
     - target: {fileID: 875958189519843287, guid: 69fcda3cee266ae499bc77edbf3778ed, type: 3}
       propertyPath: m_Name
       value: XR Origin (VR)
@@ -28466,6 +28490,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0071502ea48b574c850a7403b5f56f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1157715732 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2564363099614190319, guid: 504628a345f7013479313ce8e873e403, type: 3}
+  m_PrefabInstance: {fileID: 1157715730}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1163990414
 GameObject:
   m_ObjectHideFlags: 0
@@ -44183,6 +44212,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1610268873659576382, guid: 81fc856e350b3d74b924a6341f4bfed8, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2874704701743649376, guid: 81fc856e350b3d74b924a6341f4bfed8, type: 3}
       propertyPath: m_LocalPosition.x
       value: -14.509845
@@ -44231,6 +44264,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1595582682}
+    - target: {fileID: 5406835698816357285, guid: 81fc856e350b3d74b924a6341f4bfed8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5540711138132081842, guid: 81fc856e350b3d74b924a6341f4bfed8, type: 3}
       propertyPath: targetObject
       value: 
@@ -44244,6 +44281,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 81fc856e350b3d74b924a6341f4bfed8, type: 3}
+--- !u!1 &1760459870 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2080666365110675593, guid: 81fc856e350b3d74b924a6341f4bfed8, type: 3}
+  m_PrefabInstance: {fileID: 1760459869}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1762259393
 PrefabInstance:
   m_ObjectHideFlags: 0
