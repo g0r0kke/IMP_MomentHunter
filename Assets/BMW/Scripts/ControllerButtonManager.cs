@@ -96,7 +96,7 @@ public class ControllerButtonManager : MonoBehaviour
 
     private void OnYButtonPressed(InputAction.CallbackContext context)
     {
-        if (isDebug) Debug.Log("Y 버튼 입력 감지됨");
+        if (isDebug) Debug.Log("Y Button Pressed");
         
         if (photoUICloseManager != null && photoUICloseManager.GetActPhotoUICanvus())
         {
@@ -113,7 +113,7 @@ public class ControllerButtonManager : MonoBehaviour
 
     private void OnBButtonPressed(InputAction.CallbackContext context)
     {
-        if (isDebug) Debug.Log("B 버튼 입력 감지됨");
+        if (isDebug) Debug.Log("B  Button Pressed");
         if (wristUIManager != null && wristUIManager.GetActWristUI())
         {
             wristUIManager.GetOnBButtonPressed();
