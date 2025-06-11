@@ -355,9 +355,9 @@ GameObject:
   - component: {fileID: 5346767245539523286}
   - component: {fileID: 3895733878243964657}
   - component: {fileID: 3893813637897147330}
-  - component: {fileID: 7381983186330751264}
-  - component: {fileID: 4073652625074308782}
-  - component: {fileID: 4716504765118825095}
+  - component: {fileID: 2508693795542075743}
+  - component: {fileID: 6407177214403178554}
+  - component: {fileID: 8273381010245472965}
   m_Layer: 0
   m_Name: Cup
   m_TagString: Untagged
@@ -438,7 +438,7 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300008, guid: abc00000000004625334998501325631, type: 3}
---- !u!65 &7381983186330751264
+--- !u!65 &2508693795542075743
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -457,9 +457,9 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.11759731, y: 0.13548976, z: 0.16752812}
-  m_Center: {x: -0.0069379658, y: 0.06495598, z: 0.015216225}
---- !u!54 &4073652625074308782
+  m_Size: {x: 0.06028071, y: 0.1348362, z: 0.1742839}
+  m_Center: {x: -0.019494213, y: 0.06888783, z: 0.014713948}
+--- !u!54 &6407177214403178554
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -486,7 +486,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &4716504765118825095
+--- !u!114 &8273381010245472965
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

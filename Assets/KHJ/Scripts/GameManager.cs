@@ -193,13 +193,18 @@ public class GameManager : MonoBehaviour
             if (_currentMissionObjectCount == requiredCount)
             {
                 Debug.Log("클리어!");
+                // 체력 감소
+                if (DataManager.Data)
+                {
+                    DataManager.Data.UseHealth();
+                }
                 SetNextMissionState();
             }
             else
             {
                 Debug.Log("실패!");
                 // 체력 감소
-                if (DataManager.Data != null)
+                if (DataManager.Data)
                 {
                     DataManager.Data.UseHealth();
                 }

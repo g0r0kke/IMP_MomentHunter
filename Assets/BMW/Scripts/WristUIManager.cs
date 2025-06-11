@@ -12,6 +12,7 @@ public class WristUIManager : MonoBehaviour
 {
 
     [Header("UIComponents")]
+    [SerializeField] private GameObject WristCanvus;
     [SerializeField] private GameObject WristUI;
     [SerializeField] private GameObject TutorialUI;
                      private GameObject Tutorial1Page;
@@ -37,15 +38,8 @@ public class WristUIManager : MonoBehaviour
     [Header("CameraComponents")]
     [SerializeField] private GameObject Camera;
 
-    [Header("inputActions")]
-    [SerializeField] private InputActionAsset inputActions;
-
     [Header("Check Debug:")]
     [SerializeField] bool isDebug = true;
-
-    private InputAction yButton;
-    private InputAction BButton;
-    private XRGrabInteractable grabInteractable;
 
     private bool isWristUI;
     private bool isTutorialUI;
@@ -59,7 +53,7 @@ public class WristUIManager : MonoBehaviour
     private DataManager dataManager;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
         gameManager = FindAnyObjectByType<GameManager>();
         dataManager = FindAnyObjectByType<DataManager>();
@@ -97,45 +91,6 @@ public class WristUIManager : MonoBehaviour
         SFXSlider.onValueChanged.AddListener(OnSFXSliderValueChanged);
         OnSFXSliderValueChanged(SFXValue);
 
-        var LeftActionMap = inputActions?.FindActionMap("XRI Left");
-        if (LeftActionMap != null)
-        {
-            yButton = LeftActionMap.FindAction("YButton");
-            if (yButton != null)
-            {
-                yButton.Enable();
-                yButton.performed += OnYButtonPressed;
-            }
-            else
-            {
-                if (isDebug) Debug.LogError("YButton action not found!");
-            }
-        }
-        else
-        {
-            if (isDebug) Debug.LogError("XRI Left action map not found!");
-        }
-
-        var RightActionMap = inputActions?.FindActionMap("XRI Right");
-        if (RightActionMap != null)
-        {
-
-            BButton = RightActionMap.FindAction("BButton");
-            if (BButton != null)
-            {
-                BButton.Enable();
-                BButton.performed += OnBButtonPressed;
-            }
-            else
-            {
-                if (isDebug) Debug.LogError("BButton action not found!");
-            }
-        }
-        else
-        {
-            if (isDebug) Debug.LogError("XRI Right action map not found!");
-        }
-
         ResetAction();
     }
 
@@ -144,21 +99,20 @@ public class WristUIManager : MonoBehaviour
     {
 
     }
-
-    private void OnYButtonPressed(InputAction.CallbackContext context)
+    public bool GetActWristUI()
     {
+        if (isTutorialUI || isAudioUI || isMainBackUI) { return true; }
+        else { return false; }
+    }
+    public void GetOnYButtonPressed()
+    {
+        if (isDebug) Debug.Log("WristUI Called");
         if (isWristUI || isTutorialUI || isAudioUI || isMainBackUI) { CloseAction(); }
         else { OpenAction(); }
     }
-    private void OnBButtonPressed(InputAction.CallbackContext context)
+    public void GetOnBButtonPressed()
     {
         if (isTutorialUI || isAudioUI || isMainBackUI) { BackAction(); }
-    }
-
-    private void OnDestroy()
-    {
-        if (yButton != null) yButton.performed -= OnYButtonPressed;
-        if (BButton != null) BButton.performed -= OnBButtonPressed;
     }
 
     public void OnClickMenu()
@@ -437,8 +391,17 @@ public class WristUIManager : MonoBehaviour
             if (isDebug) Debug.LogWarning("UI Ray Interactor not found under Right Controller!");
         }
 
+        if (WristCanvus != null)
+        {
+            if (isDebug) Debug.Log("WristCanvus found!");
+        }
+        else
+        {
+            if (isDebug) Debug.LogWarning("WristCanvus not found!");
+        }
 
-        if (WristUI == null) WristUI = transform.Find("WristUI").gameObject;
+
+        if (WristUI == null) WristUI = WristCanvus.transform.Find("WristUI").gameObject;
         if (WristUI != null)
         {
             if (isDebug) Debug.Log("WristUI found!");
@@ -448,7 +411,7 @@ public class WristUIManager : MonoBehaviour
             if (isDebug) Debug.LogWarning("WristUI not found!");
         }
 
-        if (TutorialUI == null) TutorialUI = transform.Find("TutorialUI").gameObject;
+        if (TutorialUI == null) TutorialUI = WristCanvus.transform.Find("TutorialUI").gameObject;
         if (TutorialUI != null)
         {
             if (isDebug) Debug.Log("TutorialUI found!");
@@ -478,7 +441,7 @@ public class WristUIManager : MonoBehaviour
             if (isDebug) Debug.LogWarning("TutorialUI not found!");
         }
 
-        if (AudioUI == null) AudioUI = transform.Find("AudioUI").gameObject;
+        if (AudioUI == null) AudioUI = WristCanvus.transform.Find("AudioUI").gameObject;
         if (AudioUI != null)
         {
             if (isDebug) Debug.Log("AudioUI found!");
@@ -488,7 +451,7 @@ public class WristUIManager : MonoBehaviour
             if (isDebug) Debug.LogWarning("AudioUI not found!");
         }
 
-        if (MainBackUI == null) MainBackUI = transform.Find("MainBackUI").gameObject;
+        if (MainBackUI == null) MainBackUI = WristCanvus.transform.Find("MainBackUI").gameObject;
         if (MainBackUI != null)
         {
             if (isDebug) Debug.Log("MainBackUI found!");
