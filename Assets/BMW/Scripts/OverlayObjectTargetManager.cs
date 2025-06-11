@@ -1,46 +1,76 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UIElements;
 
 public class OverlayObjectTargetManager : MonoBehaviour
 {
     [Header("Layer")]
-    [SerializeField] private LayerMask customLayerMask;
-    [SerializeField] private LayerMask defaultLayerMask;
+    [SerializeField] private LayerMask targetLayerMask;
 
     [Header("Tag")]
-    [SerializeField] private string Tag = "OverlayObject";
+    [SerializeField] private string UnActiveTag = "Untagged";
+    [SerializeField] private string ActiveTag = "MissionTarget";
 
     [Header("DeBug Log")]
     [SerializeField] private bool IsDebug = false;
 
     private int _OverlayObjectCount = 0;
     private List<string> _enteredObjects = new List<string>();
-    private Dictionary<string, int> _previousLayers = new Dictionary<string, int>();
+    private Dictionary<string, string> _previoustags = new Dictionary<string, string>();
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag(Tag))
+        if ((targetLayerMask.value & (1 << other.gameObject.layer)) != 0)
         {
             string objName = other.gameObject.name;
+            transform.tag = UnActiveTag;
 
             if (!_enteredObjects.Contains(objName))
             {
-                _previousLayers[objName] = other.gameObject.layer;
+                _previoustags[objName] = other.gameObject.tag;
 
                 _enteredObjects.Add(objName);
                 _OverlayObjectCount++;
 
-                int defaultLayerIndex = Mathf.RoundToInt(Mathf.Log(defaultLayerMask.value, 2));
-                other.gameObject.layer = defaultLayerIndex;
+                if (IsDebug)
+                    Debug.LogWarning($"[Enter] Added: {objName} | Total: {_OverlayObjectCount}");
+
+                if (_OverlayObjectCount == 1 && IsDebug)
+                {
+                    Debug.LogWarning($"[Layer Changed] {objName}: " +
+                        $"{_previoustags[objName]} ¡æ " +
+                        $"{transform.gameObject.tag}");
+                }
+            }
+            else if (IsDebug)
+            {
+                Debug.LogWarning($"[Enter Ignored] Duplicate: {objName}");
+            }
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if ((targetLayerMask.value & (1 << other.gameObject.layer)) != 0 && transform.tag == ActiveTag)
+        {
+            string objName = other.gameObject.name;
+            transform.tag = UnActiveTag;
+
+            if (!_enteredObjects.Contains(objName))
+            {
+                _previoustags[objName] = other.gameObject.tag;
+
+                _enteredObjects.Add(objName);
+                _OverlayObjectCount++;
 
                 if (IsDebug)
                     Debug.LogWarning($"[Enter] Added: {objName} | Total: {_OverlayObjectCount}");
 
-                if (other.gameObject.layer != _previousLayers[objName] && IsDebug)
+                if (_OverlayObjectCount == 1 && IsDebug)
                 {
                     Debug.LogWarning($"[Layer Changed] {objName}: " +
-                        $"{LayerMask.LayerToName(_previousLayers[objName])} ¡æ " +
-                        $"{LayerMask.LayerToName(other.gameObject.layer)}");
+                        $"{_previoustags[objName]} ¡æ " +
+                        $"{transform.gameObject.tag}");
                 }
             }
             else if (IsDebug)
@@ -52,13 +82,13 @@ public class OverlayObjectTargetManager : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag(Tag))
+        if ((targetLayerMask.value & (1 << other.gameObject.layer)) != 0)
         {
             string objName = other.gameObject.name;
 
             if (_enteredObjects.Contains(objName))
             {
-                int prevLayer = other.gameObject.layer;
+                string  prevtag = transform.tag;
 
                 _enteredObjects.Remove(objName);
                 _OverlayObjectCount = Mathf.Max(0, _OverlayObjectCount - 1);
@@ -68,19 +98,18 @@ public class OverlayObjectTargetManager : MonoBehaviour
 
                 if (_OverlayObjectCount <= 0)
                 {
-                    int customLayerIndex = Mathf.RoundToInt(Mathf.Log(customLayerMask.value, 2));
-                    other.gameObject.layer = customLayerIndex;
                     _OverlayObjectCount = 0;
+                    transform.gameObject.tag = ActiveTag;
 
-                    if (other.gameObject.layer != prevLayer && IsDebug)
+                    if (transform.tag != prevtag && IsDebug)
                     {
                         Debug.LogWarning($"[Layer Changed] {objName}: " +
-                            $"{LayerMask.LayerToName(prevLayer)} ¡æ " +
-                            $"{LayerMask.LayerToName(other.gameObject.layer)}");
+                            $"{prevtag} ¡æ " +
+                            $"{transform.gameObject.tag}");
                     }
                 }
 
-                _previousLayers.Remove(objName);
+                _previoustags.Remove(objName);
             }
             else if (IsDebug)
             {

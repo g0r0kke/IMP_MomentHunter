@@ -11,7 +11,9 @@ GameObject:
   - component: {fileID: 2419988807446298152}
   - component: {fileID: 7933064640749386118}
   - component: {fileID: 8705922929182881152}
-  m_Layer: 0
+  - component: {fileID: 5651853690133401104}
+  - component: {fileID: 1884734854497889891}
+  m_Layer: 6
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -75,6 +77,37 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.0048716227, y: 0.005755971, z: 0.006153243}
   m_Center: {x: -6.8616507e-10, y: 0.0028779851, z: 7.597813e-10}
+--- !u!114 &5651853690133401104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2300143093773749587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 534c1a0732c79b242b53ff918dbe7252, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  UnActiveTag: Untagged
+  ActiveTag: MissionTarget
+  IsDebug: 1
+--- !u!114 &1884734854497889891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2300143093773749587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1a356ec87eeca244b5904bd5cd6a9c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetMissionType: 2
 --- !u!1 &7882752891363718264
 GameObject:
   m_ObjectHideFlags: 0
