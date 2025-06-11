@@ -24,8 +24,8 @@ public class ControllerButtonManager : MonoBehaviour
     {
         try
         {
-            wristUIManager = FindAnyObjectByType<WristUIManager>(FindObjectsInactive.Include);
-            photoUICloseManager = FindAnyObjectByType<PhotoUICloseManager>(FindObjectsInactive.Include);
+            wristUIManager = FindAnyObjectByType<WristUIManager>();
+            photoUICloseManager = FindAnyObjectByType<PhotoUICloseManager>();
 
             if (wristUIManager == null)
             {
@@ -83,7 +83,7 @@ public class ControllerButtonManager : MonoBehaviour
                 BButton.Enable();
                 BButton.performed += OnBButtonPressed;
             }
-            else
+            else 
             {
                 if (isDebug) Debug.LogError("BButton action not found!");
             }
@@ -96,36 +96,27 @@ public class ControllerButtonManager : MonoBehaviour
 
     private void OnYButtonPressed(InputAction.CallbackContext context)
     {
-        try
+        if (isDebug) Debug.Log("Y 버튼 입력 감지됨");
+        
+        if (photoUICloseManager != null && photoUICloseManager.GetActPhotoUICanvus())
         {
-            if (photoUICloseManager != null && photoUICloseManager.GetActPhotoUICanvus())
-            {
-                photoUICloseManager.GetOnYButtonPressed();
-            }
-            else if (wristUIManager != null && wristUIManager.GetActWristUICanvus())
-            {
-                wristUIManager.GetOnYButtonPressed();
-            }
-
+            photoUICloseManager.GetOnYButtonPressed();
         }
-        catch (System.Exception e)
+        else if (wristUIManager != null)
         {
-            if (isDebug) Debug.LogError($"OnYButtonPressed Exception: {e.Message}");
+            
+        wristUIManager.GetOnYButtonPressed();
+            
         }
+        
     }
 
     private void OnBButtonPressed(InputAction.CallbackContext context)
     {
-        try
+        if (isDebug) Debug.Log("B 버튼 입력 감지됨");
+        if (wristUIManager != null && wristUIManager.GetActWristUI())
         {
-            if (wristUIManager != null)
-            {
-                wristUIManager.GetOnBButtonPressed();
-            }
-        }
-        catch (System.Exception e)
-        {
-            if (isDebug) Debug.LogError($"OnBButtonPressed Exception: {e.Message}");
+            wristUIManager.GetOnBButtonPressed();
         }
     }
 

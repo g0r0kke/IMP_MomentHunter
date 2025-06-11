@@ -12,6 +12,7 @@ public class WristUIManager : MonoBehaviour
 {
 
     [Header("UIComponents")]
+    [SerializeField] private GameObject WristCanvus;
     [SerializeField] private GameObject WristUI;
     [SerializeField] private GameObject TutorialUI;
                      private GameObject Tutorial1Page;
@@ -52,7 +53,7 @@ public class WristUIManager : MonoBehaviour
     private DataManager dataManager;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
         gameManager = FindAnyObjectByType<GameManager>();
         dataManager = FindAnyObjectByType<DataManager>();
@@ -98,15 +99,14 @@ public class WristUIManager : MonoBehaviour
     {
 
     }
-
-    public bool GetActWristUICanvus()
+    public bool GetActWristUI()
     {
-        if (isWristUI || isTutorialUI || isAudioUI || isMainBackUI) { return true; }
+        if (isTutorialUI || isAudioUI || isMainBackUI) { return true; }
         else { return false; }
     }
-
     public void GetOnYButtonPressed()
     {
+        if (isDebug) Debug.Log("º’∏ÒUI »£√‚µ ");
         if (isWristUI || isTutorialUI || isAudioUI || isMainBackUI) { CloseAction(); }
         else { OpenAction(); }
     }
@@ -391,8 +391,17 @@ public class WristUIManager : MonoBehaviour
             if (isDebug) Debug.LogWarning("UI Ray Interactor not found under Right Controller!");
         }
 
+        if (WristCanvus != null)
+        {
+            if (isDebug) Debug.Log("WristCanvus found!");
+        }
+        else
+        {
+            if (isDebug) Debug.LogWarning("WristCanvus not found!");
+        }
 
-        if (WristUI == null) WristUI = transform.Find("WristUI").gameObject;
+
+        if (WristUI == null) WristUI = WristCanvus.transform.Find("WristUI").gameObject;
         if (WristUI != null)
         {
             if (isDebug) Debug.Log("WristUI found!");
@@ -402,7 +411,7 @@ public class WristUIManager : MonoBehaviour
             if (isDebug) Debug.LogWarning("WristUI not found!");
         }
 
-        if (TutorialUI == null) TutorialUI = transform.Find("TutorialUI").gameObject;
+        if (TutorialUI == null) TutorialUI = WristCanvus.transform.Find("TutorialUI").gameObject;
         if (TutorialUI != null)
         {
             if (isDebug) Debug.Log("TutorialUI found!");
@@ -432,7 +441,7 @@ public class WristUIManager : MonoBehaviour
             if (isDebug) Debug.LogWarning("TutorialUI not found!");
         }
 
-        if (AudioUI == null) AudioUI = transform.Find("AudioUI").gameObject;
+        if (AudioUI == null) AudioUI = WristCanvus.transform.Find("AudioUI").gameObject;
         if (AudioUI != null)
         {
             if (isDebug) Debug.Log("AudioUI found!");
@@ -442,7 +451,7 @@ public class WristUIManager : MonoBehaviour
             if (isDebug) Debug.LogWarning("AudioUI not found!");
         }
 
-        if (MainBackUI == null) MainBackUI = transform.Find("MainBackUI").gameObject;
+        if (MainBackUI == null) MainBackUI = WristCanvus.transform.Find("MainBackUI").gameObject;
         if (MainBackUI != null)
         {
             if (isDebug) Debug.Log("MainBackUI found!");
