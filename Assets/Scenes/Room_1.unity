@@ -272,16 +272,8 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1316848185}
     - target: {fileID: 571203504602029996, guid: 69fcda3cee266ae499bc77edbf3778ed, type: 3}
-      propertyPath: CAMUIName
-      value: Camera Canvas
-      objectReference: {fileID: 0}
-    - target: {fileID: 571203504602029996, guid: 69fcda3cee266ae499bc77edbf3778ed, type: 3}
-      propertyPath: MainUIName
-      value: Can_Main
-      objectReference: {fileID: 0}
-    - target: {fileID: 571203504602029996, guid: 69fcda3cee266ae499bc77edbf3778ed, type: 3}
-      propertyPath: PhotoUIName
-      value: PhotoDisplay
+      propertyPath: isDebug
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 875958189519843287, guid: 69fcda3cee266ae499bc77edbf3778ed, type: 3}
       propertyPath: m_Name
@@ -327,6 +319,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3904124014195649845, guid: 69fcda3cee266ae499bc77edbf3778ed, type: 3}
+      propertyPath: isDebug
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3921598533727149780, guid: 69fcda3cee266ae499bc77edbf3778ed, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -369,6 +365,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8313212464490817877, guid: 69fcda3cee266ae499bc77edbf3778ed, type: 3}
       propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8413687780492580600, guid: 69fcda3cee266ae499bc77edbf3778ed, type: 3}
+      propertyPath: isDebug
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -28380,6 +28380,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1595582682}
+    - target: {fileID: 1000788269694931202, guid: 504628a345f7013479313ce8e873e403, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.7663574
+      objectReference: {fileID: 0}
     - target: {fileID: 3642200292966137287, guid: 504628a345f7013479313ce8e873e403, type: 3}
       propertyPath: m_Name
       value: KHJ_Room1
@@ -28459,6 +28463,10 @@ PrefabInstance:
     - target: {fileID: 4224135330441221759, guid: 504628a345f7013479313ce8e873e403, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4876635120711909355, guid: 504628a345f7013479313ce8e873e403, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.9260254
       objectReference: {fileID: 0}
     - target: {fileID: 8772191662380716991, guid: 504628a345f7013479313ce8e873e403, type: 3}
       propertyPath: m_IsActive
@@ -35872,6 +35880,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5431655969799481199, guid: 9c643d6e9ac43754ab85c1bbe66231be, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5992354152234277363, guid: 9c643d6e9ac43754ab85c1bbe66231be, type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5992354152234277363, guid: 9c643d6e9ac43754ab85c1bbe66231be, type: 3}
