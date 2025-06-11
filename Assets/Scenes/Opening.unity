@@ -586,7 +586,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_InteractionManager: {fileID: 0}
   m_InteractionLayers:
-    m_Bits: 4294967295
+    m_Bits: 1024
   m_Handedness: 2
   m_AttachTransform: {fileID: 0}
   m_KeepSelectedTargetValid: 0
@@ -704,9 +704,9 @@ MonoBehaviour:
   m_HapticHoverCancelIntensity: 0
   m_HapticHoverCancelDuration: 0
   m_AllowHoverHapticsWhileSelecting: 1
-  m_LineType: 1
+  m_LineType: 0
   m_BlendVisualLinePoints: 1
-  m_MaxRaycastDistance: 30
+  m_MaxRaycastDistance: 1500
   m_RayOriginTransform: {fileID: 0}
   m_ReferenceFrame: {fileID: 0}
   m_Velocity: 16
@@ -724,7 +724,7 @@ MonoBehaviour:
   m_LiveConeCastDebugVisuals: 0
   m_RaycastMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 32
   m_RaycastTriggerInteraction: 1
   m_RaycastSnapVolumeInteraction: 1
   m_HitClosestOnly: 0
@@ -7826,6 +7826,10 @@ PrefabInstance:
       propertyPath: _leftRayInteractor
       value: 
       objectReference: {fileID: 1239321709}
+    - target: {fileID: 3352889826358374465, guid: 23c00551d37edad40b6d69a6984ee84f, type: 3}
+      propertyPath: _rightRayInteractor
+      value: 
+      objectReference: {fileID: 206141801}
     - target: {fileID: 3527251725473368569, guid: 23c00551d37edad40b6d69a6984ee84f, type: 3}
       propertyPath: m_IsActive
       value: 1
