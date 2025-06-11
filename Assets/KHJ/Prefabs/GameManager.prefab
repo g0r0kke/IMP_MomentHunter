@@ -66,7 +66,7 @@ MonoBehaviour:
   _missionObjectCounts: 
   _missionObjectDisplay:
   - 'None: 0'
-  - 'Mission1: 1'
+  - 'Mission1: 2'
   - 'Mission2: 4'
   - 'Mission3: 1'
   - 'Mission4: 2'
@@ -123,6 +123,14 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   _missionContentObjects:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  _feedbackObjects:
+  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}

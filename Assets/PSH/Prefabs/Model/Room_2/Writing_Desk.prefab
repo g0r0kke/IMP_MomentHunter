@@ -897,7 +897,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1a356ec87eeca244b5904bd5cd6a9c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetMissionType: 6
+  targetMissionType: 5
 --- !u!4 &3334093385937961311 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5535840059872535912, guid: 33b2759fbbab29646aa80755721b8721, type: 3}

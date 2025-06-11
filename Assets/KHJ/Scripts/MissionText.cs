@@ -18,6 +18,9 @@ public class MissionText : MonoBehaviour
     [SerializeField] private GameObject[] _missionTitleObjects;    // 미션 타이틀 게임오브젝트들
     [SerializeField] private GameObject[] _missionContentObjects; // 미션 콘텐츠 게임오브젝트들
     
+    [Header("Feedback GameObject Array")]
+    [SerializeField] private GameObject[] _feedbackObjects;        // 피드백 게임오브젝트들
+    
     private void Start()
     {
         UpdateMissionText();
@@ -50,6 +53,21 @@ public class MissionText : MonoBehaviour
                 {
                     _missionContentObjects[i].SetActive(i == index);
                 }
+            }
+        }
+    }
+    
+    // 피드백 오브젝트 활성화/비활성화
+    public void ActivateFeedbackObject(int index)
+    {
+        if (_feedbackObjects == null) return;
+        
+        // 모든 피드백 오브젝트 비활성화 후 지정된 인덱스만 활성화
+        for (int i = 0; i < _feedbackObjects.Length; i++)
+        {
+            if (_feedbackObjects[i])
+            {
+                _feedbackObjects[i].SetActive(i == index);
             }
         }
     }

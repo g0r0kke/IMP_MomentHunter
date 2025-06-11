@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.Android.Gradle.Manifest;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -64,6 +65,7 @@ public class GameManager : MonoBehaviour
     
     // 씬 로드 후 Initialize 호출을 위한 플래그
     private bool _shouldInitializeScene0Load = false;
+    private bool _isDead = false;
     
     void Awake()
     {
@@ -113,16 +115,21 @@ public class GameManager : MonoBehaviour
         switch (_gameState)
         {
             case GameState.Victory:
-                TransitionToScene(3);
-                SetMissionState(MissionState.Ending);
+                Invoke("WaitAndEnding", 3f);
                 break;
             case GameState.Defeat:
-                SetMissionState(MissionState.Ending);
+                _isDead = true;
                 Debug.Log("Defeat");
+                SetMissionState(MissionState.Ending);
                 break;
             default:
                 break;
         }
+    }
+    
+    void WaitAndEnding()
+    {
+        TransitionToScene(3);
     }
 
     public void SetMissionState(MissionState newMissionState)
@@ -145,6 +152,7 @@ public class GameManager : MonoBehaviour
         switch (_missionState)
         {
             case MissionState.None:
+                _isDead = false;
                 TransitionToScene(0);
                 SetGameState(GameState.Intro);
                 break;
@@ -165,6 +173,7 @@ public class GameManager : MonoBehaviour
             case MissionState.Mission6:
                 break;
             case MissionState.Ending:
+                if (!_isDead) SetGameState(GameState.Victory);
                 break;
         }
     }
@@ -193,6 +202,8 @@ public class GameManager : MonoBehaviour
             if (_currentMissionObjectCount == requiredCount)
             {
                 Debug.Log("클리어!");
+                int feedbackIndex = GetMissionFeedbackIndex(_missionState);
+                _missionText.ActivateFeedbackObject(feedbackIndex);
                 // 체력 감소
                 if (DataManager.Data)
                 {
@@ -203,6 +214,7 @@ public class GameManager : MonoBehaviour
             else
             {
                 Debug.Log("실패!");
+                _missionText.ActivateFeedbackObject(0);
                 // 체력 감소
                 if (DataManager.Data)
                 {
@@ -216,6 +228,21 @@ public class GameManager : MonoBehaviour
         }
     }
     
+    // 미션 상태에 따른 피드백 인덱스 반환
+    private int GetMissionFeedbackIndex(MissionState missionState)
+    {
+        return missionState switch
+        {
+            MissionState.Mission1 => 1,
+            MissionState.Mission2 => 2,
+            MissionState.Mission3 => 3,
+            MissionState.Mission4 => 4,
+            MissionState.Mission5 => 5,
+            MissionState.Mission6 => 6,
+            _ => 0 // 기본값 (실패용)
+        };
+    }
+
     /// <summary>
     /// 현재 미션 오브젝트 개수 초기화
     /// </summary>

@@ -201,9 +201,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 816d96dc36dc7f840ada4d371f50c609, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _dontDestroyOnLoad: 0
   _audioSource: {fileID: 4461977985081970441}
   _audioClips:
   - {fileID: 8300000, guid: 16fba6d30ed741d4a9fdd6e79ee2f3ac, type: 3}
+  _autoPlayOnStart: 0
+  _backgroundMusicClipId: 0
+  _loopBackgroundMusic: 1
 --- !u!54 &7184158386967928226
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -365,7 +369,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1a356ec87eeca244b5904bd5cd6a9c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetMissionType: 5
+  targetMissionType: 4
 --- !u!136 &2463876996755100934
 CapsuleCollider:
   m_ObjectHideFlags: 0
