@@ -12,10 +12,10 @@ public class DataManager : MonoBehaviour
     [SerializeField] private int _currentHealth = MAX_HEALTH;
     public int CurrentHealth => _currentHealth;
 
-    
     [Header("Game Settings")]
-    private float _masterVolume = 1f;
-    public float MasterVolume => _masterVolume;
+    [SerializeField] [Range(0, 100)] private int _masterVolumeLevel = 80; // 0~100 범위로 변경
+    public int MasterVolumeLevel => _masterVolumeLevel;
+    public float MasterVolume => _masterVolumeLevel / 100f; // 0~1 범위로 변환하여 반환
 
     [Header("UI Components")]
     [SerializeField] private MissionText _missionText;
@@ -38,7 +38,7 @@ public class DataManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
+ 
     private void Start()
     {
         if (Data != this) return;
@@ -53,7 +53,7 @@ public class DataManager : MonoBehaviour
         UpdateHealthUI();
         
         // 새 씬이 로드될 때 현재 볼륨을 모든 AudioManager에 브로드캐스트
-        OnMasterVolumeChanged?.Invoke(_masterVolume);
+        OnMasterVolumeChanged?.Invoke(MasterVolume);
     }
     
     private void FindMissionText()
@@ -69,13 +69,13 @@ public class DataManager : MonoBehaviour
     // 에디터에서 값 변경 시 호출
     private void OnValidate()
     {
-        float previousVolume = _masterVolume;
+        int previousVolumeLevel = _masterVolumeLevel;
         
         // 체력 범위 제한
         _currentHealth = Mathf.Clamp(_currentHealth, 0, MAX_HEALTH);
 
-        // 볼륨 범위 제한
-        _masterVolume = Mathf.Clamp01(_masterVolume);
+        // 볼륨 범위 제한 (0~100)
+        _masterVolumeLevel = Mathf.Clamp(_masterVolumeLevel, 0, 100);
         
         // 런타임 중일 때만 UI 업데이트
         if (Application.isPlaying)
@@ -83,9 +83,10 @@ public class DataManager : MonoBehaviour
             UpdateHealthUI();
             
             // 볼륨이 변경되었다면 이벤트 발생
-            if (!Mathf.Approximately(previousVolume, _masterVolume))
+            if (previousVolumeLevel != _masterVolumeLevel)
             {
-                OnMasterVolumeChanged?.Invoke(_masterVolume);
+                OnMasterVolumeChanged?.Invoke(MasterVolume);
+                Debug.Log($"마스터 볼륨이 {_masterVolumeLevel}%로 설정되었습니다. (Float: {MasterVolume:F2})");
             }
         }
    
@@ -125,26 +126,31 @@ public class DataManager : MonoBehaviour
         }
     }
     
-    // 볼륨 변경 함수 (int 값 0~100으로 받아서 0~1로 변환)
+    // 볼륨 변경 함수 (0~100 범위로 받기)
     public void SetMasterVolume(int volumeLevel)
     {
-        float newVolume = Mathf.Clamp(volumeLevel / 100f, 0f, 1f);
+        int newVolumeLevel = Mathf.Clamp(volumeLevel, 0, 100);
 
         // 볼륨이 실제로 변경된 경우에만 이벤트 발생
-        if (!Mathf.Approximately(_masterVolume, newVolume))
+        if (_masterVolumeLevel != newVolumeLevel)
         {
-            _masterVolume = newVolume;
+            _masterVolumeLevel = newVolumeLevel;
 
-            // 모든 AudioManager에게 볼륨 변경 알림
-            OnMasterVolumeChanged?.Invoke(_masterVolume);
+            // 모든 AudioManager에게 볼륨 변경 알림 (0~1 범위로 변환하여 전달)
+            OnMasterVolumeChanged?.Invoke(MasterVolume);
 
-            Debug.Log($"마스터 볼륨이 {_masterVolume:F1}로 설정되었습니다.");
+            Debug.Log($"마스터 볼륨이 {_masterVolumeLevel}%로 설정되었습니다. (Float: {MasterVolume:F2})");
         }
     }
 
     public float GetMasterVolume()
     {
-        return _masterVolume;
+        return MasterVolume;
+    }
+    
+    public int GetMasterVolumeLevel()
+    {
+        return _masterVolumeLevel;
     }
 
     public void InitializeHealth()

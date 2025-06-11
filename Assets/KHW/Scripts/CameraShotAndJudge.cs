@@ -187,11 +187,13 @@ public class PhotoCaptureAndJudge : MonoBehaviour
                 photoRawImage.texture = tex;
             }
 
+            GameManager.Instance.SetMainCanvasActive(false);
             DisplayCanvas.gameObject.SetActive(true);  // 캔버스 전체 보여주기
             // panel.gameObject.SetActive(true);
 
             yield return new WaitForSeconds(photoDisplayDuration);
 
+            GameManager.Instance.SetMainCanvasActive(true);
             DisplayCanvas.gameObject.SetActive(false);  // 다시 끄기
             // panel.gameObject.SetActive(false);
         }
