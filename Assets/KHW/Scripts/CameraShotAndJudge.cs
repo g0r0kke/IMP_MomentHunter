@@ -12,9 +12,10 @@ public class PhotoCaptureAndJudge : MonoBehaviour
     public bool useTutorial = true;
     public CanvasGroup flashCanvasGroup;
     public float flashDuration = 0.2f;
-    public RawImage photoDisplay;
+    // public RawImage photoDisplay;
+    public GameObject DisplayCanvas;
     public float photoDisplayDuration = 5f;
-    public GameObject panel;
+    // public GameObject panel;
     public GameObject CameraFrame;
     public RenderTexture captureRT;
     public AudioClip shutterClip;        
@@ -162,20 +163,37 @@ public class PhotoCaptureAndJudge : MonoBehaviour
         }
 
         // RawImage 활성화 + 표시
-        if (photoDisplay != null)
+        // if (photoDisplay != null)
+        // {
+        //     photoDisplay.texture = tex;
+        //     photoDisplay.gameObject.SetActive(true);
+        //     panel.gameObject.SetActive(true);
+
+        //     yield return new WaitForSeconds(photoDisplayDuration);
+
+        //     // RawImage 비활성화
+        //     photoDisplay.gameObject.SetActive(false);
+        //     panel.gameObject.SetActive(false);
+
+        //     // 메모리 해제
+        //     Destroy(tex);
+        // }
+
+        if (DisplayCanvas != null)
         {
-            photoDisplay.texture = tex;
-            photoDisplay.gameObject.SetActive(true);
-            panel.gameObject.SetActive(true);
+            var photoRawImage = DisplayCanvas.transform.Find("CapturedPhoto").GetComponent<RawImage>();
+            if (photoRawImage != null)
+            {
+                photoRawImage.texture = tex;
+            }
+
+            DisplayCanvas.gameObject.SetActive(true);  // 캔버스 전체 보여주기
+            // panel.gameObject.SetActive(true);
 
             yield return new WaitForSeconds(photoDisplayDuration);
 
-            // RawImage 비활성화
-            photoDisplay.gameObject.SetActive(false);
-            panel.gameObject.SetActive(false);
-
-            // 메모리 해제
-            Destroy(tex);
+            DisplayCanvas.gameObject.SetActive(false);  // 다시 끄기
+            // panel.gameObject.SetActive(false);
         }
     }
 
