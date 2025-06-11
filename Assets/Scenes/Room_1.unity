@@ -270,7 +270,7 @@ PrefabInstance:
     - target: {fileID: 571203504602029996, guid: 69fcda3cee266ae499bc77edbf3778ed, type: 3}
       propertyPath: PhotoUI
       value: 
-      objectReference: {fileID: 1316848185}
+      objectReference: {fileID: 614611918}
     - target: {fileID: 875958189519843287, guid: 69fcda3cee266ae499bc77edbf3778ed, type: 3}
       propertyPath: m_Name
       value: XR Origin (VR)
@@ -330,11 +330,11 @@ PrefabInstance:
     - target: {fileID: 4366527343313467721, guid: 69fcda3cee266ae499bc77edbf3778ed, type: 3}
       propertyPath: CameraFrame
       value: 
-      objectReference: {fileID: 1316848185}
+      objectReference: {fileID: 0}
     - target: {fileID: 4366527343313467721, guid: 69fcda3cee266ae499bc77edbf3778ed, type: 3}
       propertyPath: photoDisplay
       value: 
-      objectReference: {fileID: 569394163}
+      objectReference: {fileID: 0}
     - target: {fileID: 4366527343313467721, guid: 69fcda3cee266ae499bc77edbf3778ed, type: 3}
       propertyPath: tutorialMission
       value: 
@@ -14123,17 +14123,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1030992052, guid: abc00000000016029636442961362006, type: 3}
   m_PrefabInstance: {fileID: 1867938476}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &569394163 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6046048485049805218, guid: 81fc856e350b3d74b924a6341f4bfed8, type: 3}
-  m_PrefabInstance: {fileID: 1760459869}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &573881429
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15264,6 +15253,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: abc00000000006998134490930038741, type: 3}
+--- !u!1 &614611918 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5783559219246426338, guid: 81fc856e350b3d74b924a6341f4bfed8, type: 3}
+  m_PrefabInstance: {fileID: 1760459869}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &616023490
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -32561,11 +32555,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1030988756, guid: abc00000000003277687722025950104, type: 3}
   m_PrefabInstance: {fileID: 1316286743}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1316848185 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1610268873659576382, guid: 81fc856e350b3d74b924a6341f4bfed8, type: 3}
-  m_PrefabInstance: {fileID: 1760459869}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1327646465
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -44216,10 +44205,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1610268873659576382, guid: 81fc856e350b3d74b924a6341f4bfed8, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
+    - target: {fileID: 2793283318827913716, guid: 81fc856e350b3d74b924a6341f4bfed8, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 1595582682}
     - target: {fileID: 2874704701743649376, guid: 81fc856e350b3d74b924a6341f4bfed8, type: 3}
       propertyPath: m_LocalPosition.x
       value: -14.509845
@@ -44268,17 +44257,13 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1595582682}
-    - target: {fileID: 5406835698816357285, guid: 81fc856e350b3d74b924a6341f4bfed8, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5540711138132081842, guid: 81fc856e350b3d74b924a6341f4bfed8, type: 3}
       propertyPath: targetObject
       value: 
       objectReference: {fileID: 2063746136}
-    - target: {fileID: 6129300000411818343, guid: 81fc856e350b3d74b924a6341f4bfed8, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
+    - target: {fileID: 6635776633521280701, guid: 81fc856e350b3d74b924a6341f4bfed8, type: 3}
+      propertyPath: photoDisplay
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
