@@ -1715,6 +1715,10 @@ PrefabInstance:
       propertyPath: m_IsTrigger
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5551020351121673273, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: IsDebug
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5725339325751382705, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
       propertyPath: IsDebug
       value: 1
@@ -1842,6 +1846,10 @@ PrefabInstance:
     - target: {fileID: 8660040079085804955, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
       propertyPath: m_TagString
       value: OverlayObject
+      objectReference: {fileID: 0}
+    - target: {fileID: 8843165197528389208, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: IsDebug
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9008484713792557349, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
       propertyPath: m_Resource
@@ -32524,11 +32532,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1030990771, guid: abc00000000016821239069402567327, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 7.119
+      value: 6.982
       objectReference: {fileID: 0}
     - target: {fileID: 1030990771, guid: abc00000000016821239069402567327, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.052
+      value: -0.091
       objectReference: {fileID: 0}
     - target: {fileID: 1030990771, guid: abc00000000016821239069402567327, type: 3}
       propertyPath: m_LocalPosition.z
@@ -43442,7 +43450,11 @@ PrefabInstance:
     - target: {fileID: 6210129394503743113, guid: 81fc856e350b3d74b924a6341f4bfed8, type: 3}
       propertyPath: m_Camera
       value: 
-      objectReference: {fileID: 1595582682}
+      objectReference: {fileID: 0}
+    - target: {fileID: 6406742354797436832, guid: 81fc856e350b3d74b924a6341f4bfed8, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -2.598877
+      objectReference: {fileID: 0}
     - target: {fileID: 6635776633521280701, guid: 81fc856e350b3d74b924a6341f4bfed8, type: 3}
       propertyPath: photoDisplay
       value: 

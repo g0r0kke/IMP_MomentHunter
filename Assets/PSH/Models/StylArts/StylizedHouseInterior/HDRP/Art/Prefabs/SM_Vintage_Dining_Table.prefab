@@ -148,7 +148,7 @@ MonoBehaviour:
     m_Bits: 128
   UnActiveTag: Untagged
   ActiveTag: MissionTarget
-  IsDebug: 1
+  IsDebug: 0
 --- !u!23 &2964111755675946305
 MeshRenderer:
   m_ObjectHideFlags: 0

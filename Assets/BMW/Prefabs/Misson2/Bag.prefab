@@ -94,7 +94,7 @@ MonoBehaviour:
     m_Bits: 64
   UnActiveTag: Untagged
   ActiveTag: MissionTarget
-  IsDebug: 1
+  IsDebug: 0
 --- !u!114 &1884734854497889891
 MonoBehaviour:
   m_ObjectHideFlags: 0
