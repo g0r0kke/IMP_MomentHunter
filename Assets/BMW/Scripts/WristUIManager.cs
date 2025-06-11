@@ -37,15 +37,8 @@ public class WristUIManager : MonoBehaviour
     [Header("CameraComponents")]
     [SerializeField] private GameObject Camera;
 
-    [Header("inputActions")]
-    [SerializeField] private InputActionAsset inputActions;
-
     [Header("Check Debug:")]
     [SerializeField] bool isDebug = true;
-
-    private InputAction yButton;
-    private InputAction BButton;
-    private XRGrabInteractable grabInteractable;
 
     private bool isWristUI;
     private bool isTutorialUI;
@@ -97,45 +90,6 @@ public class WristUIManager : MonoBehaviour
         SFXSlider.onValueChanged.AddListener(OnSFXSliderValueChanged);
         OnSFXSliderValueChanged(SFXValue);
 
-        var LeftActionMap = inputActions?.FindActionMap("XRI Left");
-        if (LeftActionMap != null)
-        {
-            yButton = LeftActionMap.FindAction("YButton");
-            if (yButton != null)
-            {
-                yButton.Enable();
-                yButton.performed += OnYButtonPressed;
-            }
-            else
-            {
-                if (isDebug) Debug.LogError("YButton action not found!");
-            }
-        }
-        else
-        {
-            if (isDebug) Debug.LogError("XRI Left action map not found!");
-        }
-
-        var RightActionMap = inputActions?.FindActionMap("XRI Right");
-        if (RightActionMap != null)
-        {
-
-            BButton = RightActionMap.FindAction("BButton");
-            if (BButton != null)
-            {
-                BButton.Enable();
-                BButton.performed += OnBButtonPressed;
-            }
-            else
-            {
-                if (isDebug) Debug.LogError("BButton action not found!");
-            }
-        }
-        else
-        {
-            if (isDebug) Debug.LogError("XRI Right action map not found!");
-        }
-
         ResetAction();
     }
 
@@ -145,20 +99,20 @@ public class WristUIManager : MonoBehaviour
 
     }
 
-    private void OnYButtonPressed(InputAction.CallbackContext context)
+    public bool GetActWristUICanvus()
+    {
+        if (isWristUI || isTutorialUI || isAudioUI || isMainBackUI) { return true; }
+        else { return false; }
+    }
+
+    public void GetOnYButtonPressed()
     {
         if (isWristUI || isTutorialUI || isAudioUI || isMainBackUI) { CloseAction(); }
         else { OpenAction(); }
     }
-    private void OnBButtonPressed(InputAction.CallbackContext context)
+    public void GetOnBButtonPressed()
     {
         if (isTutorialUI || isAudioUI || isMainBackUI) { BackAction(); }
-    }
-
-    private void OnDestroy()
-    {
-        if (yButton != null) yButton.performed -= OnYButtonPressed;
-        if (BButton != null) BButton.performed -= OnBButtonPressed;
     }
 
     public void OnClickMenu()
