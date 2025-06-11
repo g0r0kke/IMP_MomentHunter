@@ -4,9 +4,15 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactors;
+using UnityEngine.XR.Interaction.Toolkit.UI;
 
 public class OpeningUIManager : MonoBehaviour
 {
+    [Header("Debug")]
+    [SerializeField] private Text _debugText; // VR에서 디버그 정보 표시용
+
     [Header("UI Components")]
     [SerializeField] private GameObject _playUI;
     [SerializeField] private GameObject _settingsUI;
@@ -14,61 +20,148 @@ public class OpeningUIManager : MonoBehaviour
     [SerializeField] private Canvas _openingCanvas;
     [SerializeField] private Canvas _prologueCanvas;
     
-    [SerializeField] private GraphicRaycaster _graphicRaycaster;
+    [SerializeField] private TrackedDeviceGraphicRaycaster _trackedRaycaster;
     [SerializeField] private EventSystem _eventSystem;
+
+    [Header("VR Components")]
+    [SerializeField] private XRRayInteractor _leftRayInteractor; // 왼쪽 컨트롤러 레이 인터랙터
+    [SerializeField] private InputActionAsset _inputActions;     // VR Input Actions
 
     // 캔버스 상태 관리 변수 (true: 프롤로그, false: 오프닝)
     private bool _isPrologueActive = false;
     
+    // VR Input Actions
+    private InputAction _aButton;
+    
+    // 현재 레이가 가리키고 있는 UI
+    private GameObject _currentHoveredUI = null;
+    
     private void Start()
     {
         SetPrologueActive(_isPrologueActive);
+        SetupVRInputActions();
     }
-    private void Update()
+    
+    private void SetupVRInputActions()
     {
-        if (Input.GetMouseButtonDown(0) && !_isPrologueActive)
+        if (_inputActions == null)
         {
-            CheckUIClick();
+            Debug.LogError("InputActionAsset not found!");
+            return;
         }
 
-        if (Keyboard.current.aKey.wasPressedThisFrame && _isPrologueActive)
+        var rightActionMap = _inputActions?.FindActionMap("XRI Right");
+        if (rightActionMap != null)
         {
-            GameManager.Instance.TransitionToScene(1);
+            _aButton = rightActionMap.FindAction("AButton");
+            if (_aButton != null)
+            {
+                _aButton.Enable();
+                _aButton.performed += OnAButtonPressed;
+            }
+            else
+            {
+                Debug.LogError("AButton action not found!");
+            }
+        }
+        else
+        {
+            Debug.LogError("XRI Right action map not found!");
         }
     }
     
-    void CheckUIClick()
+    private void Update()
     {
-        if (_isPrologueActive) return;
-        
-        PointerEventData pointerData = new PointerEventData(_eventSystem);
-        pointerData.position = Input.mousePosition;
-   
-        List<RaycastResult> results = new List<RaycastResult>();
-        _graphicRaycaster.Raycast(pointerData, results);
-        
-        LayerMask uiLayerMask = LayerMask.GetMask("UI");
-       
-        // 히트된 UI 확인
-        foreach (RaycastResult result in results)
+        // VR 환경에서는 레이캐스트로 UI 검사
+        if (!_isPrologueActive)
         {
-            if ((uiLayerMask.value & (1 << result.gameObject.layer)) == 0) continue;
+            CheckVRUIHover();
+        }
+    }
+    
+    void CheckVRUIHover()
+    {
+        if (_isPrologueActive) 
+        {
+            UpdateDebugText("Prologue is active");
+            return;
+        }
         
-            if (result.gameObject == _playUI || result.gameObject.transform.IsChildOf(_playUI.transform))
+        if (_leftRayInteractor == null) 
+        {
+            UpdateDebugText("Left Ray Interactor is null!");
+            return;
+        }
+        
+        // XR Ray Interactor를 사용한 UI 검사
+        if (_leftRayInteractor.TryGetCurrentUIRaycastResult(out RaycastResult raycastResult))
+        {
+            GameObject hitUI = raycastResult.gameObject;
+            UpdateDebugText($"Ray hit: {hitUI.name}");
+            
+            // 현재 가리키고 있는 UI 업데이트
+            if (IsTargetUI(hitUI))
             {
-                OnPlayUIClicked();
-                return;
+                _currentHoveredUI = hitUI;
+                UpdateDebugText($"Target UI: {hitUI.name}");
             }
-            else if (result.gameObject == _settingsUI || result.gameObject.transform.IsChildOf(_settingsUI.transform))
+            else
             {
-                OnSettingsUIClicked();
-                return;
+                _currentHoveredUI = null;
+                UpdateDebugText($"Non-target: {hitUI.name}");
             }
-            else if (result.gameObject == _quitUI || result.gameObject.transform.IsChildOf(_quitUI.transform))
-            {
-                OnQuitUIClicked();
-                return;
-            }
+        }
+        else
+        {
+            _currentHoveredUI = null;
+            UpdateDebugText("No UI hit");
+        }
+    }
+    
+    private void UpdateDebugText(string message)
+    {
+        if (_debugText != null)
+        {
+            _debugText.text = message;
+        }
+    }
+    
+    private bool IsTargetUI(GameObject hitObject)
+    {
+        if (hitObject == null) return false;
+        
+        return (hitObject == _playUI || hitObject.transform.IsChildOf(_playUI.transform)) ||
+               (hitObject == _settingsUI || hitObject.transform.IsChildOf(_settingsUI.transform)) ||
+               (hitObject == _quitUI || hitObject.transform.IsChildOf(_quitUI.transform));
+    }
+    
+    private void OnAButtonPressed(InputAction.CallbackContext context)
+    {
+        if (_isPrologueActive)
+        {
+            // 프롤로그에서 A버튼 누르면 다음 씬으로
+            GameManager.Instance.TransitionToScene(1);
+        }
+        else if (_currentHoveredUI != null)
+        {
+            // 오프닝에서 레이가 UI에 닿은 상태에서 A버튼 누르면 해당 UI 클릭
+            HandleUIClick(_currentHoveredUI);
+        }
+    }
+    
+    private void HandleUIClick(GameObject clickedUI)
+    {
+        if (clickedUI == _playUI || clickedUI.transform.IsChildOf(_playUI.transform))
+        {
+            OnPlayUIClicked();
+        }
+        else if (clickedUI == _settingsUI || clickedUI.transform.IsChildOf(_settingsUI.transform))
+        {
+            OnSettingsUIClicked();
+        }
+        else if (clickedUI == _quitUI || clickedUI.transform.IsChildOf(_quitUI.transform))
+        {
+            OnQuitUIClicked();
         }
     }
 
@@ -93,5 +186,13 @@ public class OpeningUIManager : MonoBehaviour
         _isPrologueActive = isPrologueActive;
         _openingCanvas.enabled = !_isPrologueActive;
         _prologueCanvas.enabled = _isPrologueActive;
+    }
+    
+    private void OnDestroy()
+    {
+        if (_aButton != null) 
+        {
+            _aButton.performed -= OnAButtonPressed;
+        }
     }
 }
