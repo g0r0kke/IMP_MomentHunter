@@ -60,17 +60,17 @@ PrefabInstance:
       propertyPath: _isActive
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 7339367817659353110, guid: 23c00551d37edad40b6d69a6984ee84f, type: 3}
-      propertyPath: _mainCanvas
-      value: 
-      objectReference: {fileID: 83632052702815896}
     - target: {fileID: 8873573171520887073, guid: 23c00551d37edad40b6d69a6984ee84f, type: 3}
       propertyPath: _gameState
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8873573171520887073, guid: 23c00551d37edad40b6d69a6984ee84f, type: 3}
       propertyPath: _missionState
-      value: 8
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8873573171520887073, guid: 23c00551d37edad40b6d69a6984ee84f, type: 3}
+      propertyPath: _openingUIManager
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -78,8 +78,3 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 23c00551d37edad40b6d69a6984ee84f, type: 3}
---- !u!223 &83632052702815896 stripped
-Canvas:
-  m_CorrespondingSourceObject: {fileID: 194591086885947265, guid: 23c00551d37edad40b6d69a6984ee84f, type: 3}
-  m_PrefabInstance: {fileID: 259605109195628825}
-  m_PrefabAsset: {fileID: 0}
