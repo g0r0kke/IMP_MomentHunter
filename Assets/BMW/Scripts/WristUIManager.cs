@@ -24,7 +24,8 @@ public class WristUIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI SFXText;
     [SerializeField] private Slider SFXSlider;
     [SerializeField] private GameObject MainBackUI;
-    
+    [SerializeField] private GameObject CamUI;
+
     private string SelectedMenu;
 
     [Header("InteractorComponents")]
@@ -461,6 +462,15 @@ public class WristUIManager : MonoBehaviour
             if (isDebug) Debug.LogWarning("MainBackUI not found!");
         }
 
+            if (CamUI != null)
+        {
+            if (isDebug) Debug.Log("CamUI found!");
+        }
+        else
+        {
+            if (isDebug) Debug.LogWarning("CamUI not found!");
+        }
+
     }
 
     private void FindCameraComponents()
@@ -485,6 +495,7 @@ public class WristUIManager : MonoBehaviour
             R_directInteractor.SetActive(!isWristUI);
             R_rayInteractor.SetActive(!isWristUI);
             L_directInteractor.SetActive(!isWristUI);
+            if (CamUI != null && isWristUI) CamUI.SetActive(!isWristUI);
             if (isDebug) Debug.Log("Interactor modified.");
         }
         else
@@ -495,6 +506,7 @@ public class WristUIManager : MonoBehaviour
                 R_directInteractor.SetActive(!isWristUI);
                 R_rayInteractor.SetActive(!isWristUI);
                 L_directInteractor.SetActive(!isWristUI);
+                if (CamUI != null) CamUI.SetActive(!isWristUI);
                 if (isDebug) Debug.Log("Interactor found and modified.");
             }
             else
