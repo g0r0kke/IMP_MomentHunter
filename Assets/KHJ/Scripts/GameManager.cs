@@ -296,6 +296,14 @@ public class GameManager : MonoBehaviour
         if (sceneIndex == 0)
         {
             _shouldInitializeScene0Load = true;
+            
+            // 씬0으로 돌아갈 때 DontDestroyOnLoad AudioManager 파괴
+            if (AudioManager.BGMInstance)
+            {
+                Debug.Log("Destroying DontDestroyOnLoad AudioManager when returning to Scene 0");
+                Destroy(AudioManager.BGMInstance.gameObject);
+                // BGMInstance는 AudioManager의 OnDestroy에서 null로 설정됨
+            }
         }
         
         string targetScene = _sceneNames[sceneIndex];
