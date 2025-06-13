@@ -22,7 +22,8 @@ public class PhotoCaptureAndJudge : MonoBehaviour
     private AudioSource audioSource;
     public float startTimeInSeconds = 0f; 
     public float playDuration = 2f; 
-    
+    public GameObject tutorialCanvas;
+    public GameObject cameraFrameControl;
 
     [Header("Input")]
     public InputActionProperty triggerButton;   // 오른손 트리거
@@ -106,24 +107,27 @@ public class PhotoCaptureAndJudge : MonoBehaviour
 
     void Update()
     {
-        if (triggerButton.action.WasPressedThisFrame())
+        if (CameraModeController.Instance != null && CameraModeController.Instance.IsActive)
         {
-            PlayShutterEffect();
-            StartCoroutine(CaptureAndShowPhoto());       
-            int count = JudgeMultipleTargets();
-            Debug.Log($"현재 프레임 + 거리 통과 타겟 개수: {count}");
-            
-            // KHJ: GameManager에 촬영한 미션 오브젝트 개수 전달
-            if (GameManager.Instance)
+            if (triggerButton.action.WasPressedThisFrame())
             {
-                GameManager.Instance.SetMissionObjectCount(count);
-            }
+                PlayShutterEffect();
+                StartCoroutine(CaptureAndShowPhoto());
+                int count = JudgeMultipleTargets();
+                Debug.Log($"현재 프레임 + 거리 통과 타겟 개수: {count}");
 
-            if (useTutorial &&
-               TutorialManager.Instance != null &&
-               TutorialManager.Instance.Current == TutorialManager.Step.TakePhoto)
-            {
-                TutorialManager.Instance.OnTutorialPhotoTaken();
+                // KHJ: GameManager에 촬영한 미션 오브젝트 개수 전달
+                if (GameManager.Instance)
+                {
+                    GameManager.Instance.SetMissionObjectCount(count);
+                }
+
+                if (useTutorial &&
+                   TutorialManager.Instance != null &&
+                   TutorialManager.Instance.Current == TutorialManager.Step.TakePhoto)
+                {
+                    TutorialManager.Instance.OnTutorialPhotoTaken();
+                }
             }
         }
     }
@@ -188,6 +192,8 @@ public class PhotoCaptureAndJudge : MonoBehaviour
             }
 
             GameManager.Instance.SetMainCanvasActive(false);
+            tutorialCanvas.gameObject.SetActive(false);
+            cameraFrameControl.gameObject.SetActive(false);
             DisplayCanvas.gameObject.SetActive(true);  // 캔버스 전체 보여주기
             // panel.gameObject.SetActive(true);
 
@@ -195,6 +201,8 @@ public class PhotoCaptureAndJudge : MonoBehaviour
 
             GameManager.Instance.SetMainCanvasActive(true);
             DisplayCanvas.gameObject.SetActive(false);  // 다시 끄기
+            tutorialCanvas.gameObject.SetActive(true);
+            cameraFrameControl.gameObject.SetActive(true);
             // panel.gameObject.SetActive(false);
         }
     }
