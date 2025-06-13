@@ -4,10 +4,10 @@ public class MoveTriggerZone : MonoBehaviour
 {
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))  // XR Origin에 "Player" 태그 붙이기
+        // Check if the object entering the trigger zone has the "Player" tag
+        if (other.CompareTag("Player"))
         {
-            TutorialManager.Instance?.OnMoveDone(); // 튜토리얼 다음 단계로
-            Debug.Log("다음단계로로");
+            TutorialManager.Instance?.OnMoveDone();   // Notify tutorial progress
         }
     }
 }

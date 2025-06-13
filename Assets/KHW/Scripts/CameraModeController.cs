@@ -1,34 +1,29 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-
-// Grip을 눌러 카메라 UI를 켜고 끄는 컨트롤러
-
 public class CameraModeController : MonoBehaviour
 {
     public static CameraModeController Instance;
-    // public GameObject cameraModel;
-    public GameObject cameraUI; 
-    public GameObject cameraModel;
+    public GameObject cameraUI;   // Camera UI object
+    public GameObject cameraModel;  // Camera 3D model
 
-    public InputActionProperty gripAction;   
+    public InputActionProperty gripAction;    // Grip button input
 
-    public bool IsActive { get; private set; }
+    public bool IsActive { get; private set; }   // Current camera mode state
 
     void Awake()
     {
-        Instance = this;    
+        Instance = this;    // Singleton instance
     }
     void Start()
     {
-        cameraUI.SetActive(false); 
+        cameraUI.SetActive(false);   // Hide UI at start
     }
 
-
-    /* ─────────── Input 바인딩 ─────────── */
+    // Input binding
     void OnEnable()
     {
-        gripAction.action.performed += OnGripPressed;   // 눌렀을 때
-        gripAction.action.canceled  += OnGripReleased;  // 뗐을 때
+        gripAction.action.performed += OnGripPressed;   // On grip press
+        gripAction.action.canceled  += OnGripReleased;  // On grip release
         gripAction.action.Enable();
     }
     void OnDisable()
@@ -38,15 +33,15 @@ public class CameraModeController : MonoBehaviour
         gripAction.action.Disable();
     }
 
-    /* ─────────── 이벤트 핸들러 ─────────── */
+    // Event handlers
     void OnGripPressed(InputAction.CallbackContext _)
     {
         if (IsActive) return;
         IsActive = true;
 
-        cameraUI.SetActive(true);
-        cameraModel.SetActive(false);
-        TutorialManager.Instance?.OnRightGrabDone();
+        cameraUI.SetActive(true);   // Show camera UI
+        cameraModel.SetActive(false);   // Hide camera model
+        TutorialManager.Instance?.OnRightGrabDone();   // Notify tutorial progress
     }
 
     void OnGripReleased(InputAction.CallbackContext _)
@@ -54,7 +49,7 @@ public class CameraModeController : MonoBehaviour
         if (!IsActive) return;
         IsActive = false;
 
-        cameraUI.SetActive(false);
-        cameraModel.SetActive(true);
+        cameraUI.SetActive(false);   // Hide camera UI
+        cameraModel.SetActive(true);   // Show camera model
     }
 }
