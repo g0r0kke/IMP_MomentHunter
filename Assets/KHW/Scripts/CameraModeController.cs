@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 
 public class CameraModeController : MonoBehaviour
 {
+    public static CameraModeController Instance;
     // public GameObject cameraModel;
     public GameObject cameraUI; 
     public GameObject cameraModel;
@@ -12,6 +13,11 @@ public class CameraModeController : MonoBehaviour
     public InputActionProperty gripAction;   
 
     public bool IsActive { get; private set; }
+
+    void Awake()
+    {
+        Instance = this;    
+    }
     void Start()
     {
         cameraUI.SetActive(false); 
