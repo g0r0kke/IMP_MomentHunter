@@ -1796,6 +1796,10 @@ PrefabInstance:
       propertyPath: m_TagString
       value: OverlayObject
       objectReference: {fileID: 0}
+    - target: {fileID: 5931843867623478066, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 581edfb370a734c4493a8d3e30be5641, type: 2}
     - target: {fileID: 6247704667574611770, guid: e1be2e5bb9a4406448b4df0bd194f606, type: 3}
       propertyPath: m_TagString
       value: OverlayObject
