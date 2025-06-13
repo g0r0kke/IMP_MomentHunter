@@ -9,14 +9,17 @@ public class TransformAnimator : MonoBehaviour
     [SerializeField] private Vector3 targetRotation;
     [SerializeField] private Vector3 targetScale = Vector3.one;
     
+    [Header("Key Settings")]
+    [SerializeField] private GameObject keyPrefab;
+    
     private Vector3 startPosition;
     private Vector3 startRotation;
     private Vector3 startScale;
     
     private void Start()
     {
-        startPosition = transform.position;
-        startRotation = transform.eulerAngles;
+        startPosition = transform.localPosition;    // localPosition으로 변경
+        startRotation = transform.localEulerAngles; // localEulerAngles로 변경
         startScale = transform.localScale;
     }
     
@@ -25,28 +28,31 @@ public class TransformAnimator : MonoBehaviour
     /// </summary>
     public void AnimateTransform()
     {
+        if (keyPrefab) keyPrefab.SetActive(false);
+        
         StartCoroutine(DoAnimation());
     }
     
     private IEnumerator DoAnimation()
     {
         float elapsedTime = 0f;
+        Vector3 positionDelta = targetPosition - startPosition;
         
         while (elapsedTime < duration)
         {
             float t = elapsedTime / duration;
-            
-            transform.position = Vector3.Lerp(startPosition, targetPosition, t);
-            transform.eulerAngles = Vector3.Lerp(startRotation, targetRotation, t);
+        
+            transform.localPosition = Vector3.Lerp(startPosition, targetPosition, t);    
+            transform.localEulerAngles = Vector3.Lerp(startRotation, targetRotation, t); 
             transform.localScale = Vector3.Lerp(startScale, targetScale, t);
-            
+        
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-        
+    
         // 정확한 최종값 설정
-        transform.position = targetPosition;
-        transform.eulerAngles = targetRotation;
+        transform.localPosition = targetPosition;    
+        transform.localEulerAngles = targetRotation; 
         transform.localScale = targetScale;
     }
 }
