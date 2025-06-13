@@ -4,16 +4,16 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class ControllerButtonManager : MonoBehaviour
 {
-    // === inputActions REFERENCES ===
+    // inputActions REFERENCES
     [Header("inputActions")]
     [SerializeField] private InputActionAsset inputActions; // Reference to the Input Action Asset for controller mapping
 
     // Debug
-    [Header("Check Debug:")]
-    [SerializeField] bool isDebug = true; // Toggle for debug logging
+    [Header("Debug Log")]
+    [SerializeField] private bool isDebug = true; // Toggle for debug logging
 
     // Controller CONFIGURATION
-    private InputAction yButton;    // Action reference for the Y button (typically left controller)
+    private InputAction YButton;    // Action reference for the Y button (typically left controller)
     private InputAction BButton;    // Action reference for the B button (typically right controller)
 
     // External Script References
@@ -62,11 +62,11 @@ public class ControllerButtonManager : MonoBehaviour
         var LeftActionMap = inputActions?.FindActionMap("XRI Left");
         if (LeftActionMap != null)
         {
-            yButton = LeftActionMap.FindAction("YButton");
-            if (yButton != null)
+            YButton = LeftActionMap.FindAction("YButton");
+            if (YButton != null)
             {
-                yButton.Enable();
-                yButton.performed += OnYButtonPressed;
+                YButton.Enable();
+                YButton.performed += OnYButtonPressed;
             }
             else
             {
@@ -134,7 +134,7 @@ public class ControllerButtonManager : MonoBehaviour
     // Unsubscribes from input action events to prevent memory leaks.
     private void OnDestroy()
     {
-        if (yButton != null) yButton.performed -= OnYButtonPressed;
+        if (YButton != null) YButton.performed -= OnYButtonPressed;
         if (BButton != null) BButton.performed -= OnBButtonPressed;
     }
 }

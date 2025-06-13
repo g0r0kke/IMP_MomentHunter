@@ -14,7 +14,7 @@ public class OverlayObjectTargetManager : MonoBehaviour
     [SerializeField] private string ActiveTag = "MissionTarget";   // Tag to set when object is active
 
     // Debug
-    [Header("DeBug Log")]
+    [Header("Debug Log")]
     [SerializeField] private bool IsDebug = false;                 // Enable/disable debug logging
 
     // Object Checker CONFIGURATION

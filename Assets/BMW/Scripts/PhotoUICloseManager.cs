@@ -20,8 +20,8 @@ public class PhotoUICloseManager : MonoBehaviour
     [SerializeField] private string CAMUIName;       // Name for locating CAMUI in hierarchy
 
     // Debug
-    [Header("Check Debug:")]
-    [SerializeField] bool isDebug = true;            // Enable/disable diagnostic logging
+    [Header("Debug Log")]
+    [SerializeField] private bool isDebug = true;            // Enable/disable diagnostic logging
 
     void Start()
     {

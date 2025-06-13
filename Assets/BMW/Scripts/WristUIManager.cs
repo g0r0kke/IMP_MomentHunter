@@ -42,8 +42,8 @@ public class WristUIManager : MonoBehaviour
     [SerializeField] private GameObject Camera; // Main camera holder
 
     // Debug and State Flags
-    [Header("Check Debug:")]
-    [SerializeField] bool isDebug = true; // Enable debug logging
+    [Header("Debug Log")]
+    [SerializeField] private bool isDebug = true; // Enable debug logging
     private bool isWristUI;      // Wrist UI active state
     private bool isTutorialUI;   // Tutorial UI active state
     private bool isAudioUI;      // Audio UI active state
@@ -100,11 +100,6 @@ public class WristUIManager : MonoBehaviour
         OnSFXSliderValueChanged(SFXValue);
 
         ResetAction(); // Reset menu selection
-    }
-
-    void Update()
-    {
-        // Empty: Reserved for per-frame logic if needed
     }
 
     // Returns true if any sub-UI (tutorial, audio, main back) is active
