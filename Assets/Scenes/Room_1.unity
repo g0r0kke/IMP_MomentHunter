@@ -43566,34 +43566,6 @@ PrefabInstance:
       propertyPath: targetObject
       value: 
       objectReference: {fileID: 529584146}
-    - target: {fileID: 5704298771182730356, guid: 81fc856e350b3d74b924a6341f4bfed8, type: 3}
-      propertyPath: m_Size.x
-      value: 0.7770102
-      objectReference: {fileID: 0}
-    - target: {fileID: 5704298771182730356, guid: 81fc856e350b3d74b924a6341f4bfed8, type: 3}
-      propertyPath: m_Size.y
-      value: 0.60612994
-      objectReference: {fileID: 0}
-    - target: {fileID: 5704298771182730356, guid: 81fc856e350b3d74b924a6341f4bfed8, type: 3}
-      propertyPath: m_Size.z
-      value: 0.8866814
-      objectReference: {fileID: 0}
-    - target: {fileID: 5704298771182730356, guid: 81fc856e350b3d74b924a6341f4bfed8, type: 3}
-      propertyPath: m_Center.x
-      value: 3.4826374
-      objectReference: {fileID: 0}
-    - target: {fileID: 5704298771182730356, guid: 81fc856e350b3d74b924a6341f4bfed8, type: 3}
-      propertyPath: m_Center.y
-      value: 1.5489012
-      objectReference: {fileID: 0}
-    - target: {fileID: 5704298771182730356, guid: 81fc856e350b3d74b924a6341f4bfed8, type: 3}
-      propertyPath: m_Center.z
-      value: 0.19341944
-      objectReference: {fileID: 0}
-    - target: {fileID: 5727475073523104700, guid: 81fc856e350b3d74b924a6341f4bfed8, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6210129394503743113, guid: 81fc856e350b3d74b924a6341f4bfed8, type: 3}
       propertyPath: m_Camera
       value: 
@@ -43603,8 +43575,7 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1595582682}
     m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 1271985569937482239, guid: 81fc856e350b3d74b924a6341f4bfed8, type: 3}
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 81fc856e350b3d74b924a6341f4bfed8, type: 3}
