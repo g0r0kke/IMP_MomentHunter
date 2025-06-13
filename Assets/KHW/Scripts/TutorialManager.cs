@@ -3,10 +3,11 @@ using System.Collections;
 
 public class TutorialManager : MonoBehaviour
 {
-    public enum Step { None, Teleport, Move, GrabLeft, GrabRight, TakePhoto, Mission1, AllDone }
-    public Step Current { get; private set; }
+    // Tutorial steps
+    public enum Step { None, Teleport, Move, GrabLeft, GrabRight, TakePhoto, AllDone }
+    public Step Current { get; private set; }   // Current tutorial step
     
-    public static TutorialManager Instance;
+    public static TutorialManager Instance;   // Singleton instance
     void Awake() => Instance = this;
     
 
@@ -31,93 +32,96 @@ public class TutorialManager : MonoBehaviour
 
     void Start()
     {
-        Debug.Log("[튜토리얼 시작]");
         StartCoroutine(RunTutorial());
     }
 
+    // Start tutorial flow
     IEnumerator RunTutorial()
     {
+        // Step 1: Move
         Current = Step.Move;
         moveTriggerZoneObject.SetActive(true);
         moveUI.SetActive(true);
-        Debug.Log("[1단계] move 시작");
 
         yield return null;
     }
 
+    // Called when Move is completed
     public void OnMoveDone()
     {
         if (Current != Step.Move) return;
 
+        // Hide move step UI
         moveTriggerZoneObject.SetActive(false);
         moveUI.SetActive(false);
-        Debug.Log("조이스틱 이동 완료");
 
-        audioSrc.PlayOneShot(successClip);
+        audioSrc.PlayOneShot(successClip);  // Play success sound
 
+        // Step 2: Teleport
         Current = Step.Teleport;
         teleportTriggerZoneObject.SetActive(true);
         teleportUI.SetActive(true);
-        Debug.Log("[2단계] 텔레포트 시작");
     }
 
+    // Called when Teleport is completed
     public void OnTeleportDone()
     {
         if (Current != Step.Teleport) return;
 
+        // Hide teleport step UI
         teleportTriggerZoneObject.SetActive(false);
         teleportUI.SetActive(false);
 
-        audioSrc.PlayOneShot(successClip);
+        audioSrc.PlayOneShot(successClip);  // Play success sound
 
-        /* 3. 왼손 그립 학습 */
+        // Step 3: Left grab
         Current = Step.GrabLeft;
-        leftGrabDetectorObject.SetActive(true);  
+        leftGrabDetectorObject.SetActive(true);
         leftGrabUI.SetActive(true);
-        Debug.Log("[3단계] 왼손 그립 시작 (미션1 진행 중)");
     }
 
+    // Called when Left grab is completed
     public void OnLeftGrabDone()
     {
         if (Current != Step.GrabLeft) return;
 
+        // Hide left grab step UI
         leftGrabDetectorObject.SetActive(false);
         leftGrabUI.SetActive(false);
 
-        audioSrc.PlayOneShot(successClip);
+        audioSrc.PlayOneShot(successClip);   // Play success sound
 
-        /* 4. 오른손 그립 + 카메라 모드 진입 */
+        // Step 4: Right grab
         Current = Step.GrabRight;
         rightGrabUI.SetActive(true);
-        Debug.Log("[4단계] 오른손 그립 + 카메라 모드 진입 시작 (미션1 진행 중)");
     }
 
+    // Called when Right grab is completed
     public void OnRightGrabDone()
     {
         if (Current != Step.GrabRight) return;
 
+        // Hide right grab step UI
         rightGrabUI.SetActive(false);
 
-        audioSrc.PlayOneShot(successClip);
+        audioSrc.PlayOneShot(successClip);   // Play success sound
 
-        /* 5. 사진 촬영 */
+        // Step 5: Take photo
         Current = Step.TakePhoto;
         photoUI.SetActive(true);
-        Debug.Log("[5단계] 사진 촬영 시작 (미션1 진행 중)");
     }
 
-    /* PhotoCaptureAndJudge 에서 호출 */
+    // Called by PhotoCaptureAndJudge
     public void OnTutorialPhotoTaken()
     {
         if (Current != Step.TakePhoto) return;
 
-        photoUI.SetActive(false);
+        photoUI.SetActive(false);   // Hide photo step UI
+        audioSrc.PlayOneShot(successClip);   // Play success sound
 
-        audioSrc.PlayOneShot(successClip);
-
+        // All done
         Current = Step.AllDone;
-        Debug.Log("< 튜토리얼 + 미션1 완료 >");
-        tutorialCanvas.SetActive(false);
-        GameManager.Instance.SetNextMissionState();
+        tutorialCanvas.SetActive(false);   // Hide tutorial canvas
+        GameManager.Instance.SetNextMissionState();   // Notify GameManager
     }
 }

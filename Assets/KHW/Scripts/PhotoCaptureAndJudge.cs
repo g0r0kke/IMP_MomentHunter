@@ -1,41 +1,45 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.IO;
-using System.Collections.Generic;
 using System.Collections;
 using UnityEngine.UI;
-using static UnityEngine.Rendering.DebugUI;
 
 public class PhotoCaptureAndJudge : MonoBehaviour
 {
-    public TutorialMission tutorialMission;
-    public bool useTutorial = true;
-    public CanvasGroup flashCanvasGroup;
+    [Header("Tutorial Settings")]
+    public bool useTutorial = true;   // Use tutorial mode
+
+    [Header("Flash Effect")]
+    public CanvasGroup flashCanvasGroup;   // Flash effect
     public float flashDuration = 0.2f;
-    // public RawImage photoDisplay;
-    public GameObject DisplayCanvas;
-    public float photoDisplayDuration = 5f;
-    // public GameObject panel;
-    public GameObject CameraFrame;
-    public RenderTexture captureRT;
-    public AudioClip shutterClip;        
+
+    [Header("Audio")]
+    public AudioClip shutterClip;   // Shutter sound
+    public float startTimeInSeconds = 0f;   // Shutter start time
+    public float playDuration = 2f;    // Shutter play duration
     private AudioSource audioSource;
-    public float startTimeInSeconds = 0f; 
-    public float playDuration = 2f; 
+
+    [Header("UI References")]
+    public GameObject DisplayCanvas;   // Photo display canvas
+    public float photoDisplayDuration = 5f;
+    public GameObject CameraFrame;
     public GameObject tutorialCanvas;
     public GameObject cameraFrameControl;
 
+    [Header("Render Target")]
+    public RenderTexture captureRT;
+
     [Header("Input")]
-    public InputActionProperty triggerButton;   // 오른손 트리거
+    public InputActionProperty triggerButton;   // Right hand trigger
 
-    [Header("Camera / Distance")]
-    public Camera captureCam;                   // 카메라(대개 MainCamera)
-    public float maxJudgeDistance = 5f;
-    public LayerMask TargetLayer;          // PhotoTarget 레이어만 체크
+    [Header("Camera Settings")]
+    public Camera captureCam;   // Capture camera
+    public float maxJudgeDistance = 5f;   // Max judge distance
+    public LayerMask TargetLayer;   // Layer to detect
 
-    [Header("Save")]
+    [Header("Save Settings")]
     public bool savePhotoToFile = true;
-    public string saveFolder = "Photos";
+    public string saveFolder = "Photos";   // Folder path
 
     void Start()
     {
@@ -43,44 +47,48 @@ public class PhotoCaptureAndJudge : MonoBehaviour
         {
             string path = Path.Combine(Application.persistentDataPath, saveFolder);
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
-            saveFolder = path;   // 퀘스트 빌드 대비
+            saveFolder = path;   // For Quest build
         }
-        audioSource = GetComponent<AudioSource>();
+
+        audioSource = GetComponent<AudioSource>();   // Get audio source
     }
 
+    // Play shutter sound and flash effect
     void PlayShutterEffect()
     {
-        
+        // Play sound
         if (shutterClip != null && audioSource != null)
         {
             audioSource.clip = shutterClip;
             audioSource.time = startTimeInSeconds; 
             audioSource.Play();
 
-            // 2초만 재생 후 Stop() 코루틴 실행
+            // Stop sound after delay
             StartCoroutine(StopAudioAfterSeconds(playDuration));
         }
 
-        // 플래시 코루틴 실행
+        // Play flash effect
         if (flashCanvasGroup != null)
         {
             StartCoroutine(FlashRoutine());
         }
     }
 
+    // Stop audio after duration
     IEnumerator StopAudioAfterSeconds(float duration)
     {
         yield return new WaitForSeconds(duration);
         audioSource.Stop();
     }
 
-
+    // Flash UI fade in/out
     IEnumerator FlashRoutine()
     {
         float fadeInDuration = flashDuration * 0.3f;
         float holdDuration = flashDuration * 0.2f;
         float fadeOutDuration = flashDuration * 0.5f;
 
+        // Fade in
         float t = 0f;
         while (t < fadeInDuration)
         {
@@ -90,8 +98,10 @@ public class PhotoCaptureAndJudge : MonoBehaviour
         }
         flashCanvasGroup.alpha = 1f;
 
+        // Hold
         yield return new WaitForSeconds(holdDuration);
 
+        // Fade out
         t = 0f;
         while (t < fadeOutDuration)
         {
@@ -102,26 +112,31 @@ public class PhotoCaptureAndJudge : MonoBehaviour
         flashCanvasGroup.alpha = 0f;
     }
 
-    void OnEnable() => triggerButton.action.Enable();
-    void OnDisable() => triggerButton.action.Disable();
+    void OnEnable() => triggerButton.action.Enable();   // Enable input
+    void OnDisable() => triggerButton.action.Disable();   // Disable input
 
     void Update()
     {
+        // Only if camera mode active
         if (CameraModeController.Instance != null && CameraModeController.Instance.IsActive)
         {
+            // On trigger press
             if (triggerButton.action.WasPressedThisFrame())
             {
-                PlayShutterEffect();
-                StartCoroutine(CaptureAndShowPhoto());
-                int count = JudgeMultipleTargets();
-                Debug.Log($"현재 프레임 + 거리 통과 타겟 개수: {count}");
+                PlayShutterEffect();   // Play sound & flash
+                StartCoroutine(CaptureAndShowPhoto());   // Capture photo
 
-                // KHJ: GameManager에 촬영한 미션 오브젝트 개수 전달
+                // Judge targets
+                int count = JudgeMultipleTargets();
+                // Debug.Log($"pass target count : {count}");
+
+                // KHJ: Send count to GameManager
                 if (GameManager.Instance)
                 {
                     GameManager.Instance.SetMissionObjectCount(count);
                 }
 
+                // Tutorial check
                 if (useTutorial &&
                    TutorialManager.Instance != null &&
                    TutorialManager.Instance.Current == TutorialManager.Step.TakePhoto)
@@ -132,57 +147,33 @@ public class PhotoCaptureAndJudge : MonoBehaviour
         }
     }
 
-    /* ----------------------- 화면에 사진 띄우기 ----------------------- */
+    // Show captured photo on screen
     IEnumerator CaptureAndShowPhoto()
     {
-
-        // yield return new WaitForEndOfFrame();
-
-        // int cropSize = Mathf.Min(Screen.width, Screen.height); // 정사각형 crop
-        // int startX = (Screen.width - cropSize) / 2;
-        // int startY = (Screen.height - cropSize) / 2;
-
-        // Texture2D screenTex = new Texture2D(cropSize, cropSize, TextureFormat.RGB24, false);
-        // screenTex.ReadPixels(new Rect(startX, startY, cropSize, cropSize), 0, 0);
-        // screenTex.Apply();
+        // Enable capture cam
         captureCam.enabled = true;
         captureCam.targetTexture = captureRT;
         captureCam.Render();
 
+        // Read pixels to Texture2D
         RenderTexture.active = captureRT;
         Texture2D tex = new Texture2D(captureRT.width, captureRT.height, TextureFormat.RGB24, false);
         tex.ReadPixels(new Rect(0, 0, captureRT.width, captureRT.height), 0, 0);
         tex.Apply();
 
+        // Disable capture cam
         captureCam.enabled = false;
         RenderTexture.active = null;
 
-
+        // Save to file
         if (savePhotoToFile)
         {
             string file = Path.Combine(saveFolder,
                 $"Photo_{System.DateTime.Now:yyyyMMdd_HHmmss}.png");
             File.WriteAllBytes(file, tex.EncodeToPNG());
-            Debug.Log($"사진 저장: {file}");
         }
 
-        // RawImage 활성화 + 표시
-        // if (photoDisplay != null)
-        // {
-        //     photoDisplay.texture = tex;
-        //     photoDisplay.gameObject.SetActive(true);
-        //     panel.gameObject.SetActive(true);
-
-        //     yield return new WaitForSeconds(photoDisplayDuration);
-
-        //     // RawImage 비활성화
-        //     photoDisplay.gameObject.SetActive(false);
-        //     panel.gameObject.SetActive(false);
-
-        //     // 메모리 해제
-        //     Destroy(tex);
-        // }
-
+        // Show captured photo in UI
         if (DisplayCanvas != null)
         {
             var photoRawImage = DisplayCanvas.transform.Find("CapturedPhoto").GetComponent<RawImage>();
@@ -191,60 +182,60 @@ public class PhotoCaptureAndJudge : MonoBehaviour
                 photoRawImage.texture = tex;
             }
 
+            // Hide other UI
             GameManager.Instance.SetMainCanvasActive(false);
             tutorialCanvas.gameObject.SetActive(false);
             cameraFrameControl.gameObject.SetActive(false);
-            DisplayCanvas.gameObject.SetActive(true);  // 캔버스 전체 보여주기
-            // panel.gameObject.SetActive(true);
 
+            // Show display
+            DisplayCanvas.gameObject.SetActive(true);  
+
+            // Wait display time
             yield return new WaitForSeconds(photoDisplayDuration);
 
+            // Restore UI
             GameManager.Instance.SetMainCanvasActive(true);
-            DisplayCanvas.gameObject.SetActive(false);  // 다시 끄기
+            DisplayCanvas.gameObject.SetActive(false);  
             tutorialCanvas.gameObject.SetActive(true);
             cameraFrameControl.gameObject.SetActive(true);
-            // panel.gameObject.SetActive(false);
+
         }
     }
 
-    /* ---------------- 다중 타겟 판정 ---------------- */
+    // Judge multiple targets
     int JudgeMultipleTargets()
     {
         Vector3 camPos = captureCam.transform.position;
+
+        // Find nearby colliders
         Collider[] hits = Physics.OverlapSphere(camPos, maxJudgeDistance, TargetLayer);
 
         int visibleCount = 0;
+        
+        // Check each collider
         foreach (Collider col in hits)
         {
-            if (!col.CompareTag("MissionTarget")) continue; 
+            if (!col.CompareTag("MissionTarget")) continue;   // Check tag
 
+            // Check if in camera view
             if (IsInView(col.transform))
             {
                 visibleCount++;
-#if UNITY_EDITOR
-                Debug.Log($"뷰포트 + 거리 통과: {col.name}");
-#endif
+            // #if UNITY_EDITOR
+            //     Debug.Log($"pass target : {col.name}");
+            // #endif
             }
         }
 
-        return visibleCount; // 프레임 + 거리 통과한 개수만 반환
+        return visibleCount; // Return visible target count
     }
 
-    // 카메라 뷰 안(0~1) + 정면(Z>0)인지 검사
+    // Check if target is in camera view and in front
     bool IsInView(Transform target)
     {
         Vector3 vPos = captureCam.WorldToViewportPoint(target.position);
+        // Check Z>0 and viewport inside (0~1)
         return vPos.z > 0f && vPos.x is >= 0f and <= 1f && vPos.y is >= 0f and <= 1f;
     }
 
-    // 카메라 → 타겟 라인에 가로막는 물체가 없는지 검사
-    // bool IsVisible(Vector3 camPos, Collider targetCol)
-    // {
-    //     Vector3 targetCenter = targetCol.bounds.center;
-    //     Vector3 dir = targetCenter - camPos;
-
-    //     // Linecast로 가장 먼저 맞는 콜라이더가 본인인가?
-    //     return !Physics.Linecast(camPos, targetCenter, out RaycastHit hit, ~0)
-    //         || hit.collider == targetCol;
-    // }
 }
