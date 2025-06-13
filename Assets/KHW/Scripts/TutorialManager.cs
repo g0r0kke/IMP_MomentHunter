@@ -17,6 +17,7 @@ public class TutorialManager : MonoBehaviour
     public GameObject leftGrabUI;
     public GameObject rightGrabUI;
     public GameObject photoUI;
+    public GameObject tutorialCanvas;
 
     [Header("Trigger Zones")]
     public GameObject moveTriggerZoneObject;
@@ -116,6 +117,7 @@ public class TutorialManager : MonoBehaviour
 
         Current = Step.AllDone;
         Debug.Log("< 튜토리얼 + 미션1 완료 >");
+        tutorialCanvas.SetActive(false);
         GameManager.Instance.SetNextMissionState();
     }
 }
