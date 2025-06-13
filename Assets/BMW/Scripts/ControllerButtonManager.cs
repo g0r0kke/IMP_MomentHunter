@@ -4,29 +4,31 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class ControllerButtonManager : MonoBehaviour
 {
-
+    // === inputActions REFERENCES ===
     [Header("inputActions")]
-    [SerializeField] private InputActionAsset inputActions;
+    [SerializeField] private InputActionAsset inputActions; // Reference to the Input Action Asset for controller mapping
 
-
+    // Debug
     [Header("Check Debug:")]
-    [SerializeField] bool isDebug = true;
+    [SerializeField] bool isDebug = true; // Toggle for debug logging
 
-    private InputAction yButton;
-    private InputAction BButton;
-    private XRGrabInteractable grabInteractable;
+    // Controller CONFIGURATION
+    private InputAction yButton;    // Action reference for the Y button (typically left controller)
+    private InputAction BButton;    // Action reference for the B button (typically right controller)
 
-    private WristUIManager wristUIManager;
-    private PhotoUICloseManager photoUICloseManager;
+    // External Script References
+    private WristUIManager wristUIManager;               // Reference to Wrist UI manager script
+    private PhotoUICloseManager photoUICloseManager;     // Reference to Photo UI close manager script
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         try
         {
+            // Find and cache references to UI management scripts in the scene
             wristUIManager = FindAnyObjectByType<WristUIManager>();
             photoUICloseManager = FindAnyObjectByType<PhotoUICloseManager>();
 
+            // Error logging if managers are not found
             if (wristUIManager == null)
             {
                 if (isDebug) Debug.LogError("WristUIManager not found!");
@@ -37,15 +39,17 @@ public class ControllerButtonManager : MonoBehaviour
                 if (isDebug) Debug.LogError("PhotoUICloseManager not found!");
             }
 
+            // Set up input action bindings
             SetupInputActions();
         }
         catch (System.Exception e)
         {
             if (isDebug) Debug.LogError($"Start Exception: {e.Message}");
         }
-
     }
 
+    // Configures input action bindings for Y and B buttons.
+    // Subscribes event handlers to their performed events.
     private void SetupInputActions()
     {
         if (inputActions == null)
@@ -54,6 +58,7 @@ public class ControllerButtonManager : MonoBehaviour
             return;
         }
 
+        // Locate left controller action map and bind Y button
         var LeftActionMap = inputActions?.FindActionMap("XRI Left");
         if (LeftActionMap != null)
         {
@@ -73,17 +78,17 @@ public class ControllerButtonManager : MonoBehaviour
             if (isDebug) Debug.LogError("XRI Left action map not found!");
         }
 
+        // Locate right controller action map and bind B button
         var RightActionMap = inputActions?.FindActionMap("XRI Right");
         if (RightActionMap != null)
         {
-
             BButton = RightActionMap.FindAction("BButton");
             if (BButton != null)
             {
                 BButton.Enable();
                 BButton.performed += OnBButtonPressed;
             }
-            else 
+            else
             {
                 if (isDebug) Debug.LogError("BButton action not found!");
             }
@@ -94,23 +99,29 @@ public class ControllerButtonManager : MonoBehaviour
         }
     }
 
+    /*
+    * Called when the Y button is pressed.
+    * - If Photo UI is open, closes it and opens Main UI.
+    * - Otherwise, toggles the Wrist UI.
+    */
     private void OnYButtonPressed(InputAction.CallbackContext context)
     {
         if (isDebug) Debug.Log("Y Button Pressed");
-        
+
+        // Give priority to closing the Photo UI if it's active
         if (photoUICloseManager != null && photoUICloseManager.GetActPhotoUICanvus())
         {
             photoUICloseManager.GetOnYButtonPressed();
         }
+        // Otherwise, toggle Wrist UI
         else if (wristUIManager != null)
         {
-            
-        wristUIManager.GetOnYButtonPressed();
-            
+            wristUIManager.GetOnYButtonPressed();
         }
-        
     }
 
+    // Called when the B button is pressed.
+    // - If Wrist UI is active, triggers its back action.
     private void OnBButtonPressed(InputAction.CallbackContext context)
     {
         if (isDebug) Debug.Log("B  Button Pressed");
@@ -120,6 +131,7 @@ public class ControllerButtonManager : MonoBehaviour
         }
     }
 
+    // Unsubscribes from input action events to prevent memory leaks.
     private void OnDestroy()
     {
         if (yButton != null) yButton.performed -= OnYButtonPressed;

@@ -10,73 +10,70 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class PhotoUICloseManager : MonoBehaviour
 {
-
+    // === UI COMPONENT REFERENCES ===
     [Header("UIComponents")]
-    [SerializeField] private GameObject MainUI;
-    [SerializeField] private string MainUIName;
-    [SerializeField] private GameObject PhotoUI;
-    [SerializeField] private string PhotoUIName;
-    [SerializeField] private GameObject CAMUI;
-    [SerializeField] private string CAMUIName;
+    [SerializeField] private GameObject MainUI;      // Primary interface panel
+    [SerializeField] private string MainUIName;      // Name for locating MainUI in hierarchy
+    [SerializeField] private GameObject PhotoUI;     // Photo-related UI panel
+    [SerializeField] private string PhotoUIName;     // Name for locating PhotoUI in hierarchy
+    [SerializeField] private GameObject CAMUI;       // Camera control interface
+    [SerializeField] private string CAMUIName;       // Name for locating CAMUI in hierarchy
 
+    // Debug
     [Header("Check Debug:")]
-    [SerializeField] bool isDebug = true;
+    [SerializeField] bool isDebug = true;            // Enable/disable diagnostic logging
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
-        FindUIComponents();
-
+        FindUIComponents();  // Initialize UI references on startup
     }
 
-
+    // Checks if photo UI is currently active in hierarchy
     public bool GetActPhotoUICanvus()
     {
-        if (PhotoUI != null && PhotoUI.activeInHierarchy) { return true; }
-        else { return false; }
+        return PhotoUI != null && PhotoUI.activeInHierarchy;
     }
 
+    /* Handles Y button press event for UI state management
+    * - Closes photo UI
+    * - Re-opens main UI
+    * - Maintains camera UI state
+    */
     public void GetOnYButtonPressed()
     {
         PhotoUI.SetActive(false);
         MainUI.SetActive(true);
-        if (isDebug) Debug.Log($"{PhotoUIName} closed & {MainUIName} opend");
-
+        if (isDebug) Debug.Log($"{PhotoUIName} closed & {MainUIName} opened");
     }
 
+    /* Locates and caches UI components in hierarchy using serialized names
+    *  Provides fallback for manual reference assignment
+    */
     private void FindUIComponents()
     {
+        // Main UI panel initialization
+        if (MainUI == null) MainUI = transform.Find(MainUIName)?.gameObject;
+        LogComponentStatus(MainUI, MainUIName);
 
-        if (MainUI == null) MainUI = transform.Find(MainUIName).gameObject;
-        if (MainUI != null)
-        {
-            if (isDebug) Debug.Log($"{MainUIName} found!");
-        }
-        else
-        {
-            if (isDebug) Debug.LogWarning($"{MainUIName} not found!");
-        }
+        // Photo UI panel initialization
+        if (PhotoUI == null) PhotoUI = transform.Find(PhotoUIName)?.gameObject;
+        LogComponentStatus(PhotoUI, PhotoUIName);
 
-        if (PhotoUI == null) PhotoUI = transform.Find(PhotoUIName).gameObject;
-        if (PhotoUI != null)
-        {
-            if (isDebug) Debug.Log($"{PhotoUIName} found!");
-        }
-        else
-        {
-            if (isDebug) Debug.LogWarning($"{PhotoUIName} not found!");
-        }
+        // Camera UI element initialization
+        if (CAMUI == null) CAMUI = transform.Find(CAMUIName)?.gameObject;
+        LogComponentStatus(CAMUI, CAMUIName);
+    }
 
-        if (CAMUI == null) CAMUI = transform.Find(CAMUIName).gameObject;
-        if (CAMUI != null)
+    // Handles debug logging for component initialization status
+    private void LogComponentStatus(GameObject component, string componentName)
+    {
+        if (component != null && isDebug)
         {
-            if (isDebug) Debug.Log($"{CAMUIName} found!");
+            Debug.Log($"{componentName} found!");
         }
-        else
+        else if (isDebug)
         {
-            if (isDebug) Debug.LogWarning($"{CAMUIName} not found!");
+            Debug.LogWarning($"{componentName} not found!");
         }
-
     }
 }

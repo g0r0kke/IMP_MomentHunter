@@ -10,80 +10,87 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class WristUIManager : MonoBehaviour
 {
-
+    // UI Component References
     [Header("UIComponents")]
-    [SerializeField] private GameObject WristCanvus;
-    [SerializeField] private GameObject WristUI;
-    [SerializeField] private GameObject TutorialUI;
-                     private GameObject Tutorial1Page;
-                     private GameObject Tutorial2Page;
-    [SerializeField] private TextMeshProUGUI TutorialPageText;
-    [SerializeField] private GameObject AudioUI;
-    [SerializeField] private TextMeshProUGUI BGMText;
-    [SerializeField] private Slider BGMSlider;
-    [SerializeField] private TextMeshProUGUI SFXText;
-    [SerializeField] private Slider SFXSlider;
-    [SerializeField] private GameObject MainBackUI;
-    [SerializeField] private GameObject CamUI;
+    [SerializeField] private GameObject WristCanvus; // Parent canvas for wrist UI
+    [SerializeField] private GameObject WristUI;     // Main wrist UI panel
+    [SerializeField] private GameObject TutorialUI;  // Tutorial UI panel
+                     private GameObject Tutorial1Page; // First tutorial page
+                     private GameObject Tutorial2Page; // Second tutorial page
+    [SerializeField] private TextMeshProUGUI TutorialPageText; // Tutorial page indicator text
+    [SerializeField] private GameObject AudioUI;     // Audio settings UI panel
+    [SerializeField] private TextMeshProUGUI BGMText; // Background music volume text
+    [SerializeField] private Slider BGMSlider;        // BGM volume slider
+    [SerializeField] private TextMeshProUGUI SFXText; // SFX volume text
+    [SerializeField] private Slider SFXSlider;        // SFX volume slider
+    [SerializeField] private GameObject MainBackUI;   // Main back UI panel
+    [SerializeField] private GameObject CamUI;        // Camera UI element
 
-    private string SelectedMenu;
+    private string SelectedMenu; // Current selected menu/button
 
+    // Interactor Component References
     [Header("InteractorComponents")]
-    [SerializeField] private GameObject rightController;
-                     private GameObject R_directInteractor;
-                     private GameObject R_rayInteractor;
-    [SerializeField] private GameObject leftController;
-    [SerializeField] private GameObject uiRayInteractor;
-                     private GameObject L_directInteractor;
+    [SerializeField] private GameObject rightController; // Right VR controller
+                     private GameObject R_directInteractor; // Right direct interactor
+                     private GameObject R_rayInteractor;    // Right ray interactor
+    [SerializeField] private GameObject leftController;     // Left VR controller
+    [SerializeField] private GameObject uiRayInteractor;    // UI ray interactor
+                     private GameObject L_directInteractor; // Left direct interactor
 
+    // Camera Reference
     [Header("CameraComponents")]
-    [SerializeField] private GameObject Camera;
+    [SerializeField] private GameObject Camera; // Main camera holder
 
+    // Debug and State Flags
     [Header("Check Debug:")]
-    [SerializeField] bool isDebug = true;
+    [SerializeField] bool isDebug = true; // Enable debug logging
+    private bool isWristUI;      // Wrist UI active state
+    private bool isTutorialUI;   // Tutorial UI active state
+    private bool isAudioUI;      // Audio UI active state
+    private bool isMainBackUI;   // Main back UI active state
+    private int pagesNum;        // Current tutorial page number
+    private int BGMValue;        // Current BGM value (0-100)
+    private int SFXValue;        // Current SFX value (0-100)
 
-    private bool isWristUI;
-    private bool isTutorialUI;
-    private bool isAudioUI;
-    private bool isMainBackUI;
-    private int pagesNum;
-    private int BGMValue;
-    private int SFXValue;
+    // External Script References
+    private GameManager gameManager; // Reference to GameManager script
+    private DataManager dataManager; // Reference to DataManager script
 
-    private GameManager gameManager;
-    private DataManager dataManager;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
+        // Find and cache references to GameManager and DataManager
         gameManager = FindAnyObjectByType<GameManager>();
         dataManager = FindAnyObjectByType<DataManager>();
 
-
+        // Find and cache references to interactors, UI, and camera
         FindInteractorComponents();
         FindUIComponents();
         FindCameraComponents();
 
+        // Initialize UI state flags
         isWristUI = false;
         isTutorialUI = false;
         isAudioUI = false;
         isMainBackUI = false;
 
+        // Set initial UI active states
         if (WristUI != null) WristUI.SetActive(isWristUI);
         if (TutorialUI != null) TutorialUI.SetActive(isTutorialUI);
         if (AudioUI != null) AudioUI.SetActive(isAudioUI);
         if (MainBackUI != null) MainBackUI.SetActive(isMainBackUI);
         if (uiRayInteractor != null) uiRayInteractor.SetActive(isWristUI);
 
+        // Initialize BGM slider
         BGMSlider.minValue = 0;
         BGMSlider.maxValue = 100;
         BGMSlider.wholeNumbers = true;
-        if(dataManager != null) BGMValue = Mathf.RoundToInt(dataManager.GetMasterVolume() * 100f);
+        if (dataManager != null) BGMValue = Mathf.RoundToInt(dataManager.GetMasterVolume() * 100f);
         else BGMValue = 100;
         BGMSlider.value = BGMValue;
         BGMSlider.onValueChanged.AddListener(OnBGMSliderValueChanged);
         OnBGMSliderValueChanged(BGMValue);
-        
+
+        // Initialize SFX slider
         SFXSlider.minValue = 0;
         SFXSlider.maxValue = 100;
         SFXSlider.wholeNumbers = true;
@@ -92,30 +99,36 @@ public class WristUIManager : MonoBehaviour
         SFXSlider.onValueChanged.AddListener(OnSFXSliderValueChanged);
         OnSFXSliderValueChanged(SFXValue);
 
-        ResetAction();
+        ResetAction(); // Reset menu selection
     }
 
-    // Update is called once per frame
     void Update()
     {
-
+        // Empty: Reserved for per-frame logic if needed
     }
+
+    // Returns true if any sub-UI (tutorial, audio, main back) is active
     public bool GetActWristUI()
     {
         if (isTutorialUI || isAudioUI || isMainBackUI) { return true; }
         else { return false; }
     }
+
+    // Called when the Y button is pressed: toggles the wrist UI open/close
     public void GetOnYButtonPressed()
     {
         if (isDebug) Debug.Log("WristUI Called");
         if (isWristUI || isTutorialUI || isAudioUI || isMainBackUI) { CloseAction(); }
         else { OpenAction(); }
     }
+
+    // Called when the B button is pressed: goes back within sub-UIs
     public void GetOnBButtonPressed()
     {
         if (isTutorialUI || isAudioUI || isMainBackUI) { BackAction(); }
     }
 
+    // Handles menu button clicks
     public void OnClickMenu()
     {
         GameObject clickedObj = EventSystem.current.currentSelectedGameObject;
@@ -124,67 +137,60 @@ public class WristUIManager : MonoBehaviour
         {
             SelectedMenu = clickedObj.name;
 
-            CheckMenu();
-            UpdateText();
+            CheckMenu();   // Handle menu logic
+            UpdateText();  // Update debug text
         }
     }
 
+    // Switches logic based on which menu/button was selected
     private void CheckMenu()
     {
         switch (SelectedMenu)
         {
-
             case "CloseButton":
                 CloseAction();
                 break;
-
             case "BackButton":
                 BackAction();
                 break;
-
             case "TutorialUIButton":
                 TutorialUIAction();
                 break;
-
             case "PreButton":
                 TurningPageAction();
                 break;
-
             case "NextButton":
                 TurningPageAction();
                 break;
-
             case "AudioUIButton":
                 AudioUIAction();
                 break;
-
             case "MainBackUIButton":
                 MainBackUIAction();
                 break;
-
             case "MainBackButton":
                 MainBackAction();
                 break;
-
             default:
                 if (isDebug) Debug.LogError("Unknown menu: " + SelectedMenu);
                 break;
-
         }
     }
 
+    // Updates debug text for menu selection
     private void UpdateText()
     {
-
         if (isDebug) Debug.Log($"Clicked Menu {SelectedMenu}");
     }
 
+    // Resets menu selection to default
     private void ResetAction()
     {
         SelectedMenu = "Not Selected";
         UpdateText();
     }
 
+    // Opens the wrist UI and sets relevant states
     private void OpenAction()
     {
         SelectedMenu = "OpenButton";
@@ -198,6 +204,7 @@ public class WristUIManager : MonoBehaviour
         if (isDebug) Debug.Log("The WristUI has been activated.");
     }
 
+    // Closes all sub-UIs and wrist UI
     private void CloseAction()
     {
         SelectedMenu = "CloseButton";
@@ -218,6 +225,7 @@ public class WristUIManager : MonoBehaviour
         if (isDebug) Debug.Log("The WristUI has been disabled.");
     }
 
+    // Goes back to the main wrist UI from sub-UIs
     private void BackAction()
     {
         SelectedMenu = "BackButton";
@@ -232,26 +240,25 @@ public class WristUIManager : MonoBehaviour
         WristUI.SetActive(isWristUI);
 
         if (isDebug) Debug.Log("The Back Menu has been activated.");
-
     }
 
+    // Opens the tutorial UI and shows the first page
     private void TutorialUIAction()
     {
         SelectedMenu = "TutorialUIButton";
         if (isDebug) Debug.Log("The Tutorial Menu has been activated.");
-
         pagesNum = 1;
         isWristUI = false;
         WristUI.SetActive(isWristUI);
         isTutorialUI = true;
         TutorialUI.SetActive(isTutorialUI);
-        
+
         TutorialPageText.text = pagesNum.ToString();
         Tutorial2Page.SetActive(false);
         Tutorial1Page.SetActive(true);
-
     }
 
+    // Handles tutorial page turning logic
     private void TurningPageAction()
     {
         SelectedMenu = "TurningPageButton";
@@ -260,24 +267,21 @@ public class WristUIManager : MonoBehaviour
         pagesNum++;
         switch (pagesNum)
         {
-
             case 2:
                 Tutorial1Page.SetActive(false);
                 Tutorial2Page.SetActive(true);
                 break;
-
             case 1:
             default:
                 pagesNum = 1;
                 Tutorial2Page.SetActive(false);
                 Tutorial1Page.SetActive(true);
                 break;
-
         }
         TutorialPageText.text = pagesNum.ToString();
-
     }
 
+    // Opens the audio settings UI
     private void AudioUIAction()
     {
         SelectedMenu = "AudioUIButton";
@@ -287,9 +291,9 @@ public class WristUIManager : MonoBehaviour
         WristUI.SetActive(isWristUI);
         isAudioUI = true;
         AudioUI.SetActive(isAudioUI);
-
     }
 
+    // Called when BGM slider value changes
     void OnBGMSliderValueChanged(float value)
     {
         BGMValue = Mathf.RoundToInt(value);
@@ -306,6 +310,7 @@ public class WristUIManager : MonoBehaviour
         }
     }
 
+    // Called when SFX slider value changes
     void OnSFXSliderValueChanged(float value)
     {
         SFXValue = Mathf.RoundToInt(value);
@@ -313,6 +318,7 @@ public class WristUIManager : MonoBehaviour
             SFXText.text = SFXValue.ToString();
     }
 
+    // Opens the main back UI
     private void MainBackUIAction()
     {
         SelectedMenu = "MainBackUIButton";
@@ -322,11 +328,11 @@ public class WristUIManager : MonoBehaviour
         WristUI.SetActive(isWristUI);
         isMainBackUI = true;
         MainBackUI.SetActive(isMainBackUI);
-
     }
+
+    // Handles main back button logic (scene transition)
     private void MainBackAction()
     {
-        
         if (gameManager != null)
         {
             if (isDebug) Debug.Log("gameManager found.");
@@ -338,6 +344,7 @@ public class WristUIManager : MonoBehaviour
         }
     }
 
+    // Finds and caches references to interactor components
     private void FindInteractorComponents()
     {
         if (rightController == null) rightController = GameObject.Find("Right Controller");
@@ -380,6 +387,7 @@ public class WristUIManager : MonoBehaviour
         }
     }
 
+    // Finds and caches references to UI components
     private void FindUIComponents()
     {
         if (uiRayInteractor == null) uiRayInteractor = rightController.transform.Find("UI Ray Interactor").gameObject;
@@ -400,8 +408,6 @@ public class WristUIManager : MonoBehaviour
         {
             if (isDebug) Debug.LogWarning("WristCanvus not found!");
         }
-
-
         if (WristUI == null) WristUI = WristCanvus.transform.Find("WristUI").gameObject;
         if (WristUI != null)
         {
@@ -462,7 +468,7 @@ public class WristUIManager : MonoBehaviour
             if (isDebug) Debug.LogWarning("MainBackUI not found!");
         }
 
-            if (CamUI != null)
+        if (CamUI != null)
         {
             if (isDebug) Debug.Log("CamUI found!");
         }
@@ -470,15 +476,14 @@ public class WristUIManager : MonoBehaviour
         {
             if (isDebug) Debug.LogWarning("CamUI not found!");
         }
-
     }
 
+    // Finds and caches reference to the camera
     private void FindCameraComponents()
     {
         if (Camera == null) Camera = GameObject.Find("Camera Holder");
         if (Camera != null)
         {
-
             if (isDebug) Debug.Log("Camera found!");
         }
         else
@@ -487,11 +492,11 @@ public class WristUIManager : MonoBehaviour
         }
     }
 
+    // Toggles the interactors' active state based on wrist UI state
     private void ToggleInteractor()
     {
         if (R_directInteractor != null && R_rayInteractor != null && L_directInteractor != null)
         {
-
             R_directInteractor.SetActive(!isWristUI);
             R_rayInteractor.SetActive(!isWristUI);
             L_directInteractor.SetActive(!isWristUI);
@@ -516,6 +521,7 @@ public class WristUIManager : MonoBehaviour
         }
     }
 
+    // Toggles the UI ray interactor based on wrist UI state
     private void ToggleUIRayInteractor()
     {
         if (uiRayInteractor != null)
@@ -539,6 +545,7 @@ public class WristUIManager : MonoBehaviour
         }
     }
 
+    // Toggles the camera active state based on wrist UI state
     private void ToggleCamera()
     {
         if (Camera != null)
@@ -560,5 +567,4 @@ public class WristUIManager : MonoBehaviour
             }
         }
     }
-
 }
