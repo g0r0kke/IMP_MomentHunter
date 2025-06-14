@@ -348,7 +348,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba77bff83283b874e8d51a85008089d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  duration: 3
+  duration: 2.5
   targetPosition: {x: -0.505, y: 0.43, z: 0.531}
   targetRotation: {x: 43.773, y: 0, z: 0}
   targetScale: {x: 1, y: 1, z: 1}

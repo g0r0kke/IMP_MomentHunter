@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Unity.Android.Gradle.Manifest;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -90,7 +89,7 @@ public class GameManager : MonoBehaviour
         SetMainCanvasActive(true);
         if (_failUI) _failUI.SetActive(false);
         
-        if (_gameState == GameState.Victory) Invoke("TransitionToScene0", 4);
+        if (_gameState == GameState.Victory) StartCoroutine(TransitionToSceneWithDelay(0, 4f));;
     }
     
     void OnDestroy()
@@ -119,27 +118,24 @@ public class GameManager : MonoBehaviour
         switch (_gameState)
         {
             case GameState.Victory:
-                Invoke("TransitionToScene3", 3f);
+                StartCoroutine(TransitionToSceneWithDelay(3, 3f));
                 break;
             case GameState.Defeat:
                 _isDead = true;
                 Debug.Log("Defeat");
                 if (_failUI) _failUI.SetActive(true);
                 SetMissionState(MissionState.Ending);
+                StartCoroutine(TransitionToSceneWithDelay(0, 3f));
                 break;
             default:
                 break;
         }
     }
     
-    private void TransitionToScene0()
+    private System.Collections.IEnumerator TransitionToSceneWithDelay(int sceneIndex, float delay)
     {
-        TransitionToScene(0);
-    }
-    
-    private void TransitionToScene3()
-    {
-        TransitionToScene(3);
+        yield return new WaitForSeconds(delay);
+        TransitionToScene(sceneIndex);
     }
 
     public void SetMissionState(MissionState newMissionState)
@@ -175,7 +171,7 @@ public class GameManager : MonoBehaviour
             case MissionState.Mission3:
                 break;
             case MissionState.Mission4:
-                TransitionToScene(2);
+                StartCoroutine(TransitionToSceneWithDelay(2, 3f));
                 SetGameState(GameState.Room2);
                 break;
             case MissionState.Mission5:
