@@ -43,6 +43,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private MissionText _missionText;
     [SerializeField] private OpeningUIManager _openingUIManager;
     [SerializeField] private GameObject _failUI;
+
+    [SerializeField] private AudioSource _failSound;
     
     [Header("UI Settings")]
     [SerializeField] private bool _isMainCanvasActive = true;
@@ -124,8 +126,10 @@ public class GameManager : MonoBehaviour
                 _isDead = true;
                 Debug.Log("Defeat");
                 if (_failUI) _failUI.SetActive(true);
+                if (_failSound) _failSound.Play();
                 SetMissionState(MissionState.Ending);
-                StartCoroutine(TransitionToSceneWithDelay(0, 3f));
+                
+                StartCoroutine(TransitionToSceneWithDelay(0, 6f));
                 break;
             default:
                 break;
@@ -302,6 +306,7 @@ public class GameManager : MonoBehaviour
         if (sceneIndex == 0)
         {
             _shouldInitializeScene0Load = true;
+            Initialize();
             
             // 씬0으로 돌아갈 때 DontDestroyOnLoad AudioManager 파괴
             if (AudioManager.BGMInstance)
