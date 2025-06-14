@@ -123,18 +123,29 @@ public class PhotoCaptureAndJudge : MonoBehaviour
             // On trigger press
             if (triggerButton.action.WasPressedThisFrame())
             {
-                PlayShutterEffect();   // Play sound & flash
-                StartCoroutine(CaptureAndShowPhoto());   // Capture photo
-
-                // Judge targets
-                int count = JudgeMultipleTargets();
-                // Debug.Log($"pass target count : {count}");
-
-                // KHJ: Send count to GameManager
-                if (GameManager.Instance)
+                if (DataManager.Data.CurrentHealth > 0)
                 {
-                    GameManager.Instance.SetMissionObjectCount(count);
+                    PlayShutterEffect();   // Play sound & flash
+                    StartCoroutine(CaptureAndShowPhoto());   // Capture photo
+
+                    // Judge targets
+                    int count = JudgeMultipleTargets();
+                    // Debug.Log($"pass target count : {count}");
+                    
+                    // KHJ: Send count to GameManager
+                    if (GameManager.Instance)
+                    {
+                        GameManager.Instance.SetMissionObjectCount(count);
+                    }
                 }
+                else
+                {
+                    if (DataManager.Data)
+                    {
+                        DataManager.Data.UseHealth();
+                    }
+                }
+                
 
                 // Tutorial check
                 if (useTutorial &&
