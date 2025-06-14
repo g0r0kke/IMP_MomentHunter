@@ -42,7 +42,8 @@ public class PhotoUICloseManager : MonoBehaviour
     public void GetOnYButtonPressed()
     {
         PhotoUI.SetActive(false);
-        MainUI.SetActive(true);
+        //MainUI.SetActive(true);
+        GameManager.Instance.SetMainCanvasActive(true);
         if (isDebug) Debug.Log($"{PhotoUIName} closed & {MainUIName} opened");
     }
 
