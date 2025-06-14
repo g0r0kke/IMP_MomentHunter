@@ -43,6 +43,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Canvas _mainCanvas;
     [SerializeField] private MissionText _missionText;
     [SerializeField] private OpeningUIManager _openingUIManager;
+    [SerializeField] private GameObject _failUI;
     
     [Header("UI Settings")]
     [SerializeField] private bool _isMainCanvasActive = true;
@@ -87,6 +88,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         SetMainCanvasActive(true);
+        if (_failUI) _failUI.SetActive(false);
     }
     
     void OnDestroy()
@@ -120,6 +122,7 @@ public class GameManager : MonoBehaviour
             case GameState.Defeat:
                 _isDead = true;
                 Debug.Log("Defeat");
+                if (_failUI) _failUI.SetActive(true);
                 SetMissionState(MissionState.Ending);
                 break;
             default:
