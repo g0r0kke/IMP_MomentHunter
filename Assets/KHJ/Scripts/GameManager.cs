@@ -91,7 +91,7 @@ public class GameManager : MonoBehaviour
         SetMainCanvasActive(true);
         if (_failUI) _failUI.SetActive(false);
         
-        if (_gameState == GameState.Victory) StartCoroutine(TransitionToSceneWithDelay(0, 4f));;
+        if (_gameState == GameState.Victory) StartCoroutine(TransitionToSceneWithDelay(0, 10f));;
     }
     
     void OnDestroy()
