@@ -89,6 +89,8 @@ public class GameManager : MonoBehaviour
     {
         SetMainCanvasActive(true);
         if (_failUI) _failUI.SetActive(false);
+        
+        if (_gameState == GameState.Victory) Invoke("TransitionToScene0", 4);
     }
     
     void OnDestroy()
@@ -96,7 +98,7 @@ public class GameManager : MonoBehaviour
         // 이벤트 구독 해제
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
-    
+
     // 씬 로드 완료 시 호출되는 메서드
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
@@ -117,7 +119,7 @@ public class GameManager : MonoBehaviour
         switch (_gameState)
         {
             case GameState.Victory:
-                Invoke("WaitAndEnding", 3f);
+                Invoke("TransitionToScene3", 3f);
                 break;
             case GameState.Defeat:
                 _isDead = true;
@@ -130,7 +132,12 @@ public class GameManager : MonoBehaviour
         }
     }
     
-    void WaitAndEnding()
+    private void TransitionToScene0()
+    {
+        TransitionToScene(0);
+    }
+    
+    private void TransitionToScene3()
     {
         TransitionToScene(3);
     }
