@@ -12,14 +12,13 @@ public class InputTest : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Keyboard.current.zKey.wasPressedThisFrame)
-        {
-            // 미션 6 종료 후엔 이거 말고 SetGameState() 호출 필요
-            GameManager.Instance.SetNextMissionState();
-        }
-        if (Keyboard.current.nKey.wasPressedThisFrame)
-        {
-            
-        }
+        // if (Keyboard.current.zKey.wasPressedThisFrame)
+        // {
+        //     GameManager.Instance.SetNextMissionState();
+        // }
+        // if (Keyboard.current.nKey.wasPressedThisFrame)
+        // {
+        //     
+        // }
     }
 }

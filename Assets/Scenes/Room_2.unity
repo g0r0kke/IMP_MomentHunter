@@ -29429,6 +29429,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8700689161218897976, guid: 5de3ce0087566274996284a6e1a9b3bd, type: 3}
+      propertyPath: _failUI
+      value: 
+      objectReference: {fileID: 1976514810}
+    - target: {fileID: 8700689161218897976, guid: 5de3ce0087566274996284a6e1a9b3bd, type: 3}
       propertyPath: _mainCanvas
       value: 
       objectReference: {fileID: 2119205536}
