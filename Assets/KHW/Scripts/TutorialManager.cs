@@ -122,6 +122,5 @@ public class TutorialManager : MonoBehaviour
         // All done
         Current = Step.AllDone;
         tutorialCanvas.SetActive(false);   // Hide tutorial canvas
-        GameManager.Instance.SetNextMissionState();   // Notify GameManager
     }
 }

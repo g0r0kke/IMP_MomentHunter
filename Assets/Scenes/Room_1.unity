@@ -28035,6 +28035,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -265.5124
       objectReference: {fileID: 0}
+    - target: {fileID: 3249700894336623936, guid: 504628a345f7013479313ce8e873e403, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3642200292966137287, guid: 504628a345f7013479313ce8e873e403, type: 3}
       propertyPath: m_Name
       value: KHJ_Room1
@@ -28137,7 +28141,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7930814351693082693, guid: 504628a345f7013479313ce8e873e403, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -43267,6 +43271,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1595582682}
+    - target: {fileID: 6210129394503743113, guid: 81fc856e350b3d74b924a6341f4bfed8, type: 3}
+      propertyPath: m_PlaneDistance
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6349473133848157990, guid: 81fc856e350b3d74b924a6341f4bfed8, type: 3}
       propertyPath: m_Camera
       value: 
