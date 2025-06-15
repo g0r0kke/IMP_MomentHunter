@@ -349,7 +349,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   duration: 2.5
-  targetPosition: {x: -0.505, y: 0.43, z: 0.531}
+  targetPosition: {x: -0.505, y: 0.431, z: 0.436}
   targetRotation: {x: 43.773, y: 0, z: 0}
   targetScale: {x: 1, y: 1, z: 1}
   keyPrefab: {fileID: 0}

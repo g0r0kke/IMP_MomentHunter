@@ -12,13 +12,9 @@ public class InputTest : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // if (Keyboard.current.zKey.wasPressedThisFrame)
-        // {
-        //     GameManager.Instance.SetNextMissionState();
-        // }
-        // if (Keyboard.current.nKey.wasPressedThisFrame)
-        // {
-        //     
-        // }
+        if (Keyboard.current.zKey.wasPressedThisFrame)
+        {
+            GameManager.Instance.SetNextMissionState();
+        }
     }
 }

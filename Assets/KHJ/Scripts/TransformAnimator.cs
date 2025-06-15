@@ -14,7 +14,7 @@ public class TransformAnimator : MonoBehaviour
     [SerializeField] private Vector3 targetScale = Vector3.one;
     
     [Header("Key Settings")]
-    [SerializeField] private GameObject keyPrefab;
+    [SerializeField] private MeshRenderer keyMesh;
     
     /// <summary>
     /// Starting position for animation (local space)
@@ -45,7 +45,7 @@ public class TransformAnimator : MonoBehaviour
     public void AnimateTransform()
     {
         // Deactivate key prefab if assigned
-        if (keyPrefab) keyPrefab.SetActive(false);
+        if (keyMesh) keyMesh.enabled = false;
         
         StartCoroutine(DoAnimation());
     }
