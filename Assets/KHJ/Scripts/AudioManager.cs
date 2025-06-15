@@ -1,8 +1,14 @@
 using UnityEngine;
-using UnityEngine.Serialization;
 
+/// <summary>
+/// Manages audio playback including background music and sound effects.
+/// Supports singleton pattern for persistent background music across scenes.
+/// </summary>
 public class AudioManager : MonoBehaviour
 {
+    /// <summary>
+    /// Static instance for persistent background music manager across scenes
+    /// </summary>
     public static AudioManager BGMInstance { get; private set; }
     
     [Header("Destroy Settings")]
@@ -17,77 +23,88 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private int _backgroundMusicClipId = 0;
     [SerializeField] private bool _loopBackgroundMusic = true;
     
+    /// <summary>
+    /// Initialize the AudioManager instance and set up DontDestroyOnLoad if enabled
+    /// </summary>
     void Awake()
     {
         if (_dontDestroyOnLoad)
         {
-            // 이미 인스턴스가 있는지 확인
-            if (BGMInstance != null)
+            // Check if an instance already exists
+            if (BGMInstance)
             {
-                // 이미 존재하면 새로운 것을 파괴
+                // Destroy the new duplicate instance if one already exists
                 Debug.Log("DontDestroyOnLoad AudioManager already exists. Destroying duplicate.");
                 Destroy(gameObject);
                 return;
             }
             
-            // 첫 번째 인스턴스로 설정
+            // Set as the first and only instance
             BGMInstance = this;
             DontDestroyOnLoad(gameObject);
             Debug.Log("AudioManager set to DontDestroyOnLoad and assigned as BGMInstance");
         }
         else
         {
-            // DontDestroyOnLoad가 아닌 경우는 BGMInstance 설정 안함
+            // Don't set BGMInstance if DontDestroyOnLoad is disabled
             Debug.Log("AudioManager created without DontDestroyOnLoad");
         }
     }
     
+    /// <summary>
+    /// Initialize audio components, subscribe to volume events, and start auto-play if enabled
+    /// </summary>
     void Start()
     {
-        if (_audioSource == null)
-            _audioSource = GetComponent<AudioSource>();
+        // Get AudioSource component if not assigned in inspector
+        if (!_audioSource) _audioSource = GetComponent<AudioSource>();
         
-        // DataManager의 볼륨 변경 이벤트에 구독
+        // Subscribe to DataManager's volume change events
         DataManager.OnMasterVolumeChanged += OnMasterVolumeChanged;
         
-        // 현재 마스터 볼륨 즉시 적용
+        // Apply current master volume immediately
         ApplyMasterVolume();
         
-        // 자신이 BGMInstance이고 자동재생이 활성화된 경우에만 재생
+        // Only play background music if this is the BGM instance and auto-play is enabled
         if (_autoPlayOnStart && BGMInstance == this)
         {
             PlayBackgroundMusic();
         }
     }
     
+    /// <summary>
+    /// Clean up event subscriptions and reset BGMInstance reference when destroyed
+    /// </summary>
     void OnDestroy()
     {
-        // 이벤트 구독 해제 (메모리 누수 방지)
+        // Unsubscribe from events to prevent memory leaks
         DataManager.OnMasterVolumeChanged -= OnMasterVolumeChanged;
         
-        // 자신이 BGMInstance였다면 null로 설정
+        // Reset BGMInstance to null if this was the active instance
         if (BGMInstance == this)
         {
             BGMInstance = null;
         }
     }
     
-    // 에디터에서 값 변경 시 호출
+    /// <summary>
+    /// Called when values are changed in the editor - validates settings and applies changes in real-time
+    /// </summary>
     private void OnValidate()
     {
-        // 배경음악 클립 ID 범위 체크
+        // Clamp background music clip ID to valid range
         if (_audioClips != null && _audioClips.Length > 0)
         {
             _backgroundMusicClipId = Mathf.Clamp(_backgroundMusicClipId, 0, _audioClips.Length - 1);
         }
         
-        // 런타임 중일 때만 업데이트
+        // Only update during runtime
         if (Application.isPlaying)
         {
-            // 마스터 볼륨 즉시 적용
+            // Apply master volume immediately
             ApplyMasterVolume();
             
-            // 자동 재생 설정이 변경된 경우 처리
+            // Handle auto-play setting changes
             if (_autoPlayOnStart && !_audioSource.isPlaying)
             {
                 PlayBackgroundMusic();
@@ -99,25 +116,32 @@ public class AudioManager : MonoBehaviour
         }
     }
     
-    // 볼륨 변경 이벤트 핸들러
+    /// <summary>
+    /// Event handler for master volume changes from DataManager
+    /// </summary>
+    /// <param name="newVolume">The new volume value</param>
     private void OnMasterVolumeChanged(float newVolume)
     {
         ApplyMasterVolume();
     }
     
-    // 배경음악 재생
+    /// <summary>
+    /// Plays the designated background music clip with loop settings
+    /// </summary>
     public void PlayBackgroundMusic()
     {
+        // Validate background music clip ID
         if (!IsValidClipId(_backgroundMusicClipId))
         {
             Debug.LogWarning($"Invalid background music clip ID: {_backgroundMusicClipId}");
             return;
         }
         
+        // Set up audio source with background music settings
         _audioSource.clip = _audioClips[_backgroundMusicClipId];
         _audioSource.loop = _loopBackgroundMusic;
         
-        // DataManager의 마스터 볼륨 적용
+        // Apply DataManager's master volume
         ApplyMasterVolume();
         
         _audioSource.Play();
@@ -125,50 +149,71 @@ public class AudioManager : MonoBehaviour
         Debug.Log($"Background music started: {_audioClips[_backgroundMusicClipId].name}");
     }
 
+    /// <summary>
+    /// Plays a specific audio clip by ID (non-looping)
+    /// </summary>
+    /// <param name="clipId">Index of the audio clip to play</param>
     public void PlayAudio(int clipId)
     {
-        // 안전성 체크
+        // Safety check for valid clip ID
         if (!IsValidClipId(clipId))
         {
             Debug.LogWarning($"Invalid clip ID: {clipId}");
             return;
         }
 
+        // Set up audio source for one-time playback
         _audioSource.clip = _audioClips[clipId];
-        _audioSource.loop = false; // 일반 오디오는 반복하지 않음
+        _audioSource.loop = false; // Regular audio clips don't loop
         
-        // DataManager의 마스터 볼륨 적용
+        // Apply DataManager's master volume
         ApplyMasterVolume();
         
         _audioSource.Play();
     }
     
-    // AudioSource의 clip을 바꾸지 않고 추가로 소리 재생
-    // 이전 소리를 중단하지 않고 동시에 여러 소리 재생 가능
+    /// <summary>
+    /// Plays an audio clip without changing the AudioSource's main clip
+    /// Allows multiple sounds to play simultaneously without interrupting each other
+    /// </summary>
+    /// <param name="clipId">Index of the audio clip to play as one-shot</param>
     public void PlayOneShot(int clipId)
     {
+        // Validate clip ID
         if (!IsValidClipId(clipId))
         {
             Debug.LogWarning($"Invalid clip ID: {clipId}");
             return;
         }
         
+        // Get current master volume and play one-shot
         float volumeScale = GetMasterVolume();
         _audioSource.PlayOneShot(_audioClips[clipId], volumeScale);
     }
     
+    /// <summary>
+    /// Stops the currently playing audio
+    /// </summary>
     public void StopAudio()
     {
         _audioSource.Stop();
         Debug.Log("Audio stopped");
     }
     
+    /// <summary>
+    /// Validates if the given clip ID is within bounds and references a valid AudioClip
+    /// </summary>
+    /// <param name="clipId">The clip ID to validate</param>
+    /// <returns>True if the clip ID is valid, false otherwise</returns>
     private bool IsValidClipId(int clipId)
     {
         return _audioClips != null && clipId >= 0 && clipId < _audioClips.Length && _audioClips[clipId];
     }
     
-    // DataManager에서 마스터 볼륨 가져오기
+    /// <summary>
+    /// Retrieves the master volume from DataManager
+    /// </summary>
+    /// <returns>Master volume value, or 1.0 if DataManager is unavailable</returns>
     private float GetMasterVolume()
     {
         if (DataManager.Data)
@@ -176,10 +221,12 @@ public class AudioManager : MonoBehaviour
             return DataManager.Data.GetMasterVolume();
         }
         
-        return 1f; // DataManager가 없으면 기본값 1.0 반환
+        return 1f; // Return default value 1.0 if DataManager is not available
     }
     
-    // AudioSource에 마스터 볼륨 적용
+    /// <summary>
+    /// Applies the current master volume to the AudioSource
+    /// </summary>
     private void ApplyMasterVolume()
     {
         if (_audioSource)

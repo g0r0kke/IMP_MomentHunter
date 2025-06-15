@@ -1,24 +1,34 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Debug utility for monitoring and logging mission target tag changes.
+/// Tracks all MissionTargetTag components in the scene and logs their state changes.
+/// </summary>
 public class TagDebugManager : MonoBehaviour
 {
     [Header("Debug")]
     [SerializeField] private bool showDebugInfo = true;
     
+    /// <summary>
+    /// List of all MissionTargetTag components found in the scene
+    /// </summary>
     private List<MissionTargetTag> allTargets = new List<MissionTargetTag>();
     
+    /// <summary>
+    /// Collect all MissionTargetTag components in the scene on start
+    /// </summary>
     private void Start()
     {
-        // 씬의 모든 MissionTargetTag 수집 (비활성화된 오브젝트도 포함)
+        // Collect all MissionTargetTag components in scene (including inactive objects)
         allTargets.AddRange(FindObjectsByType<MissionTargetTag>(FindObjectsInactive.Include, FindObjectsSortMode.None));
         
         if (showDebugInfo)
         {
-            Debug.Log($"씬에서 발견된 MissionTarget 대상 오브젝트 개수: {allTargets.Count}");
+            Debug.Log($"Found {allTargets.Count} MissionTarget objects in scene");
             // foreach (var target in allTargets)
             // {
-            //     if (target != null)
+            //     if (target)
             //     {
             //         Debug.Log($"- {target.gameObject.name}: {target.GetTargetMissionType()} (활성: {target.gameObject.activeInHierarchy})");
             //     }
@@ -26,53 +36,64 @@ public class TagDebugManager : MonoBehaviour
         }
     }
     
+    /// <summary>
+    /// Subscribe to mission state change events when enabled
+    /// </summary>
     private void OnEnable()
     {
         GameManager.OnMissionStateChanged += OnMissionStateChanged;
     }
     
+    /// <summary>
+    /// Unsubscribe from mission state change events when disabled
+    /// </summary>
     private void OnDisable()
     {
         GameManager.OnMissionStateChanged -= OnMissionStateChanged;
     }
     
+    /// <summary>
+    /// Handles mission state change events and logs tag changes for debugging
+    /// </summary>
+    /// <param name="newState">The new mission state</param>
     private void OnMissionStateChanged(MissionState newState)
     {
         if (showDebugInfo)
         {
-            Debug.Log($"=== 미션 상태 변경: {newState} ===");
+            Debug.Log($"=== Mission State Changed: {newState} ===");
             
             List<string> missionTargetNames = new List<string>();
             List<string> untaggedNames = new List<string>();
             
             foreach (var target in allTargets)
             {
-                if (target != null && target.gameObject.activeInHierarchy)
+                if (target && target.gameObject.activeInHierarchy)
                 {
                     if (target.GetTargetMissionType() == newState)
                     {
-                        // 현재 미션에 해당하는 타겟들 (MissionTarget 태그가 될 예정)
+                        // Targets that belong to current mission (will get MissionTarget tag)
                         missionTargetNames.Add(target.gameObject.name);
                     }
                     else
                     {
-                        // 현재 미션에 해당하지 않는 타겟들 (Untagged가 될 예정)
+                        // Targets that don't belong to current mission (will become Untagged)
                         untaggedNames.Add(target.gameObject.name);
                     }
                 }
             }
             
+            // Log tag assignments
             if (missionTargetNames.Count > 0)
             {
-                Debug.Log($"MissionTarget 태그 부착: {string.Join(", ", missionTargetNames)}");
+                Debug.Log($"MissionTarget tag applied to: {string.Join(", ", missionTargetNames)}");
             }
             
             if (untaggedNames.Count > 0)
             {
-                Debug.Log($"Untagged로 변경: {string.Join(", ", untaggedNames)}");
+                Debug.Log($"Changed to Untagged: {string.Join(", ", untaggedNames)}");
             }
             
-            Debug.Log($"현재 활성화된 MissionTarget 개수: {missionTargetNames.Count}");
+            Debug.Log($"Current active MissionTarget count: {missionTargetNames.Count}");
         }
     }
 }

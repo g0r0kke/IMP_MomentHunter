@@ -1,17 +1,18 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
 using UnityEngine.XR.Interaction.Toolkit.UI;
 
+/// <summary>
+/// Manages VR UI interactions for the opening scene including main menu, settings, and quit functionality.
+/// Handles VR input through XR controllers and manages popup states.
+/// </summary>
 public class OpeningUIManager : MonoBehaviour
 {
     [Header("Debug")]
-    [SerializeField] private Text _debugText; // VR에서 디버그 정보 표시용
+    [SerializeField] private Text _debugText; // Debug information display for VR
 
     [Header("UI Components")]
     [SerializeField] private GameObject _playUI;
@@ -20,99 +21,123 @@ public class OpeningUIManager : MonoBehaviour
     [SerializeField] private Canvas _openingCanvas;
     [SerializeField] private Canvas _prologueCanvas;
     
-    // 새로 추가된 UI 팝업들
     [Header("Popup UI Components")]
-    [SerializeField] private GameObject _settingsPopupUI;  // 설정 팝업 UI
-    [SerializeField] private GameObject _quitPopupUI;      // 종료 팝업 UI
+    [SerializeField] private GameObject _settingsPopupUI;  // Settings popup UI
+    [SerializeField] private GameObject _quitPopupUI;      // Quit popup UI
     
-    // 설정 및 종료 UI 내부 컴포넌트들
+    // Internal components for settings and quit UI
     [Header("Settings UI Components")]
-    [SerializeField] private Slider _soundSlider;         // 사운드 슬라이더
-    [SerializeField] private Text _soundValueText;        // 사운드 값 표시 텍스트 (선택사항)
+    [SerializeField] private Slider _soundSlider;         // Sound volume slider
+    [SerializeField] private Text _soundValueText;       // Sound value display text (optional)
     
     [Header("Quit UI Components")]
-    [SerializeField] private Button _mainBackButton;      // 메인으로 돌아가기 버튼
+    [SerializeField] private Button _mainBackButton;      // Return to main button
     
     [SerializeField] private TrackedDeviceGraphicRaycaster _trackedRaycaster;
     [SerializeField] private EventSystem _eventSystem;
 
     [Header("VR Components")]
-    [SerializeField] private XRRayInteractor _leftRayInteractor;  // 왼쪽 컨트롤러 레이 인터랙터
-    [SerializeField] private XRRayInteractor _rightRayInteractor; // 오른쪽 컨트롤러 레이 인터랙터
+    [SerializeField] private XRRayInteractor _leftRayInteractor;  // Left controller ray interactor
+    [SerializeField] private XRRayInteractor _rightRayInteractor; // Right controller ray interactor
     [SerializeField] private InputActionAsset _inputActions;      // VR Input Actions
 
-    // 캔버스 상태 관리 변수 (true: 프롤로그, false: 오프닝)
+    /// <summary>
+    /// Canvas state management (true: prologue, false: opening)
+    /// </summary>
     private bool _isPrologueActive = false;
     
-    // UI 팝업 상태 관리
+    /// <summary>
+    /// UI popup state management
+    /// </summary>
     private bool _isSettingsPopupActive = false;
     private bool _isQuitPopupActive = false;
     
-    // 입력 중복 방지
+    /// <summary>
+    /// Input prevention variables
+    /// </summary>
     private bool _isProcessingInput = false;
-    private bool _isQuittingGame = false;  // 게임 종료 중 플래그
-    private float _inputCooldown = 0.5f; // 0.5초 쿨다운
+    private bool _isQuittingGame = false;  // Game quit flag
+    private float _inputCooldown = 0.5f; // 0.5 second cooldown
     private float _lastInputTime = 0f;
     
-    // VR Input Actions
+    /// <summary>
+    /// VR Input Actions
+    /// </summary>
     private InputAction _aButton;
     private InputAction _yButton;
     private InputAction _leftTrigger;
     private InputAction _rightTrigger;
     
-    // 현재 레이가 가리키고 있는 UI
+    /// <summary>
+    /// Currently hovered UI element by ray
+    /// </summary>
     private GameObject _currentHoveredUI = null;
     
-    // 슬라이더 이벤트 리스너가 등록되었는지 확인하는 플래그
+    /// <summary>
+    /// Flag to check if slider event listener is registered
+    /// </summary>
     private bool _sliderListenerRegistered = false;
     
+    /// <summary>
+    /// Initialize UI state and VR input systems
+    /// </summary>
     private void Start()
     {
         SetPrologueActive(_isPrologueActive);
         InitializePopupUI();
         SetupVRInputActions();
-        SetupSliderEvents(); // 슬라이더 이벤트 설정 추가
+        SetupSliderEvents(); // Add slider event setup
     }
     
+    /// <summary>
+    /// Initialize popup UIs to inactive state
+    /// </summary>
     private void InitializePopupUI()
     {
-        // 팝업 UI들을 초기에는 비활성화
-        if (_settingsPopupUI != null)
+        // Initially deactivate popup UIs
+        if (_settingsPopupUI)
             _settingsPopupUI.SetActive(false);
-        if (_quitPopupUI != null)
+        if (_quitPopupUI)
             _quitPopupUI.SetActive(false);
     }
     
+    /// <summary>
+    /// Set up slider event listeners and configuration
+    /// </summary>
     private void SetupSliderEvents()
     {
-        if (_soundSlider != null && !_sliderListenerRegistered)
+        if (_soundSlider && !_sliderListenerRegistered)
         {
-            // Unity의 기본 슬라이더 이벤트 시스템 사용
+            // Use Unity's default slider event system
             _soundSlider.onValueChanged.AddListener(OnSoundSliderValueChanged);
             _sliderListenerRegistered = true;
             
-            // 슬라이더 설정 (0~1 범위, 연속적인 값)
+            // Configure slider (0~1 range, continuous values)
             _soundSlider.minValue = 0f;
             _soundSlider.maxValue = 1f;
-            _soundSlider.wholeNumbers = false; // 스무스한 조작을 위해 연속값 사용
+            _soundSlider.wholeNumbers = false; // Use continuous values for smooth operation
             
             Debug.Log("Sound slider events setup completed");
         }
     }
     
+    /// <summary>
+    /// Called whenever slider value changes (including during drag)
+    /// </summary>
+    /// <param name="value">New slider value (0-1)</param>
     private void OnSoundSliderValueChanged(float value)
     {
-        // 슬라이더 값이 변경될 때마다 호출 (드래그 중에도 실시간으로 호출)
+        // Called whenever slider value changes (real-time during drag)
         int volumeLevel = Mathf.RoundToInt(value * 100f);
         
-        // DataManager에 볼륨 설정
-        if (DataManager.Data != null)
+        // Set volume in DataManager
+        if (DataManager.Data)
         {
             DataManager.Data.SetMasterVolume(volumeLevel);
         }
         
-        // 옵션: 볼륨 값을 텍스트로 표시
-        if (_soundValueText != null)
+        // Optional: Display volume value as text
+        if (_soundValueText)
         {
             _soundValueText.text = volumeLevel.ToString() + "%";
         }
@@ -120,15 +145,18 @@ public class OpeningUIManager : MonoBehaviour
         Debug.Log($"Sound volume updated to: {volumeLevel}% (Slider value: {value:F2})");
     }
     
+    /// <summary>
+    /// Set up VR input action bindings for controllers
+    /// </summary>
     private void SetupVRInputActions()
     {
-        if (_inputActions == null)
+        if (!_inputActions)
         {
             Debug.LogError("InputActionAsset not found!");
             return;
         }
 
-        // 오른쪽 컨트롤러 A버튼 설정 (XRI Right Action Map에서)
+        // Right controller A button setup (from XRI Right Action Map)
         var rightActionMap = _inputActions?.FindActionMap("XRI Right");
         if (rightActionMap != null)
         {
@@ -148,7 +176,7 @@ public class OpeningUIManager : MonoBehaviour
             Debug.LogError("XRI Right action map not found!");
         }
 
-        // 왼쪽 컨트롤러 Y버튼 설정 (XRI Left Action Map에서)
+        // Left controller Y button setup (from XRI Left Action Map)
         var leftActionMap = _inputActions?.FindActionMap("XRI Left");
         if (leftActionMap != null)
         {
@@ -168,7 +196,7 @@ public class OpeningUIManager : MonoBehaviour
             Debug.LogError("XRI Left action map not found!");
         }
 
-        // 오른쪽 트리거 설정 (XRI Right Interaction Action Map에서)
+        // Right trigger setup (from XRI Right Interaction Action Map)
         var rightInteractionMap = _inputActions?.FindActionMap("XRI Right Interaction");
         if (rightInteractionMap != null)
         {
@@ -188,7 +216,7 @@ public class OpeningUIManager : MonoBehaviour
             Debug.LogError("XRI Right Interaction action map not found!");
         }
 
-        // 왼쪽 트리거 설정 (XRI Left Interaction Action Map에서)
+        // Left trigger setup (from XRI Left Interaction Action Map)
         var leftInteractionMap = _inputActions?.FindActionMap("XRI Left Interaction");
         if (leftInteractionMap != null)
         {
@@ -209,15 +237,21 @@ public class OpeningUIManager : MonoBehaviour
         }
     }
     
+    /// <summary>
+    /// Update loop for VR UI hover detection
+    /// </summary>
     private void Update()
     {
-        // VR 환경에서는 레이캐스트로 UI 검사
+        // Check UI hover with raycast in VR environment
         if (!_isPrologueActive)
         {
             CheckVRUIHover();
         }
     }
     
+    /// <summary>
+    /// Check which UI element is currently being hovered by VR rays
+    /// </summary>
     void CheckVRUIHover()
     {
         if (_isPrologueActive) 
@@ -229,24 +263,24 @@ public class OpeningUIManager : MonoBehaviour
         GameObject hitUI = null;
         string raySource = "";
         
-        // 왼쪽 레이 먼저 확인
-        if (_leftRayInteractor != null && _leftRayInteractor.TryGetCurrentUIRaycastResult(out RaycastResult leftRaycastResult))
+        // Check left ray first
+        if (_leftRayInteractor && _leftRayInteractor.TryGetCurrentUIRaycastResult(out RaycastResult leftRaycastResult))
         {
             hitUI = leftRaycastResult.gameObject;
             raySource = "Left Ray";
         }
-        // 왼쪽에 없으면 오른쪽 레이 확인
-        else if (_rightRayInteractor != null && _rightRayInteractor.TryGetCurrentUIRaycastResult(out RaycastResult rightRaycastResult))
+        // If not on left, check right ray
+        else if (_rightRayInteractor && _rightRayInteractor.TryGetCurrentUIRaycastResult(out RaycastResult rightRaycastResult))
         {
             hitUI = rightRaycastResult.gameObject;
             raySource = "Right Ray";
         }
         
-        if (hitUI != null)
+        if (hitUI)
         {
             UpdateDebugText($"{raySource} hit: {hitUI.name}");
             
-            // 현재 가리키고 있는 UI 업데이트
+            // Update currently hovered UI
             if (IsTargetUI(hitUI))
             {
                 _currentHoveredUI = hitUI;
@@ -265,54 +299,65 @@ public class OpeningUIManager : MonoBehaviour
         }
     }
     
+    /// <summary>
+    /// Update debug text display
+    /// </summary>
+    /// <param name="message">Debug message to display</param>
     private void UpdateDebugText(string message)
     {
-        if (_debugText != null)
+        if (_debugText)
         {
             _debugText.text = message;
         }
     }
     
-    // 특정 레이 인터랙터에서 히트된 UI를 가져오는 헬퍼 메서드
+    /// <summary>
+    /// Helper method to get hit UI from specific ray interactor
+    /// </summary>
+    /// <param name="rayInteractor">Ray interactor to check</param>
+    /// <returns>Hit UI GameObject or null</returns>
     private GameObject GetRayHitUI(XRRayInteractor rayInteractor)
     {
-        if (rayInteractor != null && rayInteractor.TryGetCurrentUIRaycastResult(out RaycastResult raycastResult))
+        if (rayInteractor && rayInteractor.TryGetCurrentUIRaycastResult(out RaycastResult raycastResult))
         {
             return raycastResult.gameObject;
         }
         return null;
     }
     
-    // A버튼/트리거로 슬라이더 값을 오른쪽 레이 위치에 따라 업데이트
+    /// <summary>
+    /// Update slider value based on right ray position when A button/trigger is pressed
+    /// </summary>
+    /// <returns>True if slider was successfully updated</returns>
     private bool UpdateSliderFromRaycast()
     {
-        // 오른쪽 레이에서 히트 포인트 가져오기
-        if (_rightRayInteractor != null && _rightRayInteractor.TryGetCurrentUIRaycastResult(out RaycastResult raycastResult))
+        // Get hit point from right ray
+        if (_rightRayInteractor && _rightRayInteractor.TryGetCurrentUIRaycastResult(out RaycastResult raycastResult))
         {
-            if (_soundSlider == null) 
+            if (!_soundSlider) 
             {
                 Debug.LogWarning("Sound slider is null");
                 return false;
             }
             
-            // 슬라이더의 RectTransform 가져오기
+            // Get slider's RectTransform
             RectTransform sliderRect = _soundSlider.GetComponent<RectTransform>();
-            if (sliderRect == null) 
+            if (!sliderRect) 
             {
                 Debug.LogWarning("Slider RectTransform is null");
                 return false;
             }
             
-            // 월드 포인트를 슬라이더의 로컬 포인트로 변환
+            // Convert world point to slider's local point
             Vector2 localPoint;
             if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
                 sliderRect, raycastResult.screenPosition, raycastResult.module.eventCamera, out localPoint))
             {
-                // 슬라이더의 로컬 좌표에서 0~1 값으로 변환
+                // Convert from slider's local coordinates to 0~1 value
                 Rect rect = sliderRect.rect;
                 float normalizedValue = Mathf.Clamp01((localPoint.x - rect.xMin) / rect.width);
                 
-                // 슬라이더 값 설정 (이때 OnSoundSliderValueChanged가 자동 호출됨)
+                // Set slider value (OnSoundSliderValueChanged will be called automatically)
                 _soundSlider.value = normalizedValue;
                 
                 Debug.Log($"Slider updated from button press: {normalizedValue:F2} (Volume level: {Mathf.RoundToInt(normalizedValue * 100f)}%)");
@@ -331,15 +376,20 @@ public class OpeningUIManager : MonoBehaviour
         return false;
     }
     
+    /// <summary>
+    /// Check if the hit object is a valid target UI based on current state
+    /// </summary>
+    /// <param name="hitObject">GameObject to check</param>
+    /// <returns>True if object is a valid target UI</returns>
     private bool IsTargetUI(GameObject hitObject)
     {
-        if (hitObject == null) return false;
+        if (!hitObject) return false;
     
-        // 팝업이 열려있을 때는 해당 팝업의 UI만 허용
+        // When popup is open, only allow that popup's UI
         if (_isSettingsPopupActive)
         {
-            // 설정 팝업에서는 슬라이더와 관련된 모든 UI 요소 허용
-            bool isSettingsSlider = _soundSlider != null && 
+            // In settings popup, allow all slider-related UI elements
+            bool isSettingsSlider = _soundSlider && 
                                     (hitObject == _soundSlider.gameObject || 
                                      hitObject.transform.IsChildOf(_soundSlider.transform) ||
                                      hitObject.GetComponent<Slider>() == _soundSlider);
@@ -349,15 +399,15 @@ public class OpeningUIManager : MonoBehaviour
     
         if (_isQuitPopupActive)
         {
-            // 종료 팝업에서는 메인 돌아가기 버튼만 허용
-            bool isMainBackButton = _mainBackButton != null && 
+            // In quit popup, only allow main back button
+            bool isMainBackButton = _mainBackButton && 
                                     (hitObject == _mainBackButton.gameObject || 
                                      hitObject.transform.IsChildOf(_mainBackButton.transform));
         
             return isMainBackButton;
         }
     
-        // 팝업이 없을 때는 기본 메뉴 UI만 허용
+        // When no popup is open, only allow main menu UI
         bool isMainMenuUI = (hitObject == _playUI || hitObject.transform.IsChildOf(_playUI.transform)) ||
                             (hitObject == _settingsUI || hitObject.transform.IsChildOf(_settingsUI.transform)) ||
                             (hitObject == _quitUI || hitObject.transform.IsChildOf(_quitUI.transform));
@@ -365,6 +415,10 @@ public class OpeningUIManager : MonoBehaviour
         return isMainMenuUI;
     }
     
+    /// <summary>
+    /// Handle A button press events
+    /// </summary>
+    /// <param name="context">Input action callback context</param>
     private void OnAButtonPressed(InputAction.CallbackContext context)
     {
         if (_isProcessingInput || Time.time - _lastInputTime < _inputCooldown)
@@ -375,14 +429,14 @@ public class OpeningUIManager : MonoBehaviour
         
         if (_isPrologueActive)
         {
-            // 프롤로그에서 A버튼 누르면 다음 씬으로 (A버튼만 프롤로그에서 작동)
+            // In prologue, A button advances to next scene (only A button works in prologue)
             GameManager.Instance.TransitionToScene(1);
         }
         else
         {
-            // A버튼은 오른쪽 레이만 확인
+            // A button only checks right ray
             GameObject rightHitUI = GetRayHitUI(_rightRayInteractor);
-            if (rightHitUI != null && IsTargetUI(rightHitUI))
+            if (rightHitUI && IsTargetUI(rightHitUI))
             {
                 HandleUIClick(rightHitUI);
             }
@@ -391,6 +445,10 @@ public class OpeningUIManager : MonoBehaviour
         _isProcessingInput = false;
     }
     
+    /// <summary>
+    /// Handle Y button press events (popup closing)
+    /// </summary>
+    /// <param name="context">Input action callback context</param>
     private void OnYButtonPressed(InputAction.CallbackContext context)
     {
         if (_isProcessingInput || Time.time - _lastInputTime < _inputCooldown)
@@ -399,7 +457,7 @@ public class OpeningUIManager : MonoBehaviour
         _isProcessingInput = true;
         _lastInputTime = Time.time;
         
-        // Y버튼으로 팝업 닫기
+        // Y button closes popups
         if (_isSettingsPopupActive)
         {
             CloseSettingsPopup();
@@ -412,6 +470,10 @@ public class OpeningUIManager : MonoBehaviour
         _isProcessingInput = false;
     }
     
+    /// <summary>
+    /// Handle left trigger press events
+    /// </summary>
+    /// <param name="context">Input action callback context</param>
     private void OnLeftTriggerPressed(InputAction.CallbackContext context)
     {
         if (_isProcessingInput || Time.time - _lastInputTime < _inputCooldown)
@@ -420,11 +482,11 @@ public class OpeningUIManager : MonoBehaviour
         _isProcessingInput = true;
         _lastInputTime = Time.time;
         
-        // 왼쪽 트리거는 왼쪽 레이만 확인 (프롤로그에서는 작동 안함)
+        // Left trigger only checks left ray (doesn't work in prologue)
         if (!_isPrologueActive)
         {
             GameObject leftHitUI = GetRayHitUI(_leftRayInteractor);
-            if (leftHitUI != null && IsTargetUI(leftHitUI))
+            if (leftHitUI && IsTargetUI(leftHitUI))
             {
                 HandleUIClick(leftHitUI);
             }
@@ -433,6 +495,10 @@ public class OpeningUIManager : MonoBehaviour
         _isProcessingInput = false;
     }
     
+    /// <summary>
+    /// Handle right trigger press events
+    /// </summary>
+    /// <param name="context">Input action callback context</param>
     private void OnRightTriggerPressed(InputAction.CallbackContext context)
     {
         if (_isProcessingInput || Time.time - _lastInputTime < _inputCooldown)
@@ -441,11 +507,11 @@ public class OpeningUIManager : MonoBehaviour
         _isProcessingInput = true;
         _lastInputTime = Time.time;
         
-        // 오른쪽 트리거는 오른쪽 레이만 확인 (프롤로그에서는 작동 안함)
+        // Right trigger only checks right ray (doesn't work in prologue)
         if (!_isPrologueActive)
         {
             GameObject rightHitUI = GetRayHitUI(_rightRayInteractor);
-            if (rightHitUI != null && IsTargetUI(rightHitUI))
+            if (rightHitUI && IsTargetUI(rightHitUI))
             {
                 HandleUIClick(rightHitUI);
             }
@@ -454,11 +520,15 @@ public class OpeningUIManager : MonoBehaviour
         _isProcessingInput = false;
     }
     
+    /// <summary>
+    /// Route UI click events to appropriate handlers based on current state
+    /// </summary>
+    /// <param name="clickedUI">The clicked UI GameObject</param>
     private void HandleUIClick(GameObject clickedUI)
     {
         Debug.Log($"HandleUIClick called with: {clickedUI.name}");
         
-        // 팝업이 열려있을 때는 해당 팝업의 UI만 처리
+        // When popup is open, only handle that popup's UI
         if (_isSettingsPopupActive)
         {
             HandleSettingsPopupClick(clickedUI);
@@ -471,7 +541,7 @@ public class OpeningUIManager : MonoBehaviour
             return;
         }
         
-        // 메인 메뉴 UI 처리 (팝업이 없을 때만)
+        // Handle main menu UI (only when no popup is open)
         if (clickedUI == _playUI || clickedUI.transform.IsChildOf(_playUI.transform))
         {
             OnPlayUIClicked();
@@ -490,78 +560,104 @@ public class OpeningUIManager : MonoBehaviour
         }
     }
     
+    /// <summary>
+    /// Handle clicks within the settings popup
+    /// </summary>
+    /// <param name="clickedUI">The clicked UI GameObject</param>
     private void HandleSettingsPopupClick(GameObject clickedUI)
     {
-        // 슬라이더 클릭 시 A버튼/트리거로 조작 가능하도록
-        if (_soundSlider != null && (clickedUI == _soundSlider.gameObject || clickedUI.transform.IsChildOf(_soundSlider.transform)))
+        // Allow A button/trigger interaction with slider
+        if (_soundSlider && (clickedUI == _soundSlider.gameObject || clickedUI.transform.IsChildOf(_soundSlider.transform)))
         {
             Debug.Log("Sound slider button interaction");
-            // A버튼/트리거로 슬라이더 값을 오른쪽 레이 위치에 따라 설정
+            // Set slider value based on right ray position with A button/trigger
             UpdateSliderFromRaycast();
         }
     }
     
+    /// <summary>
+    /// Handle clicks within the quit popup
+    /// </summary>
+    /// <param name="clickedUI">The clicked UI GameObject</param>
     private void HandleQuitPopupClick(GameObject clickedUI)
     {
-        // 메인으로 돌아가기 버튼 (게임 종료)만
-        if (_mainBackButton != null && (clickedUI == _mainBackButton.gameObject || clickedUI.transform.IsChildOf(_mainBackButton.transform)))
+        // Only main back button (game quit)
+        if (_mainBackButton && (clickedUI == _mainBackButton.gameObject || clickedUI.transform.IsChildOf(_mainBackButton.transform)))
         {
             Debug.Log("Main back button detected - calling OnMainBackButtonClicked");
             OnMainBackButtonClicked();
         }
     }
 
+    /// <summary>
+    /// Handle play UI button click - switches to prologue canvas
+    /// </summary>
     private void OnPlayUIClicked()
     {
-        SetPrologueActive(true); // 프롤로그 캔버스로 전환
+        SetPrologueActive(true); // Switch to prologue canvas
     }
     
+    /// <summary>
+    /// Handle settings UI button click - opens settings popup
+    /// </summary>
     private void OnSettingsUIClicked()
     {
-        Debug.Log("Settings 클릭");
+        Debug.Log("Settings clicked");
         OpenSettingsPopup();
     }
     
+    /// <summary>
+    /// Handle quit UI button click - opens quit popup
+    /// </summary>
     private void OnQuitUIClicked()
     {
-        Debug.Log("Quit 클릭");
+        Debug.Log("Quit clicked");
         OpenQuitPopup();
     }
     
+    /// <summary>
+    /// Open the settings popup and initialize slider value
+    /// </summary>
     private void OpenSettingsPopup()
     {
-        if (_settingsPopupUI != null)
+        if (_settingsPopupUI)
         {
             _settingsPopupUI.SetActive(true);
             _isSettingsPopupActive = true;
             
-            // 설정 팝업 열 때 현재 볼륨을 슬라이더에 반영
+            // Reflect current volume in slider when opening settings popup
             UpdateSoundSliderValue();
             
             Debug.Log("Settings popup opened");
         }
     }
     
+    /// <summary>
+    /// Update slider value to match current DataManager volume setting
+    /// </summary>
     private void UpdateSoundSliderValue()
     {
-        if (_soundSlider != null && DataManager.Data != null)
+        if (_soundSlider && DataManager.Data)
         {
-            // DataManager의 마스터 볼륨 레벨(0~100)을 슬라이더(0~1)에 설정
+            // Set DataManager's master volume level (0~100) to slider (0~1)
             float sliderValue = DataManager.Data.GetMasterVolumeLevel() / 100f;
             _soundSlider.value = sliderValue;
             Debug.Log($"Sound slider value updated to: {_soundSlider.value} (Volume Level: {DataManager.Data.GetMasterVolumeLevel()}%)");
             
-            // 텍스트도 업데이트
-            if (_soundValueText != null)
+            // Update text as well
+            if (_soundValueText)
             {
                 _soundValueText.text = DataManager.Data.GetMasterVolumeLevel().ToString() + "%";
             }
         }
     }
     
+    /// <summary>
+    /// Close the settings popup
+    /// </summary>
     private void CloseSettingsPopup()
     {
-        if (_settingsPopupUI != null)
+        if (_settingsPopupUI)
         {
             _settingsPopupUI.SetActive(false);
             _isSettingsPopupActive = false;
@@ -569,9 +665,12 @@ public class OpeningUIManager : MonoBehaviour
         }
     }
     
+    /// <summary>
+    /// Open the quit confirmation popup
+    /// </summary>
     private void OpenQuitPopup()
     {
-        if (_quitPopupUI != null)
+        if (_quitPopupUI)
         {
             _quitPopupUI.SetActive(true);
             _isQuitPopupActive = true;
@@ -579,9 +678,12 @@ public class OpeningUIManager : MonoBehaviour
         }
     }
     
+    /// <summary>
+    /// Close the quit confirmation popup
+    /// </summary>
     private void CloseQuitPopup()
     {
-        if (_quitPopupUI != null)
+        if (_quitPopupUI)
         {
             _quitPopupUI.SetActive(false);
             _isQuitPopupActive = false;
@@ -589,11 +691,14 @@ public class OpeningUIManager : MonoBehaviour
         }
     }
     
+    /// <summary>
+    /// Handle main back button click - initiates game quit sequence
+    /// </summary>
     private void OnMainBackButtonClicked()
     {
         Debug.Log("=== OnMainBackButtonClicked START ===");
         
-        // 이미 게임 종료 중인지 확인
+        // Check if already quitting game
         if (_isQuittingGame)
         {
             Debug.Log("Already quitting game, ignoring click");
@@ -602,26 +707,30 @@ public class OpeningUIManager : MonoBehaviour
             
         Debug.Log("Main back button clicked - Quitting game");
         
-        // 게임 종료 플래그 설정 (한 번만 실행되도록)
+        // Set game quit flag (ensure it only executes once)
         _isQuittingGame = true;
         
-        // Input Actions 비활성화 (게임 종료 전에)
+        // Disable Input Actions (before game quit)
         DisableAllInputActions();
         
         Debug.Log("Attempting to quit game...");
         
-        // 짧은 지연 후 게임 종료 (Input System이 정리될 시간을 줌)
+        // Quit game after short delay (give Input System time to clean up)
         StartCoroutine(QuitGameCoroutine());
         
         Debug.Log("=== OnMainBackButtonClicked END ===");
     }
     
+    /// <summary>
+    /// Coroutine to handle game quit with delay
+    /// </summary>
+    /// <returns>Coroutine enumerator</returns>
     private System.Collections.IEnumerator QuitGameCoroutine()
     {
-        // 0.1초 대기 (Input System 정리 시간)
+        // Wait 0.1 seconds (Input System cleanup time)
         yield return new WaitForSeconds(0.1f);
         
-        // 게임 종료
+        // Quit game
         #if UNITY_EDITOR
             Debug.Log("Stopping play mode in editor");
             UnityEditor.EditorApplication.isPlaying = false;
@@ -631,6 +740,9 @@ public class OpeningUIManager : MonoBehaviour
         #endif
     }
     
+    /// <summary>
+    /// Disable all input actions and unsubscribe from events
+    /// </summary>
     private void DisableAllInputActions()
     {
         Debug.Log("Disabling all input actions...");
@@ -659,7 +771,10 @@ public class OpeningUIManager : MonoBehaviour
         Debug.Log("All input actions disabled");
     }
     
-    // 캔버스 상태를 설정하는 메서드
+    /// <summary>
+    /// Set canvas state between opening and prologue
+    /// </summary>
+    /// <param name="isPrologueActive">True for prologue canvas, false for opening canvas</param>
     public void SetPrologueActive(bool isPrologueActive)
     {
         _isPrologueActive = isPrologueActive;
@@ -667,16 +782,18 @@ public class OpeningUIManager : MonoBehaviour
         _prologueCanvas.enabled = _isPrologueActive;
     }
     
+    /// <summary>
+    /// Clean up event listeners and input actions when destroyed
+    /// </summary>
     private void OnDestroy()
     {
-        // 슬라이더 이벤트 리스너 해제
-        if (_soundSlider != null && _sliderListenerRegistered)
+        // Unsubscribe slider event listener
+        if (_soundSlider && _sliderListenerRegistered)
         {
             _soundSlider.onValueChanged.RemoveListener(OnSoundSliderValueChanged);
         }
         
-        // OnDestroy에서는 이미 DisableAllInputActions에서 처리했으므로 
-        // 중복 해제를 방지하기 위해 체크
+        // Prevent duplicate unsubscription since DisableAllInputActions already handled it
         if (!_isQuittingGame)
         {
             if (_aButton != null) 

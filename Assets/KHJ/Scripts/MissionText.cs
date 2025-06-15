@@ -1,26 +1,31 @@
-using System.Collections;
 using TMPro;
-using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 
+/// <summary>
+/// Manages mission-related UI displays including mission text, health display, and feedback objects.
+/// Updates UI elements based on current mission state and player health.
+/// </summary>
 public class MissionText : MonoBehaviour
 {
     [Header("UI Components")]
     [SerializeField] private TMP_Text _healthText;
     
     [Header("Mission UI Objects")]
-    [SerializeField] private GameObject _missionBG;          // MissionBG 오브젝트
-    [SerializeField] private GameObject _pin;                // Pin 오브젝트
-    [SerializeField] private GameObject _missionTitle;       // MissionTitle 오브젝트
-    [SerializeField] private GameObject _missionContents;    // MissionContents 오브젝트
+    [SerializeField] private GameObject _missionBG;          // MissionBG object
+    [SerializeField] private GameObject _pin;                // Pin object
+    [SerializeField] private GameObject _missionTitle;       // MissionTitle object
+    [SerializeField] private GameObject _missionContents;    // MissionContents object
     
     [Header("Mission GameObject Arrays")]
-    [SerializeField] private GameObject[] _missionTitleObjects;    // 미션 타이틀 게임오브젝트들
-    [SerializeField] private GameObject[] _missionContentObjects; // 미션 콘텐츠 게임오브젝트들
+    [SerializeField] private GameObject[] _missionTitleObjects;    // Mission title game objects
+    [SerializeField] private GameObject[] _missionContentObjects; // Mission content game objects
     
     [Header("Feedback GameObject Array")]
-    [SerializeField] private GameObject[] _feedbackObjects;        // 피드백 게임오브젝트들
+    [SerializeField] private GameObject[] _feedbackObjects;        // Feedback game objects
     
+    /// <summary>
+    /// Initialize mission UI and health display on start
+    /// </summary>
     private void Start()
     {
         UpdateMissionText();
@@ -29,10 +34,13 @@ public class MissionText : MonoBehaviour
         UpdateHealthText(DataManager.Data.CurrentHealth);
     }
     
-    // 인덱스로 게임오브젝트 활성화/비활성화
+    /// <summary>
+    /// Activates/deactivates mission objects by index
+    /// </summary>
+    /// <param name="index">Index of the mission objects to activate</param>
     public void ActivateMissionObjects(int index)
     {
-        // 모든 미션 타이틀 오브젝트 비활성화
+        // Deactivate all mission title objects
         if (_missionTitleObjects != null)
         {
             for (int i = 0; i < _missionTitleObjects.Length; i++)
@@ -44,7 +52,7 @@ public class MissionText : MonoBehaviour
             }
         }
         
-        // 모든 미션 콘텐츠 오브젝트 비활성화
+        // Deactivate all mission content objects
         if (_missionContentObjects != null)
         {
             for (int i = 0; i < _missionContentObjects.Length; i++)
@@ -57,12 +65,15 @@ public class MissionText : MonoBehaviour
         }
     }
     
-    // 피드백 오브젝트 활성화/비활성화
+    /// <summary>
+    /// Activates/deactivates feedback objects by index
+    /// </summary>
+    /// <param name="index">Index of the feedback object to activate</param>
     public void ActivateFeedbackObject(int index)
     {
         if (_feedbackObjects == null) return;
         
-        // 모든 피드백 오브젝트 비활성화 후 지정된 인덱스만 활성화
+        // Deactivate all feedback objects then activate only the specified index
         for (int i = 0; i < _feedbackObjects.Length; i++)
         {
             if (_feedbackObjects[i])
@@ -72,13 +83,16 @@ public class MissionText : MonoBehaviour
         }
     }
     
+    /// <summary>
+    /// Updates mission text display based on current mission state
+    /// </summary>
     public void UpdateMissionText()
     {
         if (!GameManager.Instance) return;
         
         MissionState currentState = GameManager.Instance.MissionState;
         
-        // None, Tutorial, Ending 상태에서는 미션 UI 숨기기
+        // Hide mission UI during None and Ending states
         if (currentState == MissionState.None || currentState == MissionState.Ending)
         {
             SetMissionUIActive(false);
@@ -91,7 +105,10 @@ public class MissionText : MonoBehaviour
         }
     }
 
-    // 미션 UI 전체 활성화/비활성화
+    /// <summary>
+    /// Sets the entire mission UI active or inactive
+    /// </summary>
+    /// <param name="isActive">Whether to activate or deactivate mission UI</param>
     private void SetMissionUIActive(bool isActive)
     {
         if (_missionBG) _missionBG.SetActive(isActive);
@@ -100,6 +117,10 @@ public class MissionText : MonoBehaviour
         if (_missionContents) _missionContents.SetActive(isActive);
     }
     
+    /// <summary>
+    /// Updates the health text display
+    /// </summary>
+    /// <param name="health">Current health value (parameter is not used, gets value from DataManager)</param>
     public void UpdateHealthText(int health)
     {
         if (!DataManager.Data) return;
@@ -107,17 +128,22 @@ public class MissionText : MonoBehaviour
         _healthText.text = DataManager.Data.CurrentHealth + " / "  + DataManager.Data.MaxHealth;
     }
     
+    /// <summary>
+    /// Converts mission state to corresponding object index
+    /// </summary>
+    /// <param name="missionState">The mission state to convert</param>
+    /// <returns>Index corresponding to the mission state</returns>
     private int GetObjectIndex(MissionState missionState)
     {
         return missionState switch
         {
-            MissionState.Mission1 => 0,    // 첫 번째 게임오브젝트
-            MissionState.Mission2 => 1,    // 두 번째 게임오브젝트
-            MissionState.Mission3 => 2,    // 세 번째 게임오브젝트
-            MissionState.Mission4 => 3,    // 네 번째 게임오브젝트
-            MissionState.Mission5 => 4,    // 다섯 번째 게임오브젝트
-            MissionState.Mission6 => 5,    // 여섯 번째 게임오브젝트
-            _ => 0 // 기본값
+            MissionState.Mission1 => 0,    // First game object
+            MissionState.Mission2 => 1,
+            MissionState.Mission3 => 2,
+            MissionState.Mission4 => 3,
+            MissionState.Mission5 => 4,
+            MissionState.Mission6 => 5,    // Sixth game object
+            _ => 0 // Default value
         };
     }
 }
