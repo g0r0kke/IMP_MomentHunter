@@ -98,8 +98,8 @@ public class AudioManager : MonoBehaviour
             _backgroundMusicClipId = Mathf.Clamp(_backgroundMusicClipId, 0, _audioClips.Length - 1);
         }
         
-        // Only update during runtime
-        if (Application.isPlaying)
+        // Only update during runtime and when AudioSource is available and enabled
+        if (Application.isPlaying && IsAudioSourceReady())
         {
             // Apply master volume immediately
             ApplyMasterVolume();
@@ -130,6 +130,13 @@ public class AudioManager : MonoBehaviour
     /// </summary>
     public void PlayBackgroundMusic()
     {
+        // Check if AudioSource is ready before attempting to play
+        if (!IsAudioSourceReady())
+        {
+            Debug.LogWarning("AudioSource is not ready for playback");
+            return;
+        }
+        
         // Validate background music clip ID
         if (!IsValidClipId(_backgroundMusicClipId))
         {
@@ -155,6 +162,13 @@ public class AudioManager : MonoBehaviour
     /// <param name="clipId">Index of the audio clip to play</param>
     public void PlayAudio(int clipId)
     {
+        // Check if AudioSource is ready before attempting to play
+        if (!IsAudioSourceReady())
+        {
+            Debug.LogWarning("AudioSource is not ready for playback");
+            return;
+        }
+        
         // Safety check for valid clip ID
         if (!IsValidClipId(clipId))
         {
@@ -179,6 +193,13 @@ public class AudioManager : MonoBehaviour
     /// <param name="clipId">Index of the audio clip to play as one-shot</param>
     public void PlayOneShot(int clipId)
     {
+        // Check if AudioSource is ready before attempting to play
+        if (!IsAudioSourceReady())
+        {
+            Debug.LogWarning("AudioSource is not ready for one-shot playback");
+            return;
+        }
+        
         // Validate clip ID
         if (!IsValidClipId(clipId))
         {
@@ -196,8 +217,22 @@ public class AudioManager : MonoBehaviour
     /// </summary>
     public void StopAudio()
     {
-        _audioSource.Stop();
-        Debug.Log("Audio stopped");
+        if (IsAudioSourceReady())
+        {
+            _audioSource.Stop();
+            Debug.Log("Audio stopped");
+        }
+    }
+    
+    /// <summary>
+    /// Checks if the AudioSource is ready for playback
+    /// </summary>
+    /// <returns>True if AudioSource is available, enabled, and the GameObject is active</returns>
+    private bool IsAudioSourceReady()
+    {
+        return _audioSource != null && 
+               _audioSource.enabled && 
+               _audioSource.gameObject.activeInHierarchy;
     }
     
     /// <summary>
@@ -229,7 +264,7 @@ public class AudioManager : MonoBehaviour
     /// </summary>
     private void ApplyMasterVolume()
     {
-        if (_audioSource)
+        if (IsAudioSourceReady())
         {
             _audioSource.volume = GetMasterVolume();
         }
